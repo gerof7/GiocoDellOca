@@ -1,6 +1,8 @@
 package GiocoDellOca;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
 *
@@ -11,10 +13,22 @@ public class Impostazioni {
 	private List<Regola> elencoRegole;
 	private List<Personalizzazione> elencoPersonalizzazioni;
 	
+	private Map<String, Regola> mappaRegole;
+	private Map<String, Personalizzazione> mappaPersonalizzazioni;
+	private Map<String, Scenario> mappaScenari;
+	
 	private Scenario scenario;
 	
 	private TipologiaRegoleEnum tipologiaRegole;
 	private TipologiaPersonalizzazioneEnum tipologiaPersonalizzazione;
+	
+	
+	public Impostazioni() {
+		this.mappaRegole = new HashMap<>();
+        this.mappaPersonalizzazioni = new HashMap<>();
+        this.mappaScenari = new HashMap<>();
+	}
+	
 	
 	
 	public void setTipologiaRegole(TipologiaRegoleEnum selectedTipologiaRegole ) {
@@ -39,6 +53,18 @@ public class Impostazioni {
 	
 	public void addPersonalizzazioneToList(Personalizzazione personalizzazione) {
 		elencoPersonalizzazioni.add(personalizzazione);
+	}
+	
+	public void getRegole(Map<String, Regola> regole){
+		mappaRegole = regole;
+	}
+	
+	public void getPersonalizzazioni(Map<String, Personalizzazione> personalizzazioni){
+		mappaPersonalizzazioni = personalizzazioni;
+	}
+	
+	public void getScenari(Map<String, Scenario> scenari){
+		mappaScenari = scenari;
 	}
 	
 	
