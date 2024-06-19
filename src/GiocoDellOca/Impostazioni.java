@@ -13,10 +13,6 @@ public class Impostazioni {
 	private List<Regola> elencoRegole;
 	private List<Personalizzazione> elencoPersonalizzazioni;
 	
-	private Map<String, Regola> mappaRegole;
-	private Map<String, Personalizzazione> mappaPersonalizzazioni;
-	private Map<String, Scenario> mappaScenari;
-	
 	private Scenario scenario;
 	
 	private TipologiaRegoleEnum tipologiaRegole;
@@ -24,15 +20,16 @@ public class Impostazioni {
 	
 	
 	public Impostazioni() {
-		this.mappaRegole = new HashMap<>();
-        this.mappaPersonalizzazioni = new HashMap<>();
-        this.mappaScenari = new HashMap<>();
 	}
 	
 	
 	
 	public void setTipologiaRegole(TipologiaRegoleEnum selectedTipologiaRegole ) {
 		tipologiaRegole = selectedTipologiaRegole;
+	}
+	
+	public TipologiaRegoleEnum getTipologiaRegole() {
+		return tipologiaRegole;
 	}
 	
 	public void addRegolaToList(Regola regola) {
@@ -46,25 +43,20 @@ public class Impostazioni {
 	public void setScenario(Scenario selectedScenario) {
 		scenario = selectedScenario;
 	}
+	public Scenario getScenario() {
+		return scenario;
+	}
 	
 	public void setTipologiaPersonalizzazione(TipologiaPersonalizzazioneEnum selectedTipologiaPersonalizzazione ) {
 		tipologiaPersonalizzazione = selectedTipologiaPersonalizzazione;
 	}
 	
+	public TipologiaPersonalizzazioneEnum getTipologiaPersonalizzazione() {
+		return tipologiaPersonalizzazione;
+	}
+	
 	public void addPersonalizzazioneToList(Personalizzazione personalizzazione) {
 		elencoPersonalizzazioni.add(personalizzazione);
-	}
-	
-	public void getRegole(Map<String, Regola> regole){
-		mappaRegole = regole;
-	}
-	
-	public void getPersonalizzazioni(Map<String, Personalizzazione> personalizzazioni){
-		mappaPersonalizzazioni = personalizzazioni;
-	}
-	
-	public void getScenari(Map<String, Scenario> scenari){
-		mappaScenari = scenari;
 	}
 	
 	
