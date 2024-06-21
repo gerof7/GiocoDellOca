@@ -16,14 +16,19 @@ public class Partita {
 	
 	
 	
-	public Partita(int idPartita) {
+	public Partita(int idPartitaAssegnato) {
         
+		idPartita = idPartitaAssegnato;
         impostazioni = new Impostazioni();
         
     }
 	
 	public Impostazioni editImpostazioni() {
 		return impostazioni;
+	}
+	
+	public int getId() {
+		return idPartita;
 	}
 	
 	

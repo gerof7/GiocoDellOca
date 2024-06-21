@@ -7,7 +7,6 @@ package GiocoDellOca;
 
 public enum TipologiaRegoleEnum {
 
-	Regola1,
-	Regola2,
-	Regola3
+	RegolaSingola,
+	SetRegole
 }
