@@ -14,5 +14,23 @@ public class Regola {
         this.descrizione = descrizione;
         this.proprietaRegola = proprietaRegola;
     }
+
+	public String getProprietaRegola() {
+		return proprietaRegola;
+	}
+
+	public void setProprietaRegola(String proprietaRegola) {
+		this.proprietaRegola = proprietaRegola;
+	}
+
+	public String getCodiceRegola() {
+		return codiceRegola;
+	}
+
+	public String getDescrizione() {
+		return descrizione;
+	}
+	
+	
 	
 }

@@ -95,32 +95,32 @@ public class GiocoDellOca {
 		
 		System.out.println("Caricamento delle regole");
 		loadRegole();
-		partitaCorrente.editImpostazioni().setTipologiaRegole(TipologiaRegoleEnum.RegolaSingola);
-		if (partitaCorrente.editImpostazioni().getTipologiaRegole() == TipologiaRegoleEnum.RegolaSingola) {
-			//TODO
-			System.out.println("Aggiunta regole singole");
-		}
-		else {
-			//TODO
-			System.out.println("Aggiunta della lista regole");
-		}
+//		partitaCorrente.editImpostazioni().setTipologiaRegole(TipologiaRegoleEnum.RegolaSingola);
+//		if (partitaCorrente.editImpostazioni().getTipologiaRegole() == TipologiaRegoleEnum.RegolaSingola) {
+//			//TODO
+//			System.out.println("Aggiunta regole singole");
+//		}
+//		else {
+//			//TODO
+//			System.out.println("Aggiunta della lista regole");
+//		}
 		
 		System.out.println("Caricamento delle personalizzazioni");
 		loadPersonalizzazioni();
-		partitaCorrente.editImpostazioni().setTipologiaPersonalizzazione(TipologiaPersonalizzazioneEnum.Dado);
-		if (partitaCorrente.editImpostazioni().getTipologiaPersonalizzazione() == TipologiaPersonalizzazioneEnum.Dado) {
-			//TODO
-			System.out.println("Aggiunta personalizzazione dado");
-		}
-		else {
-			//TODO
-			System.out.println("Aggiunta personalizzazione pedina");
-		}
+//		partitaCorrente.editImpostazioni().setTipologiaPersonalizzazione(TipologiaPersonalizzazioneEnum.Dado);
+//		if (partitaCorrente.editImpostazioni().getTipologiaPersonalizzazione() == TipologiaPersonalizzazioneEnum.Dado) {
+//			//TODO
+//			System.out.println("Aggiunta personalizzazione dado");
+//		}
+//		else {
+//			//TODO
+//			System.out.println("Aggiunta personalizzazione pedina");
+//		}
 		
 		System.out.println("Caricamento degli scenari");
 		loadScenari();
-		partitaCorrente.editImpostazioni().setScenario(mappaScenari.get("codiceScenario"));
-		System.out.println("Aggiunto scenario");
+//		partitaCorrente.editImpostazioni().setScenario(mappaScenari.get("codiceScenario"));
+//		System.out.println("Aggiunto scenario");
 		
 		return partita;
 	}
