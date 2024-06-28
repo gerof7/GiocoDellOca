@@ -9,16 +9,11 @@ import java.util.Map;
 */
 public class Partita {
 	
-	private int idPartita;
-	private LocalDateTime dataOraInizio;
 	
 	private Impostazioni impostazioni;
 	
-	
-	
-	public Partita(int idPartitaAssegnato) {
+	public Partita() {
         
-		idPartita = idPartitaAssegnato;
         impostazioni = new Impostazioni();
         
     }
@@ -26,14 +21,5 @@ public class Partita {
 	public Impostazioni editImpostazioni() {
 		return impostazioni;
 	}
-	
-	public int getId() {
-		return idPartita;
-	}
-	
-	
-	
-	
-	
 	
 }
