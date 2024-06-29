@@ -33,8 +33,12 @@ import GiocoDellOca.Scenario;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import javax.swing.ImageIcon;
+import java.awt.Color;
 
 public class GiocoDellOcaGUI extends JFrame {
 
@@ -85,6 +89,7 @@ public class GiocoDellOcaGUI extends JFrame {
 	 */
 	@SuppressWarnings("serial")
 	public GiocoDellOcaGUI() {		
+		this.giocoDellOca = new GiocoDellOca();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
         setLocationRelativeTo(null);
@@ -132,6 +137,11 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnTipologiaRegoleSingole.setBounds(40, 108, 167, 42);
 		selezioneTipologiaRegolePanel.add(btnTipologiaRegoleSingole);
 		
+		JButton btnReturnToMenuFromSelTipReg = new JButton("Menu");		
+		btnReturnToMenuFromSelTipReg.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnReturnToMenuFromSelTipReg.setBounds(0, 0, 57, 25);
+		selezioneTipologiaRegolePanel.add(btnReturnToMenuFromSelTipReg);
+		
 		JPanel selezioneRegoleSingolePanel = new JPanel();
 		layeredPane.add(selezioneRegoleSingolePanel, "name_166112297214100");
 		selezioneRegoleSingolePanel.setLayout(null);
@@ -144,6 +154,8 @@ public class GiocoDellOcaGUI extends JFrame {
 		JScrollPane scrollPaneRegoleSelezionabili = new JScrollPane();
 		scrollPaneRegoleSelezionabili.setBounds(10, 52, 192, 158);
 		selezioneRegoleSingolePanel.add(scrollPaneRegoleSelezionabili);
+		
+        ToolTipManager.sharedInstance().setInitialDelay(200);
 		
 		tableRegoleSelezionabili = new JTable() {
 			@Override
@@ -159,9 +171,7 @@ public class GiocoDellOcaGUI extends JFrame {
                 return super.getToolTipText(e);
             }
 		};
-		
-        ToolTipManager.sharedInstance().setInitialDelay(200);
-		
+				
 		tableRegoleSelezionabili.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -227,9 +237,14 @@ public class GiocoDellOcaGUI extends JFrame {
 		DefaultTableModel tableRegoleSelezionateModel = (DefaultTableModel) tableRegoleSelezionate.getModel();
 		hideColumn(tableRegoleSelezionate, 0);
 		
-		JButton btnAvanzaToSelezionaScenario = new JButton("Selezione scenario ");
-		btnAvanzaToSelezionaScenario.setBounds(291, 221, 123, 30);
-		selezioneRegoleSingolePanel.add(btnAvanzaToSelezionaScenario);
+		JButton btnAvanzaToSelezionaScenarioRegSing = new JButton("Selezione scenario ");
+		btnAvanzaToSelezionaScenarioRegSing.setBounds(261, 221, 153, 30);
+		selezioneRegoleSingolePanel.add(btnAvanzaToSelezionaScenarioRegSing);
+		
+		JButton btnReturnToMenuFromSelRegSing = new JButton("Menu");
+		btnReturnToMenuFromSelRegSing.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnReturnToMenuFromSelRegSing.setBounds(0, 0, 57, 25);
+		selezioneRegoleSingolePanel.add(btnReturnToMenuFromSelRegSing);
 		
 		JPanel selezioneScenarioPanel = new JPanel();
 		layeredPane.add(selezioneScenarioPanel, "name_769942002122600");
@@ -244,7 +259,20 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneScenariSelezionabili.setBounds(10, 52, 192, 158);
 		selezioneScenarioPanel.add(scrollPaneScenariSelezionabili);
 		
-		tableScenariSelezionabili = new JTable();
+		tableScenariSelezionabili = new JTable(){
+			@Override
+            public String getToolTipText(java.awt.event.MouseEvent e) {
+                int row = rowAtPoint(e.getPoint());
+                int column = columnAtPoint(e.getPoint());
+                
+                if (row >= 0 && column >= 0) {
+                    String text = (String) getValueAt(row, column);
+
+                    return "<html>" + text + "</html>";
+                }
+                return super.getToolTipText(e);
+            }
+		};
 		tableScenariSelezionabili.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -271,7 +299,20 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneScenarioSelezionato.setBounds(222, 52, 192, 158);
 		selezioneScenarioPanel.add(scrollPaneScenarioSelezionato);
 		
-		tableScenarioSelezionato = new JTable();
+		tableScenarioSelezionato = new JTable(){
+			@Override
+            public String getToolTipText(java.awt.event.MouseEvent e) {
+                int row = rowAtPoint(e.getPoint());
+                int column = columnAtPoint(e.getPoint());
+                
+                if (row >= 0 && column >= 0) {
+                    String text = (String) getValueAt(row, column);
+
+                    return "<html>" + text + "</html>";
+                }
+                return super.getToolTipText(e);
+            }
+		};
 		tableScenarioSelezionato.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -292,6 +333,15 @@ public class GiocoDellOcaGUI extends JFrame {
 		tableScenarioSelezionato.getColumnModel().getColumn(1).setPreferredWidth(84);
 		scrollPaneScenarioSelezionato.setViewportView(tableScenarioSelezionato);
 		
+		JButton btnReturnToSelRegole = new JButton("Selezione regole");		
+		btnReturnToSelRegole.setBounds(10, 221, 153, 30);
+		selezioneScenarioPanel.add(btnReturnToSelRegole);
+		
+		JButton btnReturnToMenuFromSelScen = new JButton("Menu");
+		btnReturnToMenuFromSelScen.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnReturnToMenuFromSelScen.setBounds(0, 0, 57, 25);
+		selezioneScenarioPanel.add(btnReturnToMenuFromSelScen);
+		
 		DefaultTableModel tableScenarioSelezionatoModel = (DefaultTableModel) tableScenarioSelezionato.getModel();
 		
 		JPanel selezioneRegoleSetPanel = new JPanel();
@@ -307,7 +357,20 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneRegoleSetSelezionabili.setBounds(10, 52, 192, 158);
 		selezioneRegoleSetPanel.add(scrollPaneRegoleSetSelezionabili);
 		
-		tableRegoleSetSelezionabili = new JTable();
+		tableRegoleSetSelezionabili = new JTable(){
+			@Override
+            public String getToolTipText(java.awt.event.MouseEvent e) {
+                int row = rowAtPoint(e.getPoint());
+                int column = columnAtPoint(e.getPoint());
+                
+                if (row >= 0 && column >= 0) {
+                    String text = (String) getValueAt(row, column);
+
+                    return "<html>" + text + "</html>";
+                }
+                return super.getToolTipText(e);
+            }
+		};
 		tableRegoleSetSelezionabili.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -332,7 +395,20 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneRegoleSetSelezionato.setBounds(222, 52, 192, 158);
 		selezioneRegoleSetPanel.add(scrollPaneRegoleSetSelezionato);
 		
-		tableRegoleSetSelezionato = new JTable();
+		tableRegoleSetSelezionato = new JTable(){
+			@Override
+            public String getToolTipText(java.awt.event.MouseEvent e) {
+                int row = rowAtPoint(e.getPoint());
+                int column = columnAtPoint(e.getPoint());
+                
+                if (row >= 0 && column >= 0) {
+                    String text = (String) getValueAt(row, column);
+
+                    return "<html>" + text + "</html>";
+                }
+                return super.getToolTipText(e);
+            }
+		};
 		tableRegoleSetSelezionato.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -357,24 +433,43 @@ public class GiocoDellOcaGUI extends JFrame {
 		DefaultTableModel tableRegoleSetSelezionatoModel = (DefaultTableModel) tableRegoleSetSelezionato.getModel();
 		hideColumn(tableRegoleSetSelezionato, 0);
 		
+		JButton btnAvanzaToSelezionaScenarioRegSet = new JButton("Selezione scenario");		
+		btnAvanzaToSelezionaScenarioRegSet.setBounds(261, 221, 153, 30);
+		selezioneRegoleSetPanel.add(btnAvanzaToSelezionaScenarioRegSet);
+		
+		JButton btnReturnToMenuFromSelRegSet = new JButton("Menu");
+		btnReturnToMenuFromSelRegSet.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnReturnToMenuFromSelRegSet.setBounds(0, 0, 57, 25);
+		selezioneRegoleSetPanel.add(btnReturnToMenuFromSelRegSet);
+		
 		btnConfiguraNuovaPartitaSP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GiocoDellOcaGUI.this.giocoDellOca = new GiocoDellOca();
+				
+				GiocoDellOcaGUI.this.giocoDellOca.configuraNuovaPartitaSP();
 				
 				GiocoDellOcaGUI.this.listaRegoleSingole = giocoDellOca.getListaRegoleSingole();
 				GiocoDellOcaGUI.this.mapRegoleSet = giocoDellOca.getMapRegoleSet();
 				GiocoDellOcaGUI.this.listScenari = giocoDellOca.getListaScenari();
 				
-				for(var regola : listaRegoleSingole) {
-					tableRegoleSelezionabiliModel.addRow(new Object[] {regola.getCodiceRegola(), regola.getDescrizione()});
+				if(tableRegoleSelezionabiliModel.getRowCount() == 0 && tableRegoleSelezionateModel.getRowCount() == 0) 
+				{
+					for(var regola : listaRegoleSingole) {
+						tableRegoleSelezionabiliModel.addRow(new Object[] {regola.getCodiceRegola(), regola.getDescrizione()});
+					}
 				}
 				
-				for (var key : mapRegoleSet.keySet()) {
-					tableRegoleSetSelezionabiliModel.addRow(new Object[] {key});
+				if(tableRegoleSetSelezionabiliModel.getRowCount() == 0 && tableRegoleSetSelezionatoModel.getRowCount() == 0) 
+				{
+					for (var key : mapRegoleSet.keySet()) {
+						tableRegoleSetSelezionabiliModel.addRow(new Object[] {key});
+					}
 				}
 				
-				for(var scenario : listScenari) {
-					tableScenariSelezionabiliModel.addRow(new Object[] {scenario.getCodiceScenario(), scenario.getDescrizione()});
+				if(tableScenariSelezionabiliModel.getRowCount() == 0 && tableScenarioSelezionatoModel.getRowCount() == 0) 
+				{
+					for(var scenario : listScenari) {
+						tableScenariSelezionabiliModel.addRow(new Object[] {scenario.getCodiceScenario(), scenario.getDescrizione()});
+					}
 				}
 					
 				
@@ -388,7 +483,13 @@ public class GiocoDellOcaGUI extends JFrame {
 			}
 		});
 		
-		btnAvanzaToSelezionaScenario.addActionListener(new ActionListener() {
+		btnAvanzaToSelezionaScenarioRegSing.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwitchToPanel(layeredPane, selezioneScenarioPanel);
+			}
+		});
+		
+		btnAvanzaToSelezionaScenarioRegSet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SwitchToPanel(layeredPane, selezioneScenarioPanel);
 			}
@@ -397,6 +498,60 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnTipologiaRegoleSet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SwitchToPanel(layeredPane, selezioneRegoleSetPanel);
+			}
+		});
+		
+		btnReturnToSelRegole.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwitchToPanel(layeredPane, selezioneTipologiaRegolePanel);
+			}
+		});
+		
+		btnReturnToMenuFromSelTipReg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tableRegoleSetSelezionabiliModel.setRowCount(0);
+            	tableRegoleSetSelezionatoModel.setRowCount(0);	
+            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionateModel.setRowCount(0);	
+				tableScenariSelezionabiliModel.setRowCount(0);
+            	tableScenarioSelezionatoModel.setRowCount(0);
+				SwitchToPanel(layeredPane, menuPrincipalePanel);
+			}
+		});
+		
+		btnReturnToMenuFromSelRegSing.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tableRegoleSetSelezionabiliModel.setRowCount(0);
+            	tableRegoleSetSelezionatoModel.setRowCount(0);	
+            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionateModel.setRowCount(0);	
+				tableScenariSelezionabiliModel.setRowCount(0);
+            	tableScenarioSelezionatoModel.setRowCount(0);	
+				SwitchToPanel(layeredPane, menuPrincipalePanel);
+			}
+		});
+		
+		btnReturnToMenuFromSelRegSet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tableRegoleSetSelezionabiliModel.setRowCount(0);
+            	tableRegoleSetSelezionatoModel.setRowCount(0);	
+            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionateModel.setRowCount(0);	
+				tableScenariSelezionabiliModel.setRowCount(0);
+            	tableScenarioSelezionatoModel.setRowCount(0);		
+				SwitchToPanel(layeredPane, menuPrincipalePanel);
+			}
+		});
+		
+		btnReturnToMenuFromSelScen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tableRegoleSetSelezionabiliModel.setRowCount(0);
+            	tableRegoleSetSelezionatoModel.setRowCount(0);	
+            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionateModel.setRowCount(0);	
+				tableScenariSelezionabiliModel.setRowCount(0);
+            	tableScenarioSelezionatoModel.setRowCount(0);
+				SwitchToPanel(layeredPane, menuPrincipalePanel);
 			}
 		});
 		

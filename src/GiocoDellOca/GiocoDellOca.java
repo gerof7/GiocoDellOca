@@ -32,8 +32,6 @@ public class GiocoDellOca {
         
         this.giocatoreInSessione = new Giocatore("Giocatore 1", 1);
         
-        this.partitaCorrente = configuraNuovaPartitaSP();
-        avviaPartita(partitaCorrente);
 	}
 	
 	public void loadRegoleSingole() {
@@ -90,22 +88,29 @@ public class GiocoDellOca {
 		listaScenari.add(scenario4);
 	}
 	
-	public Partita configuraNuovaPartitaSP() {
+	public void configuraNuovaPartitaSP() {
 		
-		var partita = new Partita();
+		var partitaCorrente = new Partita();
 		
-		loadRegoleSingole();	
-		loadRegoleSet();
-		loadPersonalizzazioni();
-		loadScenari();
+		if(listaRegoleSingole.isEmpty())
+			loadRegoleSingole();
 		
-		return partita;
+		if(mapRegoleSet.isEmpty())
+			loadRegoleSet();
+		
+		if(listaPersonalizzazioni.isEmpty())
+			loadPersonalizzazioni();
+		
+		if(listaScenari.isEmpty())
+			loadScenari();
+		
+		this.partitaCorrente = partitaCorrente;
 	}
 	
 	
-	public void avviaPartita(Partita partitaCorrente) {
+	public void avviaPartita() {
 		
-		System.out.println(partitaCorrente);
+		System.out.println(this.partitaCorrente);
 		
 	}
 
