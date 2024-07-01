@@ -69,9 +69,9 @@ public class GiocoDellOca {
 	
 	
 	public void loadPersonalizzazioni() {
-		Personalizzazione personalizzazione1 = new Personalizzazione("Dado_doppio", "Due dadi");
-		Personalizzazione personalizzazione2 = new Personalizzazione("Dado_triplo", "Tre dadi");
-		Personalizzazione personalizzazione3 = new Personalizzazione("Pedina_Oca", "Il personaggio giocatore è un'oca");
+		Personalizzazione personalizzazione1 = new Personalizzazione("Dado_doppio", "Due dadi", TipologiaPersonalizzazioneEnum.Dado);
+		Personalizzazione personalizzazione2 = new Personalizzazione("Dado_triplo", "Tre dadi", TipologiaPersonalizzazioneEnum.Dado);
+		Personalizzazione personalizzazione3 = new Personalizzazione("Pedina_Oca", "Il personaggio giocatore è un'oca", TipologiaPersonalizzazioneEnum.Pedina);
 		listaPersonalizzazioni.add(personalizzazione1);
 		listaPersonalizzazioni.add(personalizzazione2);
 		listaPersonalizzazioni.add(personalizzazione3);
@@ -110,7 +110,7 @@ public class GiocoDellOca {
 	
 	public void avviaPartita() {
 		
-		System.out.println(this.partitaCorrente);
+		System.out.println(this.toString());
 		
 	}
 
@@ -128,6 +128,13 @@ public class GiocoDellOca {
 
 	public List<Scenario> getListaScenari() {
 		return listaScenari;
+	}
+
+	@Override
+	public String toString() {
+		return "GiocoDellOca [giocatoreInSessione=" + giocatoreInSessione + ", partitaCorrente=" + partitaCorrente
+				+ ", listaRegoleSingole=" + listaRegoleSingole + ", mapRegoleSet=" + mapRegoleSet
+				+ ", listaPersonalizzazioni=" + listaPersonalizzazioni + ", listaScenari=" + listaScenari + "]";
 	}
 	
 }

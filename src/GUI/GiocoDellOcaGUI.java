@@ -28,8 +28,10 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import GiocoDellOca.GiocoDellOca;
+import GiocoDellOca.Personalizzazione;
 import GiocoDellOca.Regola;
 import GiocoDellOca.Scenario;
+import GiocoDellOca.TipologiaPersonalizzazioneEnum;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -49,11 +51,16 @@ public class GiocoDellOcaGUI extends JFrame {
 	private List<Regola> listaRegoleSingole;
 	private Map<String, Set<Regola>> mapRegoleSet;
 	private List<Scenario> listScenari;
+	private List<Personalizzazione> listPersonalizzazioni;
 	private JTable tableRegoleSelezionate;
 	private JTable tableScenariSelezionabili;
 	private JTable tableScenarioSelezionato;
 	private JTable tableRegoleSetSelezionabili;
 	private JTable tableRegoleSetSelezionato;
+	private JTable tablePedineSelezionabili;
+	private JTable tablePedinaSelezionata;
+	private JTable tableDadiSelezionabili;
+	private JTable tableDadoSelezionato;
 	
 	private void SwitchToPanel (JLayeredPane layeredPane, JPanel panel) {
 		layeredPane.removeAll();
@@ -91,7 +98,7 @@ public class GiocoDellOcaGUI extends JFrame {
 	public GiocoDellOcaGUI() {		
 		this.giocoDellOca = new GiocoDellOca();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 533, 341);
         setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -109,13 +116,13 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		JLabel lblTitleMenuPrincipale = new JLabel("Gioco dell'Oca");
 		lblTitleMenuPrincipale.setFont(new Font("Segoe UI", Font.BOLD, 22));
-		lblTitleMenuPrincipale.setBounds(137, 11, 149, 36);
+		lblTitleMenuPrincipale.setBounds(179, 11, 150, 36);
 		menuPrincipalePanel.add(lblTitleMenuPrincipale);
 		
 		JButton btnConfiguraNuovaPartitaSP = new JButton("Nuova partita singleplayer");
 		
 		btnConfiguraNuovaPartitaSP.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		btnConfiguraNuovaPartitaSP.setBounds(121, 72, 182, 45);
+		btnConfiguraNuovaPartitaSP.setBounds(163, 72, 182, 45);
 		menuPrincipalePanel.add(btnConfiguraNuovaPartitaSP);
 		
 		JPanel selezioneTipologiaRegolePanel = new JPanel();
@@ -124,17 +131,17 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		JLabel lblTitleSelezioneTipologiaRegole = new JLabel("Selezione tipologia regole");
 		lblTitleSelezioneTipologiaRegole.setFont(new Font("Segoe UI", Font.BOLD, 22));
-		lblTitleSelezioneTipologiaRegole.setBounds(78, 11, 268, 36);
+		lblTitleSelezioneTipologiaRegole.setBounds(118, 11, 273, 36);
 		selezioneTipologiaRegolePanel.add(lblTitleSelezioneTipologiaRegole);
 		
 		JButton btnTipologiaRegoleSet = new JButton("Set di regole predefinite");	
 		btnTipologiaRegoleSet.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		btnTipologiaRegoleSet.setBounds(217, 108, 167, 42);
+		btnTipologiaRegoleSet.setBounds(265, 108, 167, 42);
 		selezioneTipologiaRegolePanel.add(btnTipologiaRegoleSet);
 		
 		JButton btnTipologiaRegoleSingole = new JButton("Regole singole");
 		btnTipologiaRegoleSingole.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		btnTipologiaRegoleSingole.setBounds(40, 108, 167, 42);
+		btnTipologiaRegoleSingole.setBounds(83, 108, 167, 42);
 		selezioneTipologiaRegolePanel.add(btnTipologiaRegoleSingole);
 		
 		JButton btnReturnToMenuFromSelTipReg = new JButton("Menu");		
@@ -147,12 +154,12 @@ public class GiocoDellOcaGUI extends JFrame {
 		selezioneRegoleSingolePanel.setLayout(null);
 		
 		JLabel lblTitleSelezioneRegoleSingole = new JLabel("Selezione regole singole");
-		lblTitleSelezioneRegoleSingole.setBounds(87, 11, 249, 30);
+		lblTitleSelezioneRegoleSingole.setBounds(127, 11, 254, 30);
 		lblTitleSelezioneRegoleSingole.setFont(new Font("Segoe UI", Font.BOLD, 22));
 		selezioneRegoleSingolePanel.add(lblTitleSelezioneRegoleSingole);
 		
 		JScrollPane scrollPaneRegoleSelezionabili = new JScrollPane();
-		scrollPaneRegoleSelezionabili.setBounds(10, 52, 192, 158);
+		scrollPaneRegoleSelezionabili.setBounds(30, 51, 205, 158);
 		selezioneRegoleSingolePanel.add(scrollPaneRegoleSelezionabili);
 		
         ToolTipManager.sharedInstance().setInitialDelay(200);
@@ -195,7 +202,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		hideColumn(tableRegoleSelezionabili, 0);
 		
 		JScrollPane scrollPaneRegoleSelezionate = new JScrollPane();
-		scrollPaneRegoleSelezionate.setBounds(222, 52, 192, 158);
+		scrollPaneRegoleSelezionate.setBounds(274, 51, 205, 158);
 		selezioneRegoleSingolePanel.add(scrollPaneRegoleSelezionate);
 		
 		tableRegoleSelezionate = new JTable(){
@@ -238,7 +245,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		hideColumn(tableRegoleSelezionate, 0);
 		
 		JButton btnAvanzaToSelezionaScenarioRegSing = new JButton("Selezione scenario ");
-		btnAvanzaToSelezionaScenarioRegSing.setBounds(261, 221, 153, 30);
+		btnAvanzaToSelezionaScenarioRegSing.setBounds(326, 227, 153, 30);
 		selezioneRegoleSingolePanel.add(btnAvanzaToSelezionaScenarioRegSing);
 		
 		JButton btnReturnToMenuFromSelRegSing = new JButton("Menu");
@@ -252,11 +259,11 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		JLabel lblTitleSelezioneScenario = new JLabel("Selezione scenario");
 		lblTitleSelezioneScenario.setFont(new Font("Segoe UI", Font.BOLD, 22));
-		lblTitleSelezioneScenario.setBounds(117, 11, 189, 30);
+		lblTitleSelezioneScenario.setBounds(158, 11, 192, 30);
 		selezioneScenarioPanel.add(lblTitleSelezioneScenario);
 		
 		JScrollPane scrollPaneScenariSelezionabili = new JScrollPane();
-		scrollPaneScenariSelezionabili.setBounds(10, 52, 192, 158);
+		scrollPaneScenariSelezionabili.setBounds(30, 51, 205, 158);
 		selezioneScenarioPanel.add(scrollPaneScenariSelezionabili);
 		
 		tableScenariSelezionabili = new JTable(){
@@ -296,7 +303,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		DefaultTableModel tableScenariSelezionabiliModel = (DefaultTableModel) tableScenariSelezionabili.getModel();
 		
 		JScrollPane scrollPaneScenarioSelezionato = new JScrollPane();
-		scrollPaneScenarioSelezionato.setBounds(222, 52, 192, 158);
+		scrollPaneScenarioSelezionato.setBounds(274, 52, 205, 158);
 		selezioneScenarioPanel.add(scrollPaneScenarioSelezionato);
 		
 		tableScenarioSelezionato = new JTable(){
@@ -334,13 +341,17 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneScenarioSelezionato.setViewportView(tableScenarioSelezionato);
 		
 		JButton btnReturnToSelRegole = new JButton("Selezione regole");		
-		btnReturnToSelRegole.setBounds(10, 221, 153, 30);
+		btnReturnToSelRegole.setBounds(30, 227, 153, 30);
 		selezioneScenarioPanel.add(btnReturnToSelRegole);
 		
 		JButton btnReturnToMenuFromSelScen = new JButton("Menu");
 		btnReturnToMenuFromSelScen.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnReturnToMenuFromSelScen.setBounds(0, 0, 57, 25);
 		selezioneScenarioPanel.add(btnReturnToMenuFromSelScen);
+		
+		JButton btnAvanzaToSelezionePers = new JButton("Selezione personalizzazioni");
+		btnAvanzaToSelezionePers.setBounds(284, 227, 195, 30);
+		selezioneScenarioPanel.add(btnAvanzaToSelezionePers);
 		
 		DefaultTableModel tableScenarioSelezionatoModel = (DefaultTableModel) tableScenarioSelezionato.getModel();
 		
@@ -349,12 +360,12 @@ public class GiocoDellOcaGUI extends JFrame {
 		selezioneRegoleSetPanel.setLayout(null);
 		
 		JLabel lblTitleSelezioneRegoleSet = new JLabel("Selezione set di regole");
-		lblTitleSelezioneRegoleSet.setBounds(96, 11, 232, 30);
+		lblTitleSelezioneRegoleSet.setBounds(137, 11, 235, 30);
 		lblTitleSelezioneRegoleSet.setFont(new Font("Segoe UI", Font.BOLD, 22));
 		selezioneRegoleSetPanel.add(lblTitleSelezioneRegoleSet);
 		
 		JScrollPane scrollPaneRegoleSetSelezionabili = new JScrollPane();
-		scrollPaneRegoleSetSelezionabili.setBounds(10, 52, 192, 158);
+		scrollPaneRegoleSetSelezionabili.setBounds(30, 51, 205, 158);
 		selezioneRegoleSetPanel.add(scrollPaneRegoleSetSelezionabili);
 		
 		tableRegoleSetSelezionabili = new JTable(){
@@ -392,7 +403,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		DefaultTableModel tableRegoleSetSelezionabiliModel = (DefaultTableModel) tableRegoleSetSelezionabili.getModel();
 		
 		JScrollPane scrollPaneRegoleSetSelezionato = new JScrollPane();
-		scrollPaneRegoleSetSelezionato.setBounds(222, 52, 192, 158);
+		scrollPaneRegoleSetSelezionato.setBounds(274, 51, 205, 158);
 		selezioneRegoleSetPanel.add(scrollPaneRegoleSetSelezionato);
 		
 		tableRegoleSetSelezionato = new JTable(){
@@ -434,13 +445,243 @@ public class GiocoDellOcaGUI extends JFrame {
 		hideColumn(tableRegoleSetSelezionato, 0);
 		
 		JButton btnAvanzaToSelezionaScenarioRegSet = new JButton("Selezione scenario");		
-		btnAvanzaToSelezionaScenarioRegSet.setBounds(261, 221, 153, 30);
+		btnAvanzaToSelezionaScenarioRegSet.setBounds(326, 219, 153, 30);
 		selezioneRegoleSetPanel.add(btnAvanzaToSelezionaScenarioRegSet);
 		
 		JButton btnReturnToMenuFromSelRegSet = new JButton("Menu");
 		btnReturnToMenuFromSelRegSet.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnReturnToMenuFromSelRegSet.setBounds(0, 0, 57, 25);
 		selezioneRegoleSetPanel.add(btnReturnToMenuFromSelRegSet);
+		
+		JPanel selezioneTipologiaPersonalizzazionePanel = new JPanel();
+		layeredPane.add(selezioneTipologiaPersonalizzazionePanel, "name_1048915761636599");
+		selezioneTipologiaPersonalizzazionePanel.setLayout(null);
+		
+		JLabel lblTitleSelezioneTipologiaPersonalizzazione = new JLabel("Selezione personalizzazioni");
+		lblTitleSelezioneTipologiaPersonalizzazione.setBounds(112, 11, 285, 36);
+		lblTitleSelezioneTipologiaPersonalizzazione.setFont(new Font("Segoe UI", Font.BOLD, 22));
+		selezioneTipologiaPersonalizzazionePanel.add(lblTitleSelezioneTipologiaPersonalizzazione);
+		
+		JButton btnReturnToMenuFromSelPers = new JButton("Menu");
+		btnReturnToMenuFromSelPers.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnReturnToMenuFromSelPers.setBounds(0, 0, 57, 25);
+		selezioneTipologiaPersonalizzazionePanel.add(btnReturnToMenuFromSelPers);
+		
+		JButton btnTipologiaPersDado = new JButton("Dadi");
+		btnTipologiaPersDado.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		btnTipologiaPersDado.setBounds(265, 108, 167, 42);
+		selezioneTipologiaPersonalizzazionePanel.add(btnTipologiaPersDado);
+		
+		JButton btnTipologiaPersPedina = new JButton("Pedina");
+		btnTipologiaPersPedina.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		btnTipologiaPersPedina.setBounds(83, 108, 167, 42);
+		selezioneTipologiaPersonalizzazionePanel.add(btnTipologiaPersPedina);
+		
+		JButton btnReturnToSelScenFromSelPers = new JButton("Selezione scenario");
+		btnReturnToSelScenFromSelPers.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		btnReturnToSelScenFromSelPers.setBounds(10, 242, 167, 42);
+		selezioneTipologiaPersonalizzazionePanel.add(btnReturnToSelScenFromSelPers);
+		
+		JPanel selezionePedinaPanel = new JPanel();
+		layeredPane.add(selezionePedinaPanel, "name_1050308981416700");
+		selezionePedinaPanel.setLayout(null);
+		
+		JLabel lblTitleSelezionePedina = new JLabel("Selezione pedina");
+		lblTitleSelezionePedina.setFont(new Font("Segoe UI", Font.BOLD, 22));
+		lblTitleSelezionePedina.setBounds(166, 10, 177, 36);
+		selezionePedinaPanel.add(lblTitleSelezionePedina);
+		
+		JButton btnReturnToMenuFromSelPedina = new JButton("Menu");
+		btnReturnToMenuFromSelPedina.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnReturnToMenuFromSelPedina.setBounds(0, 0, 57, 25);
+		selezionePedinaPanel.add(btnReturnToMenuFromSelPedina);
+		
+		JScrollPane scrollPanePedineSelezionabili = new JScrollPane();
+		scrollPanePedineSelezionabili.setBounds(30, 56, 205, 158);
+		selezionePedinaPanel.add(scrollPanePedineSelezionabili);
+			
+		tablePedineSelezionabili = new JTable(){
+			@Override
+            public String getToolTipText(java.awt.event.MouseEvent e) {
+                int row = rowAtPoint(e.getPoint());
+                int column = columnAtPoint(e.getPoint());
+                
+                if (row >= 0 && column >= 0) {
+                    String text = (String) getValueAt(row, column);
+
+                    return "<html>" + text + "</html>";
+                }
+                return super.getToolTipText(e);
+            }
+		};
+		tablePedineSelezionabili.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"CodicePedina", "Pedine selezionabili"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		tablePedineSelezionabili.getColumnModel().getColumn(0).setResizable(false);
+		tablePedineSelezionabili.getColumnModel().getColumn(1).setResizable(false);
+		scrollPanePedineSelezionabili.setViewportView(tablePedineSelezionabili);
+		
+		DefaultTableModel tablePedineSelezionabiliModel = (DefaultTableModel) tablePedineSelezionabili.getModel();
+		hideColumn(tablePedineSelezionabili, 0);
+		
+		JScrollPane scrollPanePedinaSelezionata = new JScrollPane();
+		scrollPanePedinaSelezionata.setBounds(274, 56, 205, 158);
+		selezionePedinaPanel.add(scrollPanePedinaSelezionata);
+		
+		tablePedinaSelezionata = new JTable(){
+			@Override
+            public String getToolTipText(java.awt.event.MouseEvent e) {
+                int row = rowAtPoint(e.getPoint());
+                int column = columnAtPoint(e.getPoint());
+                
+                if (row >= 0 && column >= 0) {
+                    String text = (String) getValueAt(row, column);
+
+                    return "<html>" + text + "</html>";
+                }
+                return super.getToolTipText(e);
+            }
+		};
+		tablePedinaSelezionata.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"CodicePedina", "Pedina"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		tablePedinaSelezionata.getColumnModel().getColumn(0).setResizable(false);
+		tablePedinaSelezionata.getColumnModel().getColumn(1).setResizable(false);
+		scrollPanePedinaSelezionata.setViewportView(tablePedinaSelezionata);
+		
+		DefaultTableModel tablePedinaSelezionataModel = (DefaultTableModel) tablePedinaSelezionata.getModel();
+		hideColumn(tablePedinaSelezionata, 0);
+		
+		JButton btnSelezionePersonalizzazioniFromSelPed = new JButton("Selezione personalizzazioni");
+		btnSelezionePersonalizzazioniFromSelPed.setBounds(30, 227, 195, 30);
+		selezionePedinaPanel.add(btnSelezionePersonalizzazioniFromSelPed);
+		
+		JButton btnAvviaPartitaFromSelPedina = new JButton("Avvia partita");
+		btnAvviaPartitaFromSelPedina.setBounds(360, 227, 119, 30);
+		selezionePedinaPanel.add(btnAvviaPartitaFromSelPedina);
+		
+		JPanel selezioneDadiPanel = new JPanel();
+		layeredPane.add(selezioneDadiPanel, "name_1050468066312900");
+		selezioneDadiPanel.setLayout(null);
+		
+		JLabel lblTitleSelezioneDadi = new JLabel("Selezione dadi");
+		lblTitleSelezioneDadi.setFont(new Font("Segoe UI", Font.BOLD, 22));
+		lblTitleSelezioneDadi.setBounds(175, 10, 158, 36);
+		selezioneDadiPanel.add(lblTitleSelezioneDadi);
+		
+		JButton btnReturnToMenuFromSelDado = new JButton("Menu");
+		btnReturnToMenuFromSelDado.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnReturnToMenuFromSelDado.setBounds(0, 0, 57, 25);
+		selezioneDadiPanel.add(btnReturnToMenuFromSelDado);
+		
+		JScrollPane scrollPaneDadiSelezionabili = new JScrollPane();
+		scrollPaneDadiSelezionabili.setBounds(30, 56, 205, 158);
+		selezioneDadiPanel.add(scrollPaneDadiSelezionabili);
+		
+		tableDadiSelezionabili = new JTable(){
+			@Override
+            public String getToolTipText(java.awt.event.MouseEvent e) {
+                int row = rowAtPoint(e.getPoint());
+                int column = columnAtPoint(e.getPoint());
+                
+                if (row >= 0 && column >= 0) {
+                    String text = (String) getValueAt(row, column);
+
+                    return "<html>" + text + "</html>";
+                }
+                return super.getToolTipText(e);
+            }
+		};
+		tableDadiSelezionabili.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"CodiceDado", "Dadi selezionabili"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		tableDadiSelezionabili.getColumnModel().getColumn(0).setResizable(false);
+		tableDadiSelezionabili.getColumnModel().getColumn(1).setResizable(false);
+		scrollPaneDadiSelezionabili.setViewportView(tableDadiSelezionabili);
+		
+		DefaultTableModel tableDadiSelezionabiliModel = (DefaultTableModel) tableDadiSelezionabili.getModel();
+		hideColumn(tableDadiSelezionabili, 0);
+		
+		JScrollPane scrollPaneDadoSelezionato = new JScrollPane();
+		scrollPaneDadoSelezionato.setBounds(274, 56, 205, 158);
+		selezioneDadiPanel.add(scrollPaneDadoSelezionato);
+		
+		tableDadoSelezionato = new JTable(){
+			@Override
+            public String getToolTipText(java.awt.event.MouseEvent e) {
+                int row = rowAtPoint(e.getPoint());
+                int column = columnAtPoint(e.getPoint());
+                
+                if (row >= 0 && column >= 0) {
+                    String text = (String) getValueAt(row, column);
+
+                    return "<html>" + text + "</html>";
+                }
+                return super.getToolTipText(e);
+            }
+		};
+		tableDadoSelezionato.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"CodiceDado", "Dadi selezionati"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		tableDadoSelezionato.getColumnModel().getColumn(0).setResizable(false);
+		tableDadoSelezionato.getColumnModel().getColumn(1).setResizable(false);
+		tableDadoSelezionato.getColumnModel().getColumn(1).setPreferredWidth(91);
+		scrollPaneDadoSelezionato.setViewportView(tableDadoSelezionato);
+		
+		DefaultTableModel tableDadoSelezionatoModel = (DefaultTableModel) tableDadoSelezionato.getModel();
+		hideColumn(tableDadoSelezionato, 0);
+		
+		JButton btnSelezionePersonalizzazioniFromSelDadi = new JButton("Selezione personalizzazioni");
+		btnSelezionePersonalizzazioniFromSelDadi.setBounds(30, 227, 195, 30);
+		selezioneDadiPanel.add(btnSelezionePersonalizzazioniFromSelDadi);
+		
+		JButton btnAvviaPartitaFromSelDado = new JButton("Avvia partita");
+		btnAvviaPartitaFromSelDado.setBounds(360, 227, 119, 30);
+		selezioneDadiPanel.add(btnAvviaPartitaFromSelDado);
 		
 		btnConfiguraNuovaPartitaSP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -450,6 +691,7 @@ public class GiocoDellOcaGUI extends JFrame {
 				GiocoDellOcaGUI.this.listaRegoleSingole = giocoDellOca.getListaRegoleSingole();
 				GiocoDellOcaGUI.this.mapRegoleSet = giocoDellOca.getMapRegoleSet();
 				GiocoDellOcaGUI.this.listScenari = giocoDellOca.getListaScenari();
+				GiocoDellOcaGUI.this.listPersonalizzazioni = giocoDellOca.getListaPersonalizzazioni();
 				
 				if(tableRegoleSelezionabiliModel.getRowCount() == 0 && tableRegoleSelezionateModel.getRowCount() == 0) 
 				{
@@ -471,8 +713,23 @@ public class GiocoDellOcaGUI extends JFrame {
 						tableScenariSelezionabiliModel.addRow(new Object[] {scenario.getCodiceScenario(), scenario.getDescrizione()});
 					}
 				}
-					
 				
+				if(tablePedineSelezionabiliModel.getRowCount() == 0 && tablePedinaSelezionataModel.getRowCount() == 0) 
+				{
+					for(var personalizzazione : listPersonalizzazioni) {
+						if(personalizzazione.getTipologiaPersonalizzazione() == TipologiaPersonalizzazioneEnum.Pedina)
+							tablePedineSelezionabiliModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
+					}
+				}
+				
+				if(tableDadiSelezionabiliModel.getRowCount() == 0 && tableDadoSelezionatoModel.getRowCount() == 0) 
+				{
+					for(var personalizzazione : listPersonalizzazioni) {
+						if(personalizzazione.getTipologiaPersonalizzazione() == TipologiaPersonalizzazioneEnum.Dado)
+							tableDadiSelezionabiliModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
+					}
+				}
+									
 				SwitchToPanel(layeredPane, selezioneTipologiaRegolePanel);
 			}
 		});
@@ -507,6 +764,61 @@ public class GiocoDellOcaGUI extends JFrame {
 			}
 		});
 		
+		btnAvanzaToSelezionePers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+			}
+		});
+		
+
+		btnReturnToSelScenFromSelPers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwitchToPanel(layeredPane, selezioneScenarioPanel);
+			}
+		});
+		
+
+		btnTipologiaPersPedina.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwitchToPanel(layeredPane, selezionePedinaPanel);
+			}
+		});
+		
+
+		btnTipologiaPersDado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwitchToPanel(layeredPane, selezioneDadiPanel);
+			}
+		});
+		
+
+		btnSelezionePersonalizzazioniFromSelPed.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+			}
+		});
+		
+
+		btnSelezionePersonalizzazioniFromSelDadi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+			}
+		});
+		
+
+		btnAvviaPartitaFromSelPedina.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GiocoDellOcaGUI.this.giocoDellOca.avviaPartita();
+			}
+		});
+		
+
+		btnAvviaPartitaFromSelDado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GiocoDellOcaGUI.this.giocoDellOca.avviaPartita();
+			}
+		});
+		
 		btnReturnToMenuFromSelTipReg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tableRegoleSetSelezionabiliModel.setRowCount(0);
@@ -515,6 +827,10 @@ public class GiocoDellOcaGUI extends JFrame {
             	tableRegoleSelezionateModel.setRowCount(0);	
 				tableScenariSelezionabiliModel.setRowCount(0);
             	tableScenarioSelezionatoModel.setRowCount(0);
+            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedinaSelezionataModel.setRowCount(0);
+            	tableDadiSelezionabiliModel.setRowCount(0);
+            	tableDadoSelezionatoModel.setRowCount(0);
 				SwitchToPanel(layeredPane, menuPrincipalePanel);
 			}
 		});
@@ -526,7 +842,11 @@ public class GiocoDellOcaGUI extends JFrame {
             	tableRegoleSelezionabiliModel.setRowCount(0);
             	tableRegoleSelezionateModel.setRowCount(0);	
 				tableScenariSelezionabiliModel.setRowCount(0);
-            	tableScenarioSelezionatoModel.setRowCount(0);	
+            	tableScenarioSelezionatoModel.setRowCount(0);
+            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedinaSelezionataModel.setRowCount(0);
+            	tableDadiSelezionabiliModel.setRowCount(0);
+            	tableDadoSelezionatoModel.setRowCount(0);
 				SwitchToPanel(layeredPane, menuPrincipalePanel);
 			}
 		});
@@ -538,7 +858,11 @@ public class GiocoDellOcaGUI extends JFrame {
             	tableRegoleSelezionabiliModel.setRowCount(0);
             	tableRegoleSelezionateModel.setRowCount(0);	
 				tableScenariSelezionabiliModel.setRowCount(0);
-            	tableScenarioSelezionatoModel.setRowCount(0);		
+            	tableScenarioSelezionatoModel.setRowCount(0);
+            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedinaSelezionataModel.setRowCount(0);
+            	tableDadiSelezionabiliModel.setRowCount(0);
+            	tableDadoSelezionatoModel.setRowCount(0);
 				SwitchToPanel(layeredPane, menuPrincipalePanel);
 			}
 		});
@@ -551,6 +875,60 @@ public class GiocoDellOcaGUI extends JFrame {
             	tableRegoleSelezionateModel.setRowCount(0);	
 				tableScenariSelezionabiliModel.setRowCount(0);
             	tableScenarioSelezionatoModel.setRowCount(0);
+            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedinaSelezionataModel.setRowCount(0);
+            	tableDadiSelezionabiliModel.setRowCount(0);
+            	tableDadoSelezionatoModel.setRowCount(0);
+				SwitchToPanel(layeredPane, menuPrincipalePanel);
+			}
+		});
+		
+		btnReturnToMenuFromSelPers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tableRegoleSetSelezionabiliModel.setRowCount(0);
+            	tableRegoleSetSelezionatoModel.setRowCount(0);	
+            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionateModel.setRowCount(0);	
+				tableScenariSelezionabiliModel.setRowCount(0);
+            	tableScenarioSelezionatoModel.setRowCount(0);
+            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedinaSelezionataModel.setRowCount(0);
+            	tableDadiSelezionabiliModel.setRowCount(0);
+            	tableDadoSelezionatoModel.setRowCount(0);
+				SwitchToPanel(layeredPane, menuPrincipalePanel);
+			}
+		});
+		
+
+		btnReturnToMenuFromSelPedina.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tableRegoleSetSelezionabiliModel.setRowCount(0);
+            	tableRegoleSetSelezionatoModel.setRowCount(0);	
+            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionateModel.setRowCount(0);	
+				tableScenariSelezionabiliModel.setRowCount(0);
+            	tableScenarioSelezionatoModel.setRowCount(0);
+            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedinaSelezionataModel.setRowCount(0);
+            	tableDadiSelezionabiliModel.setRowCount(0);
+            	tableDadoSelezionatoModel.setRowCount(0);
+				SwitchToPanel(layeredPane, menuPrincipalePanel);
+			}
+		});
+		
+
+		btnReturnToMenuFromSelDado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tableRegoleSetSelezionabiliModel.setRowCount(0);
+            	tableRegoleSetSelezionatoModel.setRowCount(0);	
+            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionateModel.setRowCount(0);	
+				tableScenariSelezionabiliModel.setRowCount(0);
+            	tableScenarioSelezionatoModel.setRowCount(0);
+            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedinaSelezionataModel.setRowCount(0);
+            	tableDadiSelezionabiliModel.setRowCount(0);
+            	tableDadoSelezionatoModel.setRowCount(0);
 				SwitchToPanel(layeredPane, menuPrincipalePanel);
 			}
 		});
@@ -665,6 +1043,66 @@ public class GiocoDellOcaGUI extends JFrame {
 						
 				}
                 
+			}
+		});
+		
+		tablePedineSelezionabili.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && tablePedinaSelezionata.getRowCount() == 0) {
+	            	int row = tablePedineSelezionabili.rowAtPoint(e.getPoint());
+					if(row >= 0) {		
+						String codicePedina= (String) tablePedineSelezionabiliModel.getValueAt(row, 0);
+						String descrizionePedina = (String) tablePedineSelezionabiliModel.getValueAt(row, 1);
+						tablePedineSelezionabiliModel.removeRow(row);
+						tablePedinaSelezionataModel.addRow(new Object[] {codicePedina, descrizionePedina});
+					}
+                }
+			}
+		});
+		
+		tablePedinaSelezionata.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+	            	int row = tablePedinaSelezionata.rowAtPoint(e.getPoint());
+					if(row >= 0) {		
+						String codicePedina= (String) tablePedinaSelezionataModel.getValueAt(row, 0);
+						String descrizionePedina = (String) tablePedinaSelezionataModel.getValueAt(row, 1);
+						tablePedinaSelezionataModel.removeRow(row);
+						tablePedineSelezionabiliModel.addRow(new Object[] {codicePedina, descrizionePedina});
+					}
+                }
+			}
+		});
+		
+		tableDadiSelezionabili.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && tableDadoSelezionato.getRowCount() == 0) {
+	            	int row = tableDadiSelezionabili.rowAtPoint(e.getPoint());
+					if(row >= 0) {		
+						String codiceDado= (String) tableDadiSelezionabiliModel.getValueAt(row, 0);
+						String descrizioneDado = (String) tableDadiSelezionabiliModel.getValueAt(row, 1);
+						tableDadiSelezionabiliModel.removeRow(row);
+						tableDadoSelezionatoModel.addRow(new Object[] {codiceDado, descrizioneDado});
+					}
+                }
+			}
+		});
+		
+		tableDadoSelezionato.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+	            	int row = tableDadoSelezionato.rowAtPoint(e.getPoint());
+					if(row >= 0) {		
+						String codiceDado= (String) tableDadoSelezionatoModel.getValueAt(row, 0);
+						String descrizioneDado = (String) tableDadoSelezionatoModel.getValueAt(row, 1);
+						tableDadoSelezionatoModel.removeRow(row);
+						tableDadiSelezionabiliModel.addRow(new Object[] {codiceDado, descrizioneDado});
+					}
+                }
 			}
 		});
 		
