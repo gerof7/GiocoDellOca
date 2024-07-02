@@ -108,10 +108,8 @@ public class GiocoDellOca {
 	}
 	
 	
-	public void avviaPartita() {
-		
+	public void avviaPartita() {		
 		System.out.println(this.toString());
-		
 	}
 
 	public List<Regola> getListaRegoleSingole() {
@@ -129,6 +127,10 @@ public class GiocoDellOca {
 	public List<Scenario> getListaScenari() {
 		return listaScenari;
 	}
+	
+	public Partita getPartitaCorrente() {
+		return partitaCorrente;
+	}
 
 	@Override
 	public String toString() {
@@ -136,5 +138,5 @@ public class GiocoDellOca {
 				+ ", listaRegoleSingole=" + listaRegoleSingole + ", mapRegoleSet=" + mapRegoleSet
 				+ ", listaPersonalizzazioni=" + listaPersonalizzazioni + ", listaScenari=" + listaScenari + "]";
 	}
-	
+
 }

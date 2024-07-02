@@ -742,12 +742,35 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		btnAvanzaToSelezionaScenarioRegSing.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().getElencoRegole().clear();
+				
+				for (int row = 0; row < tableRegoleSelezionateModel.getRowCount(); row++) {
+		                var codiceRegola = (String) tableRegoleSelezionateModel.getValueAt(row, 0);
+		                var descrizioneRegola = (String) tableRegoleSelezionateModel.getValueAt(row, 1);
+		                var proprietaRegola = (String) tableRegoleSelezionateModel.getValueAt(row, 2);
+		                
+		                var regola = new Regola(codiceRegola, descrizioneRegola, proprietaRegola);
+		                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addRegolaToList(regola);		                
+				}
 				SwitchToPanel(layeredPane, selezioneScenarioPanel);
 			}
 		});
 		
 		btnAvanzaToSelezionaScenarioRegSet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().getElencoRegole().clear();
+				
+				for (int row = 0; row < tableRegoleSetSelezionatoModel.getRowCount(); row++) {
+		                var codiceRegola = (String) tableRegoleSetSelezionatoModel.getValueAt(row, 0);
+		                var descrizioneRegola = (String) tableRegoleSetSelezionatoModel.getValueAt(row, 1);
+		                var proprietaRegola = (String) tableRegoleSetSelezionatoModel.getValueAt(row, 2);
+		                
+		                var regola = new Regola(codiceRegola, descrizioneRegola, proprietaRegola);
+		                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addRegolaToList(regola);		                
+				}
+				
 				SwitchToPanel(layeredPane, selezioneScenarioPanel);
 			}
 		});
@@ -765,8 +788,17 @@ public class GiocoDellOcaGUI extends JFrame {
 		});
 		
 		btnAvanzaToSelezionePers.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+			public void actionPerformed(ActionEvent e) {				
+				if(tableScenarioSelezionatoModel.getRowCount() > 0)
+				{
+	                var codiceScenario = (String) tableScenarioSelezionatoModel.getValueAt(0, 0);
+	                var descrizioneScenario = (String) tableScenarioSelezionatoModel.getValueAt(0, 1);
+	                
+	                var scenario = new Scenario(codiceScenario, descrizioneScenario);
+	                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().setScenario(scenario);               				
+					
+					SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+				}
 			}
 		});
 		
@@ -808,6 +840,25 @@ public class GiocoDellOcaGUI extends JFrame {
 
 		btnAvviaPartitaFromSelPedina.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				if(tablePedinaSelezionataModel.getRowCount() > 0) {
+					var codicePedina = (String) tablePedinaSelezionataModel.getValueAt(0, 0);
+	                var descrizionePedina= (String) tablePedinaSelezionataModel.getValueAt(0, 1);
+	                
+	                var pedina = new Personalizzazione(codicePedina, descrizionePedina, TipologiaPersonalizzazioneEnum.Pedina);
+	                
+	                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addPersonalizzazioneToList(pedina);      
+				}
+				
+				if(tableDadoSelezionatoModel.getRowCount() > 0) {
+					var codiceDado = (String) tableDadoSelezionatoModel.getValueAt(0, 0);
+	                var descrizioneDado= (String) tableDadoSelezionatoModel.getValueAt(0, 1);
+	                
+	                var dado = new Personalizzazione(codiceDado, descrizioneDado, TipologiaPersonalizzazioneEnum.Dado);
+	                
+	                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addPersonalizzazioneToList(dado);      
+				}
+                			
 				GiocoDellOcaGUI.this.giocoDellOca.avviaPartita();
 			}
 		});
@@ -815,6 +866,25 @@ public class GiocoDellOcaGUI extends JFrame {
 
 		btnAvviaPartitaFromSelDado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				if(tablePedinaSelezionataModel.getRowCount() > 0) {
+					var codicePedina = (String) tablePedinaSelezionataModel.getValueAt(0, 0);
+	                var descrizionePedina= (String) tablePedinaSelezionataModel.getValueAt(0, 1);
+	                
+	                var pedina = new Personalizzazione(codicePedina, descrizionePedina, TipologiaPersonalizzazioneEnum.Pedina);
+	                
+	                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addPersonalizzazioneToList(pedina);      
+				}
+				
+				if(tableDadoSelezionatoModel.getRowCount() > 0) {
+					var codiceDado = (String) tableDadoSelezionatoModel.getValueAt(0, 0);
+	                var descrizioneDado= (String) tableDadoSelezionatoModel.getValueAt(0, 1);
+	                
+	                var dado = new Personalizzazione(codiceDado, descrizioneDado, TipologiaPersonalizzazioneEnum.Dado);
+	                
+	                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addPersonalizzazioneToList(dado);      
+				} 
+                
 				GiocoDellOcaGUI.this.giocoDellOca.avviaPartita();
 			}
 		});

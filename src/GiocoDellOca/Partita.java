@@ -18,7 +18,7 @@ public class Partita {
         
     }
 	
-	public Impostazioni editImpostazioni() {
+	public Impostazioni getImpostazioni() {
 		return impostazioni;
 	}
 	

@@ -1,5 +1,6 @@
 package GiocoDellOca;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +21,9 @@ public class Impostazioni {
 	
 	
 	public Impostazioni() {
-	}
-	
-	
+		this.elencoRegole = new ArrayList<Regola>();
+		this.elencoPersonalizzazioni = new ArrayList<Personalizzazione>();
+	}	
 	
 	public void setTipologiaRegole(TipologiaRegoleEnum selectedTipologiaRegole ) {
 		tipologiaRegole = selectedTipologiaRegole;
@@ -58,8 +59,9 @@ public class Impostazioni {
 	public void addPersonalizzazioneToList(Personalizzazione personalizzazione) {
 		elencoPersonalizzazioni.add(personalizzazione);
 	}
-	
-	
-	
+
+	public List<Regola> getElencoRegole() {
+		return elencoRegole;
+	}
 	
 }
