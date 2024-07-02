@@ -14,5 +14,13 @@ public class Scenario {
 		this.descrizione = descrizione;
 		
 	}
+
+	public String getCodiceScenario() {
+		return codiceScenario;
+	}
+
+	public String getDescrizione() {
+		return descrizione;
+	}
 	
 }
