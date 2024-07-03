@@ -33,5 +33,4 @@ class CreazionePartitaTest {
 		assertEquals(partita.getImpostazioni().getTipologiaPersonalizzazione(), impostazioni.getTipologiaPersonalizzazione());
 	}
 
-
 }
