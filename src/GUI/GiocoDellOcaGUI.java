@@ -1,28 +1,26 @@
 package GUI;
+import GUIManager.MenuPanelManager;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import java.awt.CardLayout;
-import javax.swing.JLayeredPane;
-import javax.swing.JLabel;
+import java.awt.EventQueue;
 import java.awt.Font;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.awt.event.ActionEvent;
-import net.miginfocom.swing.MigLayout;
-import javax.swing.BoxLayout;
-import java.awt.GridBagLayout;
-import javax.swing.JTable;
-import javax.swing.ToolTipManager;
-import javax.swing.border.BevelBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -32,15 +30,6 @@ import GiocoDellOca.Personalizzazione;
 import GiocoDellOca.Regola;
 import GiocoDellOca.Scenario;
 import GiocoDellOca.TipologiaPersonalizzazioneEnum;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import javax.swing.ImageIcon;
-import java.awt.Color;
 
 public class GiocoDellOcaGUI extends JFrame {
 
@@ -97,6 +86,7 @@ public class GiocoDellOcaGUI extends JFrame {
 	@SuppressWarnings("serial")
 	public GiocoDellOcaGUI() {		
 		this.giocoDellOca = new GiocoDellOca();
+		//Creazione panel
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 533, 341);
         setLocationRelativeTo(null);
@@ -106,7 +96,11 @@ public class GiocoDellOcaGUI extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
 		
-		JLayeredPane layeredPane = new JLayeredPane();
+		//Inizio semplificazione col manager
+		
+		MenuPanelManager menuPaneManager = new MenuPanelManager(contentPane);
+		
+		/*JLayeredPane layeredPane = new JLayeredPane();
 		contentPane.add(layeredPane, "name_609521392636900");
 		layeredPane.setLayout(new CardLayout(0, 0));
 		
@@ -162,8 +156,9 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneRegoleSelezionabili.setBounds(30, 51, 205, 158);
 		selezioneRegoleSingolePanel.add(scrollPaneRegoleSelezionabili);
 		
-        ToolTipManager.sharedInstance().setInitialDelay(200);
-		
+        ToolTipManager.sharedInstance().setInitialDelay(200);*/
+        
+		//TableRegoleSelezionabili
 		tableRegoleSelezionabili = new JTable() {
 			@Override
             public String getToolTipText(java.awt.event.MouseEvent e) {
@@ -196,14 +191,15 @@ public class GiocoDellOcaGUI extends JFrame {
 		tableRegoleSelezionabili.getColumnModel().getColumn(0).setResizable(false);
 		tableRegoleSelezionabili.getColumnModel().getColumn(1).setResizable(false);
 		tableRegoleSelezionabili.getColumnModel().getColumn(1).setPreferredWidth(103);
-		scrollPaneRegoleSelezionabili.setViewportView(tableRegoleSelezionabili);
+		menuPaneManager.getScrollPaneRegoleSelezionabili().setViewportView(tableRegoleSelezionabili);
 		
 		DefaultTableModel tableRegoleSelezionabiliModel = (DefaultTableModel) tableRegoleSelezionabili.getModel();
 		hideColumn(tableRegoleSelezionabili, 0);
 		
+		//TableRegoleSelezionate
 		JScrollPane scrollPaneRegoleSelezionate = new JScrollPane();
 		scrollPaneRegoleSelezionate.setBounds(274, 51, 205, 158);
-		selezioneRegoleSingolePanel.add(scrollPaneRegoleSelezionate);
+		menuPaneManager.getSelezioneRegoleSingolePanel().add(scrollPaneRegoleSelezionate);
 		
 		tableRegoleSelezionate = new JTable(){
 			@Override
@@ -244,17 +240,18 @@ public class GiocoDellOcaGUI extends JFrame {
 		DefaultTableModel tableRegoleSelezionateModel = (DefaultTableModel) tableRegoleSelezionate.getModel();
 		hideColumn(tableRegoleSelezionate, 0);
 		
+		//Bottoni
 		JButton btnAvanzaToSelezionaScenarioRegSing = new JButton("Selezione scenario ");
 		btnAvanzaToSelezionaScenarioRegSing.setBounds(326, 227, 153, 30);
-		selezioneRegoleSingolePanel.add(btnAvanzaToSelezionaScenarioRegSing);
+		menuPaneManager.getSelezioneRegoleSingolePanel().add(btnAvanzaToSelezionaScenarioRegSing);
 		
 		JButton btnReturnToMenuFromSelRegSing = new JButton("Menu");
 		btnReturnToMenuFromSelRegSing.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnReturnToMenuFromSelRegSing.setBounds(0, 0, 57, 25);
-		selezioneRegoleSingolePanel.add(btnReturnToMenuFromSelRegSing);
+		menuPaneManager.getSelezioneRegoleSingolePanel().add(btnReturnToMenuFromSelRegSing);
 		
 		JPanel selezioneScenarioPanel = new JPanel();
-		layeredPane.add(selezioneScenarioPanel, "name_769942002122600");
+		menuPaneManager.getLayeredPane().add(selezioneScenarioPanel, "name_769942002122600");
 		selezioneScenarioPanel.setLayout(null);
 		
 		JLabel lblTitleSelezioneScenario = new JLabel("Selezione scenario");
@@ -266,6 +263,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneScenariSelezionabili.setBounds(30, 51, 205, 158);
 		selezioneScenarioPanel.add(scrollPaneScenariSelezionabili);
 		
+		//TableScenariSelezionabili
 		tableScenariSelezionabili = new JTable(){
 			@Override
             public String getToolTipText(java.awt.event.MouseEvent e) {
@@ -302,6 +300,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		DefaultTableModel tableScenariSelezionabiliModel = (DefaultTableModel) tableScenariSelezionabili.getModel();
 		
+		//TableScenarioSelezionato
 		JScrollPane scrollPaneScenarioSelezionato = new JScrollPane();
 		scrollPaneScenarioSelezionato.setBounds(274, 52, 205, 158);
 		selezioneScenarioPanel.add(scrollPaneScenarioSelezionato);
@@ -340,6 +339,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		tableScenarioSelezionato.getColumnModel().getColumn(1).setPreferredWidth(84);
 		scrollPaneScenarioSelezionato.setViewportView(tableScenarioSelezionato);
 		
+		//Bottoni
 		JButton btnReturnToSelRegole = new JButton("Selezione regole");		
 		btnReturnToSelRegole.setBounds(30, 227, 153, 30);
 		selezioneScenarioPanel.add(btnReturnToSelRegole);
@@ -356,7 +356,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		DefaultTableModel tableScenarioSelezionatoModel = (DefaultTableModel) tableScenarioSelezionato.getModel();
 		
 		JPanel selezioneRegoleSetPanel = new JPanel();
-		layeredPane.add(selezioneRegoleSetPanel, "name_790010692461100");
+		menuPaneManager.getLayeredPane().add(selezioneRegoleSetPanel, "name_790010692461100");
 		selezioneRegoleSetPanel.setLayout(null);
 		
 		JLabel lblTitleSelezioneRegoleSet = new JLabel("Selezione set di regole");
@@ -368,6 +368,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneRegoleSetSelezionabili.setBounds(30, 51, 205, 158);
 		selezioneRegoleSetPanel.add(scrollPaneRegoleSetSelezionabili);
 		
+		//TableRegoleSetSelezionabili
 		tableRegoleSetSelezionabili = new JTable(){
 			@Override
             public String getToolTipText(java.awt.event.MouseEvent e) {
@@ -402,6 +403,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		DefaultTableModel tableRegoleSetSelezionabiliModel = (DefaultTableModel) tableRegoleSetSelezionabili.getModel();
 		
+		//TableRegoleSetSelezionato
 		JScrollPane scrollPaneRegoleSetSelezionato = new JScrollPane();
 		scrollPaneRegoleSetSelezionato.setBounds(274, 51, 205, 158);
 		selezioneRegoleSetPanel.add(scrollPaneRegoleSetSelezionato);
@@ -444,6 +446,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		DefaultTableModel tableRegoleSetSelezionatoModel = (DefaultTableModel) tableRegoleSetSelezionato.getModel();
 		hideColumn(tableRegoleSetSelezionato, 0);
 		
+		//Bottoni
 		JButton btnAvanzaToSelezionaScenarioRegSet = new JButton("Selezione scenario");		
 		btnAvanzaToSelezionaScenarioRegSet.setBounds(326, 219, 153, 30);
 		selezioneRegoleSetPanel.add(btnAvanzaToSelezionaScenarioRegSet);
@@ -454,7 +457,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		selezioneRegoleSetPanel.add(btnReturnToMenuFromSelRegSet);
 		
 		JPanel selezioneTipologiaPersonalizzazionePanel = new JPanel();
-		layeredPane.add(selezioneTipologiaPersonalizzazionePanel, "name_1048915761636599");
+		menuPaneManager.getLayeredPane().add(selezioneTipologiaPersonalizzazionePanel, "name_1048915761636599");
 		selezioneTipologiaPersonalizzazionePanel.setLayout(null);
 		
 		JLabel lblTitleSelezioneTipologiaPersonalizzazione = new JLabel("Selezione personalizzazioni");
@@ -483,7 +486,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		selezioneTipologiaPersonalizzazionePanel.add(btnReturnToSelScenFromSelPers);
 		
 		JPanel selezionePedinaPanel = new JPanel();
-		layeredPane.add(selezionePedinaPanel, "name_1050308981416700");
+		menuPaneManager.getLayeredPane().add(selezionePedinaPanel, "name_1050308981416700");
 		selezionePedinaPanel.setLayout(null);
 		
 		JLabel lblTitleSelezionePedina = new JLabel("Selezione pedina");
@@ -496,6 +499,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnReturnToMenuFromSelPedina.setBounds(0, 0, 57, 25);
 		selezionePedinaPanel.add(btnReturnToMenuFromSelPedina);
 		
+		//TablePedineSelezionabili
 		JScrollPane scrollPanePedineSelezionabili = new JScrollPane();
 		scrollPanePedineSelezionabili.setBounds(30, 56, 205, 158);
 		selezionePedinaPanel.add(scrollPanePedineSelezionabili);
@@ -535,6 +539,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		DefaultTableModel tablePedineSelezionabiliModel = (DefaultTableModel) tablePedineSelezionabili.getModel();
 		hideColumn(tablePedineSelezionabili, 0);
 		
+		//TablePedinaSelezionata
 		JScrollPane scrollPanePedinaSelezionata = new JScrollPane();
 		scrollPanePedinaSelezionata.setBounds(274, 56, 205, 158);
 		selezionePedinaPanel.add(scrollPanePedinaSelezionata);
@@ -574,6 +579,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		DefaultTableModel tablePedinaSelezionataModel = (DefaultTableModel) tablePedinaSelezionata.getModel();
 		hideColumn(tablePedinaSelezionata, 0);
 		
+		//Bottoni
 		JButton btnSelezionePersonalizzazioniFromSelPed = new JButton("Selezione personalizzazioni");
 		btnSelezionePersonalizzazioniFromSelPed.setBounds(30, 227, 195, 30);
 		selezionePedinaPanel.add(btnSelezionePersonalizzazioniFromSelPed);
@@ -583,7 +589,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		selezionePedinaPanel.add(btnAvviaPartitaFromSelPedina);
 		
 		JPanel selezioneDadiPanel = new JPanel();
-		layeredPane.add(selezioneDadiPanel, "name_1050468066312900");
+		menuPaneManager.getLayeredPane().add(selezioneDadiPanel, "name_1050468066312900");
 		selezioneDadiPanel.setLayout(null);
 		
 		JLabel lblTitleSelezioneDadi = new JLabel("Selezione dadi");
@@ -596,6 +602,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnReturnToMenuFromSelDado.setBounds(0, 0, 57, 25);
 		selezioneDadiPanel.add(btnReturnToMenuFromSelDado);
 		
+		//TableDadiSelezionabili
 		JScrollPane scrollPaneDadiSelezionabili = new JScrollPane();
 		scrollPaneDadiSelezionabili.setBounds(30, 56, 205, 158);
 		selezioneDadiPanel.add(scrollPaneDadiSelezionabili);
@@ -635,6 +642,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		DefaultTableModel tableDadiSelezionabiliModel = (DefaultTableModel) tableDadiSelezionabili.getModel();
 		hideColumn(tableDadiSelezionabili, 0);
 		
+		//TableDadoSelezionato
 		JScrollPane scrollPaneDadoSelezionato = new JScrollPane();
 		scrollPaneDadoSelezionato.setBounds(274, 56, 205, 158);
 		selezioneDadiPanel.add(scrollPaneDadoSelezionato);
@@ -675,6 +683,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		DefaultTableModel tableDadoSelezionatoModel = (DefaultTableModel) tableDadoSelezionato.getModel();
 		hideColumn(tableDadoSelezionato, 0);
 		
+		//Bottoni
 		JButton btnSelezionePersonalizzazioniFromSelDadi = new JButton("Selezione personalizzazioni");
 		btnSelezionePersonalizzazioniFromSelDadi.setBounds(30, 227, 195, 30);
 		selezioneDadiPanel.add(btnSelezionePersonalizzazioniFromSelDadi);
@@ -683,7 +692,8 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnAvviaPartitaFromSelDado.setBounds(360, 227, 119, 30);
 		selezioneDadiPanel.add(btnAvviaPartitaFromSelDado);
 		
-		btnConfiguraNuovaPartitaSP.addActionListener(new ActionListener() {
+		//Action listener
+		menuPaneManager.getBtnConfiguraNuovaPartitaSP().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				GiocoDellOcaGUI.this.giocoDellOca.configuraNuovaPartitaSP();
@@ -730,13 +740,13 @@ public class GiocoDellOcaGUI extends JFrame {
 					}
 				}
 									
-				SwitchToPanel(layeredPane, selezioneTipologiaRegolePanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), menuPaneManager.getSelezioneTipologiaRegolePanel());
 			}
 		});
 		
-		btnTipologiaRegoleSingole.addActionListener(new ActionListener() {
+		menuPaneManager.getBtnTipologiaRegoleSingole().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SwitchToPanel(layeredPane, selezioneRegoleSingolePanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), menuPaneManager.getSelezioneRegoleSingolePanel());
 			}
 		});
 		
@@ -753,7 +763,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		                var regola = new Regola(codiceRegola, descrizioneRegola, proprietaRegola);
 		                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addRegolaToList(regola);		                
 				}
-				SwitchToPanel(layeredPane, selezioneScenarioPanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), selezioneScenarioPanel);
 			}
 		});
 		
@@ -771,19 +781,19 @@ public class GiocoDellOcaGUI extends JFrame {
 		                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addRegolaToList(regola);		                
 				}
 				
-				SwitchToPanel(layeredPane, selezioneScenarioPanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), selezioneScenarioPanel);
 			}
 		});
 		
-		btnTipologiaRegoleSet.addActionListener(new ActionListener() {
+		menuPaneManager.getBtnTipologiaRegoleSet().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SwitchToPanel(layeredPane, selezioneRegoleSetPanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), selezioneRegoleSetPanel);
 			}
 		});
 		
 		btnReturnToSelRegole.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SwitchToPanel(layeredPane, selezioneTipologiaRegolePanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), menuPaneManager.getSelezioneTipologiaRegolePanel());
 			}
 		});
 		
@@ -797,7 +807,7 @@ public class GiocoDellOcaGUI extends JFrame {
 	                var scenario = new Scenario(codiceScenario, descrizioneScenario);
 	                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().setScenario(scenario);               				
 					
-					SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+					SwitchToPanel(menuPaneManager.getLayeredPane(), selezioneTipologiaPersonalizzazionePanel);
 				}
 			}
 		});
@@ -805,35 +815,35 @@ public class GiocoDellOcaGUI extends JFrame {
 
 		btnReturnToSelScenFromSelPers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SwitchToPanel(layeredPane, selezioneScenarioPanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), selezioneScenarioPanel);
 			}
 		});
 		
 
 		btnTipologiaPersPedina.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SwitchToPanel(layeredPane, selezionePedinaPanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), selezionePedinaPanel);
 			}
 		});
 		
 
 		btnTipologiaPersDado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SwitchToPanel(layeredPane, selezioneDadiPanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), selezioneDadiPanel);
 			}
 		});
 		
 
 		btnSelezionePersonalizzazioniFromSelPed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), selezioneTipologiaPersonalizzazionePanel);
 			}
 		});
 		
 
 		btnSelezionePersonalizzazioniFromSelDadi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), selezioneTipologiaPersonalizzazionePanel);
 			}
 		});
 		
@@ -889,7 +899,7 @@ public class GiocoDellOcaGUI extends JFrame {
 			}
 		});
 		
-		btnReturnToMenuFromSelTipReg.addActionListener(new ActionListener() {
+		menuPaneManager.getBtnReturnToMenuFromSelTipReg().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tableRegoleSetSelezionabiliModel.setRowCount(0);
             	tableRegoleSetSelezionatoModel.setRowCount(0);	
@@ -901,7 +911,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), menuPaneManager.getMenuPrincipalePanel());
 			}
 		});
 		
@@ -917,7 +927,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), menuPaneManager.getMenuPrincipalePanel());
 			}
 		});
 		
@@ -933,7 +943,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), menuPaneManager.getMenuPrincipalePanel());
 			}
 		});
 		
@@ -949,7 +959,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), menuPaneManager.getMenuPrincipalePanel());
 			}
 		});
 		
@@ -965,7 +975,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), menuPaneManager.getMenuPrincipalePanel());
 			}
 		});
 		
@@ -982,7 +992,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), menuPaneManager.getMenuPrincipalePanel());
 			}
 		});
 		
@@ -999,7 +1009,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), menuPaneManager.getMenuPrincipalePanel());
 			}
 		});
 		
