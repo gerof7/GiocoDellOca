@@ -1,5 +1,6 @@
 package GUI;
 import GUIManager.MenuPanelManager;
+import GUIManager.TabelleRegoleSelezionabiliManager;
 
 import java.awt.CardLayout;
 import java.awt.EventQueue;
@@ -159,7 +160,9 @@ public class GiocoDellOcaGUI extends JFrame {
         ToolTipManager.sharedInstance().setInitialDelay(200);*/
         
 		//TableRegoleSelezionabili
-		tableRegoleSelezionabili = new JTable() {
+		var tableRegoleSelezionabiliManager = new TabelleRegoleSelezionabiliManager();
+		tableRegoleSelezionabili = tableRegoleSelezionabiliManager.createTabelleRegoleSelezionabili(menuPaneManager);
+		/*tableRegoleSelezionabili = new JTable() {
 			@Override
             public String getToolTipText(java.awt.event.MouseEvent e) {
                 int row = rowAtPoint(e.getPoint());
@@ -193,7 +196,8 @@ public class GiocoDellOcaGUI extends JFrame {
 		tableRegoleSelezionabili.getColumnModel().getColumn(1).setPreferredWidth(103);
 		menuPaneManager.getScrollPaneRegoleSelezionabili().setViewportView(tableRegoleSelezionabili);
 		
-		DefaultTableModel tableRegoleSelezionabiliModel = (DefaultTableModel) tableRegoleSelezionabili.getModel();
+		DefaultTableModel tableRegoleSelezionabiliModel = (DefaultTableModel) tableRegoleSelezionabili.getModel();*/
+		
 		hideColumn(tableRegoleSelezionabili, 0);
 		
 		//TableRegoleSelezionate
@@ -703,10 +707,10 @@ public class GiocoDellOcaGUI extends JFrame {
 				GiocoDellOcaGUI.this.listScenari = giocoDellOca.getListaScenari();
 				GiocoDellOcaGUI.this.listPersonalizzazioni = giocoDellOca.getListaPersonalizzazioni();
 				
-				if(tableRegoleSelezionabiliModel.getRowCount() == 0 && tableRegoleSelezionateModel.getRowCount() == 0) 
+				if(tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel().getRowCount() == 0 && tableRegoleSelezionateModel.getRowCount() == 0) 
 				{
 					for(var regola : listaRegoleSingole) {
-						tableRegoleSelezionabiliModel.addRow(new Object[] {regola.getCodiceRegola(), regola.getDescrizione()});
+						tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel().addRow(new Object[] {regola.getCodiceRegola(), regola.getDescrizione()});
 					}
 				}
 				
@@ -903,7 +907,7 @@ public class GiocoDellOcaGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				tableRegoleSetSelezionabiliModel.setRowCount(0);
             	tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel().setRowCount(0);
             	tableRegoleSelezionateModel.setRowCount(0);	
 				tableScenariSelezionabiliModel.setRowCount(0);
             	tableScenarioSelezionatoModel.setRowCount(0);
@@ -919,7 +923,7 @@ public class GiocoDellOcaGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				tableRegoleSetSelezionabiliModel.setRowCount(0);
             	tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel().setRowCount(0);
             	tableRegoleSelezionateModel.setRowCount(0);	
 				tableScenariSelezionabiliModel.setRowCount(0);
             	tableScenarioSelezionatoModel.setRowCount(0);
@@ -935,7 +939,7 @@ public class GiocoDellOcaGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				tableRegoleSetSelezionabiliModel.setRowCount(0);
             	tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel().setRowCount(0);
             	tableRegoleSelezionateModel.setRowCount(0);	
 				tableScenariSelezionabiliModel.setRowCount(0);
             	tableScenarioSelezionatoModel.setRowCount(0);
@@ -951,7 +955,7 @@ public class GiocoDellOcaGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				tableRegoleSetSelezionabiliModel.setRowCount(0);
             	tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel().setRowCount(0);
             	tableRegoleSelezionateModel.setRowCount(0);	
 				tableScenariSelezionabiliModel.setRowCount(0);
             	tableScenarioSelezionatoModel.setRowCount(0);
@@ -967,7 +971,7 @@ public class GiocoDellOcaGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				tableRegoleSetSelezionabiliModel.setRowCount(0);
             	tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel().setRowCount(0);
             	tableRegoleSelezionateModel.setRowCount(0);	
 				tableScenariSelezionabiliModel.setRowCount(0);
             	tableScenarioSelezionatoModel.setRowCount(0);
@@ -984,7 +988,7 @@ public class GiocoDellOcaGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				tableRegoleSetSelezionabiliModel.setRowCount(0);
             	tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel().setRowCount(0);
             	tableRegoleSelezionateModel.setRowCount(0);	
 				tableScenariSelezionabiliModel.setRowCount(0);
             	tableScenarioSelezionatoModel.setRowCount(0);
@@ -1001,7 +1005,7 @@ public class GiocoDellOcaGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				tableRegoleSetSelezionabiliModel.setRowCount(0);
             	tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
+            	tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel().setRowCount(0);
             	tableRegoleSelezionateModel.setRowCount(0);	
 				tableScenariSelezionabiliModel.setRowCount(0);
             	tableScenarioSelezionatoModel.setRowCount(0);
@@ -1019,9 +1023,9 @@ public class GiocoDellOcaGUI extends JFrame {
                 if (e.getClickCount() == 2) {
 	            	int row = tableRegoleSelezionabili.rowAtPoint(e.getPoint());
 					if(row >= 0) {		
-						String codiceRegola = (String) tableRegoleSelezionabiliModel.getValueAt(row, 0);
-						String descrizioneRegola = (String) tableRegoleSelezionabiliModel.getValueAt(row, 1);
-						tableRegoleSelezionabiliModel.removeRow(row);
+						String codiceRegola = (String) tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel().getValueAt(row, 0);
+						String descrizioneRegola = (String) tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel().getValueAt(row, 1);
+						tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel().removeRow(row);
 						tableRegoleSelezionateModel.addRow(new Object[] {codiceRegola, descrizioneRegola, ""});
 					}
                 }
@@ -1037,7 +1041,7 @@ public class GiocoDellOcaGUI extends JFrame {
 						String codiceRegola = (String) tableRegoleSelezionateModel.getValueAt(row, 0);
 						String descrizioneRegola = (String) tableRegoleSelezionateModel.getValueAt(row, 1);
 						tableRegoleSelezionateModel.removeRow(row);
-						tableRegoleSelezionabiliModel.addRow(new Object[] {codiceRegola, descrizioneRegola});
+						tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel().addRow(new Object[] {codiceRegola, descrizioneRegola});
 					}
                 }
 			}
