@@ -12,9 +12,7 @@ import java.util.Set;
 * @author Francesco
 */
 public class GiocoDellOca {
-	
-	private static GiocoDellOca giocoDellOca;
-	
+		
 	private Giocatore giocatoreInSessione;
 	private Partita partitaCorrente;
 	
