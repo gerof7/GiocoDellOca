@@ -8,9 +8,7 @@ public class TabelleRegoleSelezionabiliManager {
 	private JTable tableRegoleSelezionabili;
 	private DefaultTableModel tableRegoleSelezionabiliModel;
 	
-	public TabelleRegoleSelezionabiliManager() {}
-	
-	public JTable createTabelleRegoleSelezionabili(MenuPanelManager menuPaneManager) {
+	public TabelleRegoleSelezionabiliManager(MenuPanelManager menuPaneManager) {
 		tableRegoleSelezionabili = new JTable() {
 			@Override
             public String getToolTipText(java.awt.event.MouseEvent e) {
@@ -46,8 +44,6 @@ public class TabelleRegoleSelezionabiliManager {
 		menuPaneManager.getScrollPaneRegoleSelezionabili().setViewportView(tableRegoleSelezionabili);
 		
 		tableRegoleSelezionabiliModel = (DefaultTableModel) tableRegoleSelezionabili.getModel();
-
-		return tableRegoleSelezionabili;
 	}
 
 	public JTable getTableRegoleSelezionabili() {
