@@ -1,5 +1,6 @@
 package GUI;
 import GUIManager.MenuPanelManager;
+import GUIManager.TabellePedineSelezionabiliManager;
 import GUIManager.TabelleRegoleSelezionabiliManager;
 import GUIManager.TabelleRegoleSelezionateManager;
 import GUIManager.TabelleRegoleSetSelezionabiliManager;
@@ -147,65 +148,16 @@ public class GiocoDellOcaGUI extends JFrame {
 		JButton btnTipologiaPersPedina = tipologiaPersonalizzazioniManager.getBtnTipologiaPersPedina();
 		
 		JButton btnReturnToSelScenFromSelPers = tipologiaPersonalizzazioniManager.getBtnReturnToSelScenFromSelPers();
+		
 		//TablePedineSelezionabili
-		JPanel selezionePedinaPanel = new JPanel();
-		menuPaneManager.getLayeredPane().add(selezionePedinaPanel, "name_1050308981416700");
-		selezionePedinaPanel.setLayout(null);
-		
-		JLabel lblTitleSelezionePedina = new JLabel("Selezione pedina");
-		lblTitleSelezionePedina.setFont(new Font("Segoe UI", Font.BOLD, 22));
-		lblTitleSelezionePedina.setBounds(166, 10, 177, 36);
-		selezionePedinaPanel.add(lblTitleSelezionePedina);
-		
-		JButton btnReturnToMenuFromSelPedina = new JButton("Menu");
-		btnReturnToMenuFromSelPedina.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		btnReturnToMenuFromSelPedina.setBounds(0, 0, 57, 25);
-		selezionePedinaPanel.add(btnReturnToMenuFromSelPedina);
-		
-		
-		JScrollPane scrollPanePedineSelezionabili = new JScrollPane();
-		scrollPanePedineSelezionabili.setBounds(30, 56, 205, 158);
-		selezionePedinaPanel.add(scrollPanePedineSelezionabili);
-			
-		tablePedineSelezionabili = new JTable(){
-			@Override
-            public String getToolTipText(java.awt.event.MouseEvent e) {
-                int row = rowAtPoint(e.getPoint());
-                int column = columnAtPoint(e.getPoint());
-                
-                if (row >= 0 && column >= 0) {
-                    String text = (String) getValueAt(row, column);
-
-                    return "<html>" + text + "</html>";
-                }
-                return super.getToolTipText(e);
-            }
-		};
-		tablePedineSelezionabili.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"CodicePedina", "Pedine selezionabili"
-			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-				false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		tablePedineSelezionabili.getColumnModel().getColumn(0).setResizable(false);
-		tablePedineSelezionabili.getColumnModel().getColumn(1).setResizable(false);
-		scrollPanePedineSelezionabili.setViewportView(tablePedineSelezionabili);
-		
-		DefaultTableModel tablePedineSelezionabiliModel = (DefaultTableModel) tablePedineSelezionabili.getModel();
+		var tablePedineSelezionabiliManager = new TabellePedineSelezionabiliManager(menuPaneManager);	
+		tablePedineSelezionabili = tablePedineSelezionabiliManager.getTablePedineSelezionabili();
 		hideColumn(tablePedineSelezionabili, 0);
 		
 		//TablePedinaSelezionata
 		JScrollPane scrollPanePedinaSelezionata = new JScrollPane();
 		scrollPanePedinaSelezionata.setBounds(274, 56, 205, 158);
-		selezionePedinaPanel.add(scrollPanePedinaSelezionata);
+		tablePedineSelezionabiliManager.getSelezionePedinaPanel().add(scrollPanePedinaSelezionata);
 		
 		tablePedinaSelezionata = new JTable(){
 			@Override
@@ -245,11 +197,11 @@ public class GiocoDellOcaGUI extends JFrame {
 		//Bottoni
 		JButton btnSelezionePersonalizzazioniFromSelPed = new JButton("Selezione personalizzazioni");
 		btnSelezionePersonalizzazioniFromSelPed.setBounds(30, 227, 195, 30);
-		selezionePedinaPanel.add(btnSelezionePersonalizzazioniFromSelPed);
+		tablePedineSelezionabiliManager.getSelezionePedinaPanel().add(btnSelezionePersonalizzazioniFromSelPed);
 		
 		JButton btnAvviaPartitaFromSelPedina = new JButton("Avvia partita");
 		btnAvviaPartitaFromSelPedina.setBounds(360, 227, 119, 30);
-		selezionePedinaPanel.add(btnAvviaPartitaFromSelPedina);
+		tablePedineSelezionabiliManager.getSelezionePedinaPanel().add(btnAvviaPartitaFromSelPedina);
 		
 		JPanel selezioneDadiPanel = new JPanel();
 		menuPaneManager.getLayeredPane().add(selezioneDadiPanel, "name_1050468066312900");
@@ -387,11 +339,11 @@ public class GiocoDellOcaGUI extends JFrame {
 					}
 				}
 				
-				if(tablePedineSelezionabiliModel.getRowCount() == 0 && tablePedinaSelezionataModel.getRowCount() == 0) 
+				if(tablePedineSelezionabiliManager.getTablePedineSelezionabili().getRowCount() == 0 && tablePedinaSelezionataModel.getRowCount() == 0) 
 				{
 					for(var personalizzazione : listPersonalizzazioni) {
 						if(personalizzazione.getTipologiaPersonalizzazione() == TipologiaPersonalizzazioneEnum.Pedina)
-							tablePedineSelezionabiliModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
+							tablePedineSelezionabiliManager.getTablePedineSelezionabiliModel().addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
 					}
 				}
 				
@@ -485,7 +437,7 @@ public class GiocoDellOcaGUI extends JFrame {
 
 		btnTipologiaPersPedina.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SwitchToPanel(menuPaneManager.getLayeredPane(), selezionePedinaPanel);
+				SwitchToPanel(menuPaneManager.getLayeredPane(), tablePedineSelezionabiliManager.getSelezionePedinaPanel());
 			}
 		});
 		
@@ -570,7 +522,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tableRegoleSelezionateManager.getTableRegoleSelezionateModel().setRowCount(0);	
             	tableScenariSelezionabiliManager.getTableScenariSelezionabiliModel().setRowCount(0);
             	tableScenarioSelezionatoManager.getTableScenarioSelezionatoModel().setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedineSelezionabiliManager.getTablePedineSelezionabiliModel().setRowCount(0);
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
@@ -586,7 +538,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tableRegoleSelezionateManager.getTableRegoleSelezionateModel().setRowCount(0);	
             	tableScenariSelezionabiliManager.getTableScenariSelezionabiliModel().setRowCount(0);
             	tableScenarioSelezionatoManager.getTableScenarioSelezionatoModel().setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedineSelezionabiliManager.getTablePedineSelezionabiliModel().setRowCount(0);
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
@@ -602,7 +554,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tableRegoleSelezionateManager.getTableRegoleSelezionateModel().setRowCount(0);	
             	tableScenariSelezionabiliManager.getTableScenariSelezionabiliModel().setRowCount(0);
             	tableScenarioSelezionatoManager.getTableScenarioSelezionatoModel().setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedineSelezionabiliManager.getTablePedineSelezionabiliModel().setRowCount(0);
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
@@ -618,7 +570,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tableRegoleSelezionateManager.getTableRegoleSelezionateModel().setRowCount(0);	
             	tableScenariSelezionabiliManager.getTableScenariSelezionabiliModel().setRowCount(0);
             	tableScenarioSelezionatoManager.getTableScenarioSelezionatoModel().setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedineSelezionabiliManager.getTablePedineSelezionabiliModel().setRowCount(0);
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
@@ -634,7 +586,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tableRegoleSelezionateManager.getTableRegoleSelezionateModel().setRowCount(0);	
             	tableScenariSelezionabiliManager.getTableScenariSelezionabiliModel().setRowCount(0);
             	tableScenarioSelezionatoManager.getTableScenarioSelezionatoModel().setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedineSelezionabiliManager.getTablePedineSelezionabiliModel().setRowCount(0);
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
@@ -643,7 +595,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		});
 		
 
-		btnReturnToMenuFromSelPedina.addActionListener(new ActionListener() {
+		tablePedineSelezionabiliManager.getBtnReturnToMenuFromSelPedina().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tableRegoleSetSelezionabiliManager.getTableRegoleSetSelezionabiliModel().setRowCount(0);
 				tableRegoleSetSelezionatoManager.getTableRegoleSetSelezionatoModel().setRowCount(0);	
@@ -651,7 +603,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tableRegoleSelezionateManager.getTableRegoleSelezionateModel().setRowCount(0);	
             	tableScenariSelezionabiliManager.getTableScenariSelezionabiliModel().setRowCount(0);
             	tableScenarioSelezionatoManager.getTableScenarioSelezionatoModel().setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedineSelezionabiliManager.getTablePedineSelezionabiliModel().setRowCount(0);
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
@@ -668,7 +620,7 @@ public class GiocoDellOcaGUI extends JFrame {
             	tableRegoleSelezionateManager.getTableRegoleSelezionateModel().setRowCount(0);	
             	tableScenariSelezionabiliManager.getTableScenariSelezionabiliModel().setRowCount(0);
             	tableScenarioSelezionatoManager.getTableScenarioSelezionatoModel().setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
+            	tablePedineSelezionabiliManager.getTablePedineSelezionabiliModel().setRowCount(0);
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
@@ -795,9 +747,9 @@ public class GiocoDellOcaGUI extends JFrame {
                 if (e.getClickCount() == 2 && tablePedinaSelezionata.getRowCount() == 0) {
 	            	int row = tablePedineSelezionabili.rowAtPoint(e.getPoint());
 					if(row >= 0) {		
-						String codicePedina= (String) tablePedineSelezionabiliModel.getValueAt(row, 0);
-						String descrizionePedina = (String) tablePedineSelezionabiliModel.getValueAt(row, 1);
-						tablePedineSelezionabiliModel.removeRow(row);
+						String codicePedina= (String) tablePedineSelezionabiliManager.getTablePedineSelezionabiliModel().getValueAt(row, 0);
+						String descrizionePedina = (String) tablePedineSelezionabiliManager.getTablePedineSelezionabiliModel().getValueAt(row, 1);
+						tablePedineSelezionabiliManager.getTablePedineSelezionabiliModel().removeRow(row);
 						tablePedinaSelezionataModel.addRow(new Object[] {codicePedina, descrizionePedina});
 					}
                 }
@@ -813,7 +765,7 @@ public class GiocoDellOcaGUI extends JFrame {
 						String codicePedina= (String) tablePedinaSelezionataModel.getValueAt(row, 0);
 						String descrizionePedina = (String) tablePedinaSelezionataModel.getValueAt(row, 1);
 						tablePedinaSelezionataModel.removeRow(row);
-						tablePedineSelezionabiliModel.addRow(new Object[] {codicePedina, descrizionePedina});
+						tablePedineSelezionabiliManager.getTablePedineSelezionabiliModel().addRow(new Object[] {codicePedina, descrizionePedina});
 					}
                 }
 			}
