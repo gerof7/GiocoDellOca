@@ -3,12 +3,12 @@ package GUIManager;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class TabelleRegoleSelezionabiliManager {
+public class TabellaRegoleSelezionabiliManager {
 
 	private JTable tableRegoleSelezionabili;
 	private DefaultTableModel tableRegoleSelezionabiliModel;
 	
-	public TabelleRegoleSelezionabiliManager(MenuPanelManager menuPaneManager) {
+	public TabellaRegoleSelezionabiliManager(MenuPanelManager menuPaneManager) {
 		tableRegoleSelezionabili = new JTable() {
 			@Override
             public String getToolTipText(java.awt.event.MouseEvent e) {

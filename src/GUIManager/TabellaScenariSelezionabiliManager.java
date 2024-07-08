@@ -8,7 +8,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class TabelleScenariSelezionabiliManager {
+public class TabellaScenariSelezionabiliManager {
 
 	private JPanel selezioneScenarioPanel;
 	private JLabel lblTitleSelezioneScenario;
@@ -17,7 +17,7 @@ public class TabelleScenariSelezionabiliManager {
 	private DefaultTableModel tableScenariSelezionabiliModel;
 	
 	
-	public TabelleScenariSelezionabiliManager(MenuPanelManager menuPaneManager) {
+	public TabellaScenariSelezionabiliManager(MenuPanelManager menuPaneManager) {
 		selezioneScenarioPanel = new JPanel();
 		menuPaneManager.getLayeredPane().add(selezioneScenarioPanel, "name_769942002122600");
 		selezioneScenarioPanel.setLayout(null);

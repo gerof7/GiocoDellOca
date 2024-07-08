@@ -7,7 +7,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class TabelleRegoleSelezionateManager {
+public class TabellaRegoleSelezionateManager {
 
 	private JScrollPane scrollPaneRegoleSelezionate;
 	private JTable tableRegoleSelezionate;
@@ -24,7 +24,7 @@ public class TabelleRegoleSelezionateManager {
 		return btnReturnToMenuFromSelRegSing;
 	}
 
-	public TabelleRegoleSelezionateManager(MenuPanelManager menuPaneManager) {
+	public TabellaRegoleSelezionateManager(MenuPanelManager menuPaneManager) {
 		scrollPaneRegoleSelezionate = new JScrollPane();
 		scrollPaneRegoleSelezionate.setBounds(274, 51, 205, 158);
 		menuPaneManager.getSelezioneRegoleSingolePanel().add(scrollPaneRegoleSelezionate);

@@ -3,13 +3,13 @@ import GUIManager.MenuPanelManager;
 import GUIManager.TabellaDadiSelezionabiliManager;
 import GUIManager.TabellaDadoSelezionatoManager;
 import GUIManager.TabellaPedinaSelezionataManager;
-import GUIManager.TabellePedineSelezionabiliManager;
-import GUIManager.TabelleRegoleSelezionabiliManager;
-import GUIManager.TabelleRegoleSelezionateManager;
-import GUIManager.TabelleRegoleSetSelezionabiliManager;
-import GUIManager.TabelleRegoleSetSelezionatoManager;
-import GUIManager.TabelleScenariSelezionabiliManager;
-import GUIManager.TabelleScenarioSelezionatoManager;
+import GUIManager.TabellaPedineSelezionabiliManager;
+import GUIManager.TabellaRegoleSelezionabiliManager;
+import GUIManager.TabellaRegoleSelezionateManager;
+import GUIManager.TabellaRegoleSetSelezionabiliManager;
+import GUIManager.TabellaRegoleSetSelezionatoManager;
+import GUIManager.TabellaScenariSelezionabiliManager;
+import GUIManager.TabellaScenarioSelezionatoManager;
 import GUIManager.TipologiaPersonalizzazioniManager;
 
 import java.awt.CardLayout;
@@ -107,29 +107,29 @@ public class GiocoDellOcaGUI extends JFrame {
 		MenuPanelManager menuPaneManager = new MenuPanelManager(contentPane);
         
 		//TableRegoleSelezionabili
-		var tableRegoleSelezionabiliManager = new TabelleRegoleSelezionabiliManager(menuPaneManager);
+		var tableRegoleSelezionabiliManager = new TabellaRegoleSelezionabiliManager(menuPaneManager);
 		tableRegoleSelezionabili = tableRegoleSelezionabiliManager.getTableRegoleSelezionabili();		
 		hideColumn(tableRegoleSelezionabili, 0);
 		
 		//TableRegoleSelezionate
-		var tableRegoleSelezionateManager = new TabelleRegoleSelezionateManager(menuPaneManager);
+		var tableRegoleSelezionateManager = new TabellaRegoleSelezionateManager(menuPaneManager);
 		tableRegoleSelezionate = tableRegoleSelezionateManager.getTableRegoleSelezionate();
 		hideColumn(tableRegoleSelezionate, 0);
 		
 		//TableScenariSelezionabili
-		var tableScenariSelezionabiliManager = new TabelleScenariSelezionabiliManager(menuPaneManager);
+		var tableScenariSelezionabiliManager = new TabellaScenariSelezionabiliManager(menuPaneManager);
 		tableScenariSelezionabili = tableScenariSelezionabiliManager.getTableScenariSelezionabili();
 		
 		//TableScenarioSelezionato
-		var tableScenarioSelezionatoManager = new TabelleScenarioSelezionatoManager(menuPaneManager, tableScenariSelezionabiliManager);
+		var tableScenarioSelezionatoManager = new TabellaScenarioSelezionatoManager(menuPaneManager, tableScenariSelezionabiliManager);
 		tableScenarioSelezionato = tableScenarioSelezionatoManager.getTableScenarioSelezionato();
 		
 		//TableRegoleSetSelezionabili
-		var tableRegoleSetSelezionabiliManager = new TabelleRegoleSetSelezionabiliManager(tableScenarioSelezionatoManager);
+		var tableRegoleSetSelezionabiliManager = new TabellaRegoleSetSelezionabiliManager(tableScenarioSelezionatoManager);
 		tableRegoleSetSelezionabili = tableRegoleSetSelezionabiliManager.getTableRegoleSetSelezionabili();
 		
 		//TableRegoleSetSelezionato
-		var tableRegoleSetSelezionatoManager = new TabelleRegoleSetSelezionatoManager(tableScenarioSelezionatoManager);
+		var tableRegoleSetSelezionatoManager = new TabellaRegoleSetSelezionatoManager(tableScenarioSelezionatoManager);
 		tableRegoleSetSelezionato = tableRegoleSetSelezionatoManager.getTableRegoleSetSelezionato();
 		hideColumn(tableRegoleSetSelezionato, 0);
 		
@@ -137,7 +137,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		var tipologiaPersonalizzazioniManager = new TipologiaPersonalizzazioniManager(menuPaneManager);
 		
 		//TablePedineSelezionabili
-		var tablePedineSelezionabiliManager = new TabellePedineSelezionabiliManager(menuPaneManager);	
+		var tablePedineSelezionabiliManager = new TabellaPedineSelezionabiliManager(menuPaneManager);	
 		tablePedineSelezionabili = tablePedineSelezionabiliManager.getTablePedineSelezionabili();
 		hideColumn(tablePedineSelezionabili, 0);
 		

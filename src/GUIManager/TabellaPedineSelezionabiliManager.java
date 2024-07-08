@@ -9,7 +9,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class TabellePedineSelezionabiliManager {
+public class TabellaPedineSelezionabiliManager {
 
 	private JPanel selezionePedinaPanel;
 	private JLabel lblTitleSelezionePedina;
@@ -18,7 +18,7 @@ public class TabellePedineSelezionabiliManager {
 	private JTable tablePedineSelezionabili;
 	private DefaultTableModel tablePedineSelezionabiliModel;
 	
-	public TabellePedineSelezionabiliManager(MenuPanelManager menuPaneManager) {
+	public TabellaPedineSelezionabiliManager(MenuPanelManager menuPaneManager) {
 		selezionePedinaPanel = new JPanel();
 		menuPaneManager.getLayeredPane().add(selezionePedinaPanel, "name_1050308981416700");
 		selezionePedinaPanel.setLayout(null);

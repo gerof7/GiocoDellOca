@@ -7,7 +7,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class TabelleRegoleSetSelezionatoManager {
+public class TabellaRegoleSetSelezionatoManager {
 
 	private JScrollPane scrollPaneRegoleSetSelezionato;
 	private JTable tableRegoleSetSelezionato;
@@ -16,7 +16,7 @@ public class TabelleRegoleSetSelezionatoManager {
 	private JButton btnAvanzaToSelezionaScenarioRegSet;
 	private JButton btnReturnToMenuFromSelRegSet;
 	
-	public TabelleRegoleSetSelezionatoManager(TabelleScenarioSelezionatoManager tableScenarioSelezionatoManager) {
+	public TabellaRegoleSetSelezionatoManager(TabellaScenarioSelezionatoManager tableScenarioSelezionatoManager) {
 		scrollPaneRegoleSetSelezionato = new JScrollPane();
 		scrollPaneRegoleSetSelezionato.setBounds(274, 51, 205, 158);
 		tableScenarioSelezionatoManager.getSelezioneRegoleSetPanel().add(scrollPaneRegoleSetSelezionato);

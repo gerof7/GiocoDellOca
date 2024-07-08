@@ -14,7 +14,7 @@ public class TabellaPedinaSelezionataManager {
 	private JButton btnAvviaPartitaFromSelPedina;
 	
 	
-	public TabellaPedinaSelezionataManager(TabellePedineSelezionabiliManager tablePedineSelezionabiliManager) {
+	public TabellaPedinaSelezionataManager(TabellaPedineSelezionabiliManager tablePedineSelezionabiliManager) {
 		scrollPanePedinaSelezionata = new JScrollPane();
 		scrollPanePedinaSelezionata.setBounds(274, 56, 205, 158);
 		tablePedineSelezionabiliManager.getSelezionePedinaPanel().add(scrollPanePedinaSelezionata);
