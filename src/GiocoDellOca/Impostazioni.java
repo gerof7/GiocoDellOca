@@ -63,5 +63,7 @@ public class Impostazioni {
 	public List<Regola> getElencoRegole() {
 		return elencoRegole;
 	}
-	
+	public List<Personalizzazione> getElencoPersonalizzazioni() {
+		return elencoPersonalizzazioni;
+	}
 }
