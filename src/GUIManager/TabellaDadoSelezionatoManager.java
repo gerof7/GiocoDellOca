@@ -5,13 +5,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import GUIComponents.ButtonCustom;
+
 public class TabellaDadoSelezionatoManager {
 	
 	private JScrollPane scrollPaneDadoSelezionato;
 	private JTable tableDadoSelezionato;
 	private DefaultTableModel tableDadoSelezionatoModel;
-	private JButton btnSelezionePersonalizzazioniFromSelDadi;
-	private JButton btnAvviaPartitaFromSelDado;
+	private ButtonCustom btnSelezionePersonalizzazioniFromSelDadi;
+	private ButtonCustom btnAvviaPartitaFromSelDado;
 
 	public TabellaDadoSelezionatoManager(TabellaDadiSelezionabiliManager tableDadiSelezionabiliManager) {
 		scrollPaneDadoSelezionato = new JScrollPane();
@@ -54,11 +56,11 @@ public class TabellaDadoSelezionatoManager {
 		tableDadoSelezionatoModel = (DefaultTableModel) tableDadoSelezionato.getModel();
 
 		//Bottoni
-		btnSelezionePersonalizzazioniFromSelDadi = new JButton("Selezione personalizzazioni");
+		btnSelezionePersonalizzazioniFromSelDadi = new ButtonCustom("Selezione personalizzazioni", ButtonCustom.ButtonStyle.WHITE);
 		btnSelezionePersonalizzazioniFromSelDadi.setBounds(30, 227, 195, 30);
 		tableDadiSelezionabiliManager.getSelezioneDadiPanel().add(btnSelezionePersonalizzazioniFromSelDadi);
 				
-		btnAvviaPartitaFromSelDado = new JButton("Avvia partita");
+		btnAvviaPartitaFromSelDado = new ButtonCustom("Avvia partita", ButtonCustom.ButtonStyle.WHITE);
 		btnAvviaPartitaFromSelDado.setBounds(360, 227, 119, 30);
 		tableDadiSelezionabiliManager.getSelezioneDadiPanel().add(btnAvviaPartitaFromSelDado);
 				

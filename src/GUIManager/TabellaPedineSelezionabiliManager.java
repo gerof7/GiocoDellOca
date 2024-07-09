@@ -9,11 +9,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import GUIComponents.ButtonCustom;
+
 public class TabellaPedineSelezionabiliManager {
 
 	private JPanel selezionePedinaPanel;
 	private JLabel lblTitleSelezionePedina;
-	private JButton btnReturnToMenuFromSelPedina;
+	private ButtonCustom btnReturnToMenuFromSelPedina;
 	private JScrollPane scrollPanePedineSelezionabili;
 	private JTable tablePedineSelezionabili;
 	private DefaultTableModel tablePedineSelezionabiliModel;
@@ -28,7 +30,7 @@ public class TabellaPedineSelezionabiliManager {
 		lblTitleSelezionePedina.setBounds(166, 10, 177, 36);
 		selezionePedinaPanel.add(lblTitleSelezionePedina);
 		
-		btnReturnToMenuFromSelPedina = new JButton("Menu");
+		btnReturnToMenuFromSelPedina = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
 		btnReturnToMenuFromSelPedina.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnReturnToMenuFromSelPedina.setBounds(0, 0, 57, 25);
 		selezionePedinaPanel.add(btnReturnToMenuFromSelPedina);

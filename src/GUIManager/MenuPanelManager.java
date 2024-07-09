@@ -10,17 +10,19 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ToolTipManager;
 
+import GUIComponents.ButtonCustom;
+
 public class MenuPanelManager {
 
 	private JLayeredPane layeredPane;
 	private JPanel menuPrincipalePanel;
 	private JLabel lblTitleMenuPrincipale;
-	private JButton btnConfiguraNuovaPartitaSP;
+	private ButtonCustom btnConfiguraNuovaPartitaSP;
 	private JPanel selezioneTipologiaRegolePanel;
 	private JLabel lblTitleSelezioneTipologiaRegole;
-	private JButton btnTipologiaRegoleSet;
-	private JButton btnTipologiaRegoleSingole;
-	private JButton btnReturnToMenuFromSelTipReg;
+	private ButtonCustom btnTipologiaRegoleSet;
+	private ButtonCustom btnTipologiaRegoleSingole;
+	private ButtonCustom btnReturnToMenuFromSelTipReg;
 	private JPanel selezioneRegoleSingolePanel;
 	private JLabel lblTitleSelezioneRegoleSingole;
 	private JScrollPane scrollPaneRegoleSelezionabili;
@@ -41,7 +43,7 @@ public class MenuPanelManager {
 		lblTitleMenuPrincipale.setBounds(179, 11, 150, 36);
 		menuPrincipalePanel.add(lblTitleMenuPrincipale);
 		
-		btnConfiguraNuovaPartitaSP = new JButton("Nuova partita singleplayer");
+		btnConfiguraNuovaPartitaSP = new ButtonCustom("Nuova partita singleplayer", ButtonCustom.ButtonStyle.PRIMARY);
 		
 		btnConfiguraNuovaPartitaSP.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		btnConfiguraNuovaPartitaSP.setBounds(163, 72, 182, 45);
@@ -56,17 +58,17 @@ public class MenuPanelManager {
 		lblTitleSelezioneTipologiaRegole.setBounds(118, 11, 273, 36);
 		selezioneTipologiaRegolePanel.add(lblTitleSelezioneTipologiaRegole);
 		
-		btnTipologiaRegoleSet = new JButton("Set di regole predefinite");	
+		btnTipologiaRegoleSet = new ButtonCustom("Set di regole predefinite", ButtonCustom.ButtonStyle.WHITE);
 		btnTipologiaRegoleSet.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		btnTipologiaRegoleSet.setBounds(265, 108, 167, 42);
 		selezioneTipologiaRegolePanel.add(btnTipologiaRegoleSet);
 		
-		btnTipologiaRegoleSingole = new JButton("Regole singole");
+		btnTipologiaRegoleSingole = new ButtonCustom("Regole singole", ButtonCustom.ButtonStyle.WHITE);
 		btnTipologiaRegoleSingole.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		btnTipologiaRegoleSingole.setBounds(83, 108, 167, 42);
 		selezioneTipologiaRegolePanel.add(btnTipologiaRegoleSingole);
 		
-		btnReturnToMenuFromSelTipReg = new JButton("Menu");		
+		btnReturnToMenuFromSelTipReg = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
 		btnReturnToMenuFromSelTipReg.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnReturnToMenuFromSelTipReg.setBounds(0, 0, 57, 25);
 		selezioneTipologiaRegolePanel.add(btnReturnToMenuFromSelTipReg);

@@ -5,13 +5,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import GUIComponents.ButtonCustom;
+
 public class TabellaPedinaSelezionataManager {
 
 	private JScrollPane scrollPanePedinaSelezionata;
 	private JTable tablePedinaSelezionata;
 	private DefaultTableModel tablePedinaSelezionataModel;
-	private JButton btnSelezionePersonalizzazioniFromSelPed;
-	private JButton btnAvviaPartitaFromSelPedina;
+	private ButtonCustom btnSelezionePersonalizzazioniFromSelPed;
+	private ButtonCustom btnAvviaPartitaFromSelPedina;
 	
 	
 	public TabellaPedinaSelezionataManager(TabellaPedineSelezionabiliManager tablePedineSelezionabiliManager) {
@@ -53,11 +55,11 @@ public class TabellaPedinaSelezionataManager {
 		
 		tablePedinaSelezionataModel = (DefaultTableModel) tablePedinaSelezionata.getModel();
 
-		btnSelezionePersonalizzazioniFromSelPed = new JButton("Selezione personalizzazioni");
+		btnSelezionePersonalizzazioniFromSelPed = new ButtonCustom("Selezione personalizzazioni", ButtonCustom.ButtonStyle.DESTRUCTIVE);
 		btnSelezionePersonalizzazioniFromSelPed.setBounds(30, 227, 195, 30);
 		tablePedineSelezionabiliManager.getSelezionePedinaPanel().add(btnSelezionePersonalizzazioniFromSelPed);
 		
-		btnAvviaPartitaFromSelPedina = new JButton("Avvia partita");
+		btnAvviaPartitaFromSelPedina = new ButtonCustom("Avvia partita", ButtonCustom.ButtonStyle.PRIMARY);
 		btnAvviaPartitaFromSelPedina.setBounds(360, 227, 119, 30);
 		tablePedineSelezionabiliManager.getSelezionePedinaPanel().add(btnAvviaPartitaFromSelPedina);
 		

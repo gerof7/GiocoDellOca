@@ -7,13 +7,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import GUIComponents.ButtonCustom;
+
 public class TabellaRegoleSelezionateManager {
 
 	private JScrollPane scrollPaneRegoleSelezionate;
 	private JTable tableRegoleSelezionate;
 	private DefaultTableModel tableRegoleSelezionateModel;
-	private JButton btnAvanzaToSelezionaScenarioRegSing;
-	private JButton btnReturnToMenuFromSelRegSing;
+	private ButtonCustom btnAvanzaToSelezionaScenarioRegSing;
+	private ButtonCustom btnReturnToMenuFromSelRegSing;
 	
 	
 	public JButton getBtnAvanzaToSelezionaScenarioRegSing() {
@@ -68,11 +70,11 @@ public class TabellaRegoleSelezionateManager {
 		tableRegoleSelezionateModel = (DefaultTableModel) tableRegoleSelezionate.getModel();
 
 		//Bottoni
-		btnAvanzaToSelezionaScenarioRegSing = new JButton("Selezione scenario ");
+		btnAvanzaToSelezionaScenarioRegSing = new ButtonCustom("Selezione scenario", ButtonCustom.ButtonStyle.WHITE);
 		btnAvanzaToSelezionaScenarioRegSing.setBounds(326, 227, 153, 30);
 		menuPaneManager.getSelezioneRegoleSingolePanel().add(btnAvanzaToSelezionaScenarioRegSing);
 				
-		btnReturnToMenuFromSelRegSing = new JButton("Menu");
+		btnReturnToMenuFromSelRegSing = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
 		btnReturnToMenuFromSelRegSing.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnReturnToMenuFromSelRegSing.setBounds(0, 0, 57, 25);
 		menuPaneManager.getSelezioneRegoleSingolePanel().add(btnReturnToMenuFromSelRegSing);

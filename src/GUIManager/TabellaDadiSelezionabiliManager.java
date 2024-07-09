@@ -9,11 +9,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import GUIComponents.ButtonCustom;
+
 public class TabellaDadiSelezionabiliManager {
 
 	private JPanel selezioneDadiPanel;
 	private JLabel lblTitleSelezioneDadi;
-	private JButton btnReturnToMenuFromSelDado;
+	private ButtonCustom btnReturnToMenuFromSelDado;
 	private JScrollPane scrollPaneDadiSelezionabili;
 	private JTable tableDadiSelezionabili;
 	private DefaultTableModel tableDadiSelezionabiliModel;
@@ -28,7 +30,7 @@ public class TabellaDadiSelezionabiliManager {
 		lblTitleSelezioneDadi.setBounds(175, 10, 158, 36);
 		selezioneDadiPanel.add(lblTitleSelezioneDadi);
 		
-		btnReturnToMenuFromSelDado = new JButton("Menu");
+		btnReturnToMenuFromSelDado = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
 		btnReturnToMenuFromSelDado.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnReturnToMenuFromSelDado.setBounds(0, 0, 57, 25);
 		selezioneDadiPanel.add(btnReturnToMenuFromSelDado);

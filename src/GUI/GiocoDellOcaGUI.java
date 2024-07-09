@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -93,10 +94,21 @@ public class GiocoDellOcaGUI extends JFrame {
 	public GiocoDellOcaGUI() {		
 		this.giocoDellOca = new GiocoDellOca();
 		//Creazione panel
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setTitle("Gioco dell'Oca");
+        ImageIcon icon = new ImageIcon("Goose.png");
+        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        contentPane = new JPanel();
+        
+        this.setIconImage(icon.getImage());
+        this.getContentPane().add(contentPane);
+        this.pack();
+        this.setLocationByPlatform(true);
+        
+        
 		setBounds(100, 100, 533, 341);
         setLocationRelativeTo(null);
-		contentPane = new JPanel();
+		
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);

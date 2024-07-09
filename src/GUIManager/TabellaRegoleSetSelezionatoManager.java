@@ -7,14 +7,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import GUIComponents.ButtonCustom;
+
 public class TabellaRegoleSetSelezionatoManager {
 
 	private JScrollPane scrollPaneRegoleSetSelezionato;
 	private JTable tableRegoleSetSelezionato;
 	private DefaultTableModel tableRegoleSetSelezionatoModel;
 	
-	private JButton btnAvanzaToSelezionaScenarioRegSet;
-	private JButton btnReturnToMenuFromSelRegSet;
+	private ButtonCustom btnAvanzaToSelezionaScenarioRegSet;
+	private ButtonCustom btnReturnToMenuFromSelRegSet;
 	
 	public TabellaRegoleSetSelezionatoManager(TabellaScenarioSelezionatoManager tableScenarioSelezionatoManager) {
 		scrollPaneRegoleSetSelezionato = new JScrollPane();
@@ -58,11 +60,11 @@ public class TabellaRegoleSetSelezionatoManager {
 		
 		tableRegoleSetSelezionatoModel = (DefaultTableModel) tableRegoleSetSelezionato.getModel();
 
-		btnAvanzaToSelezionaScenarioRegSet = new JButton("Selezione scenario");		
+		btnAvanzaToSelezionaScenarioRegSet = new ButtonCustom("Selezione scenario", ButtonCustom.ButtonStyle.WHITE);;		
 		btnAvanzaToSelezionaScenarioRegSet.setBounds(326, 219, 153, 30);
 		tableScenarioSelezionatoManager.getSelezioneRegoleSetPanel().add(btnAvanzaToSelezionaScenarioRegSet);
 		
-		btnReturnToMenuFromSelRegSet = new JButton("Menu");
+		btnReturnToMenuFromSelRegSet = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
 		btnReturnToMenuFromSelRegSet.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnReturnToMenuFromSelRegSet.setBounds(0, 0, 57, 25);
 		tableScenarioSelezionatoManager.getSelezioneRegoleSetPanel().add(btnReturnToMenuFromSelRegSet);

@@ -9,5 +9,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="lib" path="com.miglayout.swing_11.3.0.jar"/>
 	<classpathentry kind="lib" path="com.miglayout.core_11.3.0.jar"/>
+	<classpathentry kind="lib" path="TimingFramework-0.55.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
