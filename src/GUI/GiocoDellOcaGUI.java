@@ -95,7 +95,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		this.giocoDellOca = new GiocoDellOca();
 		//Creazione panel
 		this.setTitle("Gioco dell'Oca");
-        ImageIcon icon = new ImageIcon("Goose.png");
+        ImageIcon icon = new ImageIcon("./src/images/Icon.png");
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         contentPane = new JPanel();
