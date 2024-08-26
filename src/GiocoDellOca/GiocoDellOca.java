@@ -67,9 +67,9 @@ public class GiocoDellOca {
 	
 	
 	public void loadPersonalizzazioni() {
-		Personalizzazione personalizzazione1 = new Personalizzazione("Dado_doppio", "Due dadi", TipologiaPersonalizzazioneEnum.Dado);
-		Personalizzazione personalizzazione2 = new Personalizzazione("Dado_triplo", "Tre dadi", TipologiaPersonalizzazioneEnum.Dado);
-		Personalizzazione personalizzazione3 = new Personalizzazione("Pedina_Oca", "Il personaggio giocatore è un'oca", TipologiaPersonalizzazioneEnum.Pedina);
+		Personalizzazione personalizzazione1 = new Dado("Dado_doppio", "Due dadi", "path");
+		Personalizzazione personalizzazione2 = new Dado("Dado_triplo", "Tre dadi", "path");
+		Personalizzazione personalizzazione3 = new Pedina("Pedina_Oca", "Il personaggio giocatore è un'oca", "path");
 		listaPersonalizzazioni.add(personalizzazione1);
 		listaPersonalizzazioni.add(personalizzazione2);
 		listaPersonalizzazioni.add(personalizzazione3);
@@ -88,7 +88,7 @@ public class GiocoDellOca {
 	
 	public void configuraNuovaPartitaSP() {
 		
-		var partitaCorrente = new Partita();
+		var partitaCorrente = new Partita(giocatoreInSessione);
 		
 		if(listaRegoleSingole.isEmpty())
 			loadRegoleSingole();
@@ -107,7 +107,7 @@ public class GiocoDellOca {
 	
 	
 	public void avviaPartita() {		
-		System.out.println(this.toString());
+		partitaCorrente.impostaPartitaSP();
 	}
 
 	public List<Regola> getListaRegoleSingole() {
@@ -128,13 +128,6 @@ public class GiocoDellOca {
 	
 	public Partita getPartitaCorrente() {
 		return partitaCorrente;
-	}
-
-	@Override
-	public String toString() {
-		return "GiocoDellOca [giocatoreInSessione=" + giocatoreInSessione + ", partitaCorrente=" + partitaCorrente
-				+ ", listaRegoleSingole=" + listaRegoleSingole + ", mapRegoleSet=" + mapRegoleSet
-				+ ", listaPersonalizzazioni=" + listaPersonalizzazioni + ", listaScenari=" + listaScenari + "]";
 	}
 
 }

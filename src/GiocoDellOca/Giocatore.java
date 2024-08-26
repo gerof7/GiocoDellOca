@@ -7,6 +7,8 @@ public class Giocatore {
 	
 	private String nomeGiocatore;
 	private int idGiocatore;
+	private Pedina pedina;
+	private Dado dado;
 	
 	public Giocatore(String nomeGiocatore, int idGiocatore) {
 		
@@ -21,5 +23,21 @@ public class Giocatore {
 	public int getId() {
 		return idGiocatore;
 	}
-	
+
+	public Pedina getPedina() {
+		return pedina;
+	}
+
+	public void setPedina(Pedina pedina) {
+		this.pedina = pedina;
+	}
+
+	public Dado getDado() {
+		return dado;
+	}
+
+	public void setDado(Dado dado) {
+		this.dado = dado;
+	}
+		
 }

@@ -4,13 +4,18 @@ public class Personalizzazione {
 	
 	private String codicePersonalizzazione;
 	private String descrizione;
-	private TipologiaPersonalizzazioneEnum tipologiaPersonalizzazione;
+	private String path;
 	
-	public Personalizzazione(String codicePersonalizzazione, String descrizione, TipologiaPersonalizzazioneEnum tipologiaPersonalizzazione) {
+	public Personalizzazione(String codicePersonalizzazione, String descrizione, String path) {
 		
 		this.codicePersonalizzazione = codicePersonalizzazione;
 		this.descrizione = descrizione;
-		this.tipologiaPersonalizzazione = tipologiaPersonalizzazione;	
+		this.path = path;
+	}
+	
+	public Personalizzazione() {
+		this.codicePersonalizzazione = "Default";
+		this.descrizione = "Default";
 	}
 
 	public String getCodicePersonalizzazione() {
@@ -21,8 +26,8 @@ public class Personalizzazione {
 		return descrizione;
 	}
 
-	public TipologiaPersonalizzazioneEnum getTipologiaPersonalizzazione() {
-		return tipologiaPersonalizzazione;
+	public String getPath() {
+		return path;
 	}
 		
 }
