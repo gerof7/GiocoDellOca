@@ -377,6 +377,8 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		tableScenariSelezionabiliModel = (DefaultTableModel) tableScenariSelezionabili.getModel();
 		
+		hideColumn(tableScenariSelezionabili, 0);
+		
 		//tableScenariSelezionabili = tableScenariSelezionabiliManager.getTableScenariSelezionabili();
 		
 		//TableScenarioSelezionato
@@ -429,7 +431,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		tableScenarioSelezionato.getColumnModel().getColumn(1).setResizable(false);
 		tableScenarioSelezionato.getColumnModel().getColumn(1).setPreferredWidth(84);
 		scrollPaneScenarioSelezionato.setViewportView(tableScenarioSelezionato);
-		
+				
 		//Bottoni
 		btnReturnToSelRegole = new ButtonCustom("Selezione regole", ButtonCustom.ButtonStyle.WHITE);	
 		btnReturnToSelRegole.setBounds(30, 227, 153, 30);
@@ -448,6 +450,8 @@ public class GiocoDellOcaGUI extends JFrame {
 		selezioneScenarioPanel.add(btnAvanzaToSelezionePers);
 		
 		tableScenarioSelezionatoModel = (DefaultTableModel) tableScenarioSelezionato.getModel();
+		
+		hideColumn(tableScenarioSelezionato, 0);
 		
 		selezioneRegoleSetPanel = new JPanel();
 		//menuPaneManager.getLayeredPane().add(selezioneRegoleSetPanel, "name_790010692461100");
@@ -986,8 +990,29 @@ public class GiocoDellOcaGUI extends JFrame {
 				{
 	                var codiceScenario = (String) tableScenarioSelezionatoModel.getValueAt(0, 0);
 	                var descrizioneScenario = (String) tableScenarioSelezionatoModel.getValueAt(0, 1);
+	                String descrizioneCasellaOca = "";
+	            	String descrizioneCasellaPonte = "";
+	            	String descrizioneCasellaLocanda = "";
+	            	String descrizioneCasellaPrigione = "";
+	            	String descrizioneCasellaLabirinto = "";
+	            	String descrizioneCasellaScheletro = "";
 	                
-	                var scenario = new Scenario(codiceScenario, descrizioneScenario);
+	            	for(var scenario : listScenari) {
+							if(scenario.getCodiceScenario().equals(codiceScenario)) {
+								descrizioneCasellaOca = scenario.getDescrizioneCasellaOca();
+				            	descrizioneCasellaPonte = scenario.getDescrizioneCasellaPonte();
+				            	descrizioneCasellaLocanda = scenario.getDescrizioneCasellaLocanda();
+				            	descrizioneCasellaPrigione = scenario.getDescrizioneCasellaPrigione();
+				            	descrizioneCasellaLabirinto = scenario.getDescrizioneCasellaLabirinto();
+				            	descrizioneCasellaScheletro = scenario.getDescrizioneCasellaScheletro();			
+				            	break;
+							}
+							else
+								continue;
+					}
+	            	
+	                var scenario = new Scenario(codiceScenario, descrizioneScenario, descrizioneCasellaOca, descrizioneCasellaPonte, descrizioneCasellaLocanda, descrizioneCasellaPrigione,
+	                		descrizioneCasellaLabirinto, descrizioneCasellaScheletro);
 	                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().setScenario(scenario);               				
 					
 					SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
@@ -1041,8 +1066,10 @@ public class GiocoDellOcaGUI extends JFrame {
 	                
 	                for(var personalizzazione : listPersonalizzazioni) {
 						if(personalizzazione instanceof Pedina) {
-							if(personalizzazione.getCodicePersonalizzazione().equals(codicePedina))
+							if(personalizzazione.getCodicePersonalizzazione().equals(codicePedina)) {
 								pathPedina = personalizzazione.getPath();
+								break;
+							}
 							else
 								continue;
 						}
@@ -1060,8 +1087,10 @@ public class GiocoDellOcaGUI extends JFrame {
 	                
 	                for(var personalizzazione : listPersonalizzazioni) {
 						if(personalizzazione instanceof Dado) {
-							if(personalizzazione.getCodicePersonalizzazione().equals(codiceDado))
+							if(personalizzazione.getCodicePersonalizzazione().equals(codiceDado)) {
 								pathDado = personalizzazione.getPath();
+								break;
+							}
 							else
 								continue;
 						}

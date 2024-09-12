@@ -76,14 +76,23 @@ public class GiocoDellOca {
 	}
 	
 	public void loadScenari() {
-		Scenario scenario1 = new Scenario("Fiabe", "Ogni casella ha una fiaba diversa");
-		Scenario scenario2 = new Scenario("Favole", "Ogni casella ha una favola diversa");
-		Scenario scenario3 = new Scenario("Anime", "Ogni casella rappresenta un anime diverso");
-		Scenario scenario4 = new Scenario("Citta", "Ogni casella rappresenta un posto tipico di una città");
+		Scenario scenario1 = new Scenario("cappuccetto_rosso", "Cappuccetto Rosso",
+				"La torta della nonna ha un profumo delizioso! (Avanzi del totale che hai appena ottenuto dal lancio dei dadi)",
+				"Le indicazioni della mamma ti guidano lungo il sentiero del bosco! (Avanzi di un numero pari alla casella in cui ti trovi)",
+				"Il lupo ti ferma per parlare! (Perdi 1 turno)",
+				"Il lupo si è pappato Cappuccetto Rosso e la nonna! (Resti imprigionato finchè un altro giocatore non arriva su questa casella)",
+				"State indietro! Il cacciatore è arrivato! (Torni indietro di 3 caselle) ",
+				"Cappuccetto Rosso si è persa nel bosco! (Torni alla casella iniziale)");
+		Scenario scenario2 = new Scenario("cenerentola", "Cenerentola", 
+				"Le scarpette di cristallo sono davvero magnifiche! (Avanzi del totale che hai appena ottenuto dal lancio dei dadi)", 
+				"La zucca-carrozza ti porta al ballo! (Avanzi di un numero pari alla casella in cui ti trovi)",
+				"Le sorelle malvagie non ti fanno uscire! (Perdi 1 turno)",
+				"Devi restare a casa a fare le pulizie! (Resti imprigionato finchè un altro giocatore non arriva su questa casella)",
+				"La strada per il ballo è bloccata, devi tornare indietro! (Torni indietro di 3 caselle)",
+				"È mezzanotte! L'effetto della magia è finito! (Torni alla casella iniziale)");
+
 		listaScenari.add(scenario1);
 		listaScenari.add(scenario2);
-		listaScenari.add(scenario3);
-		listaScenari.add(scenario4);
 	}
 	
 	public void configuraNuovaPartitaSP() {
