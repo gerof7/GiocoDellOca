@@ -1,16 +1,4 @@
 package GUI;
-import GUIManager.MenuPanelManager;
-import GUIManager.TabellaDadiSelezionabiliManager;
-import GUIManager.TabellaDadoSelezionatoManager;
-import GUIManager.TabellaPedinaSelezionataManager;
-import GUIManager.TabellaPedineSelezionabiliManager;
-import GUIManager.TabellaRegoleSelezionabiliManager;
-import GUIManager.TabellaRegoleSelezionateManager;
-import GUIManager.TabellaRegoleSetSelezionabiliManager;
-import GUIManager.TabellaRegoleSetSelezionatoManager;
-import GUIManager.TabellaScenariSelezionabiliManager;
-import GUIManager.TabellaScenarioSelezionatoManager;
-import GUIManager.TipologiaPersonalizzazioniManager;
 
 import java.awt.CardLayout;
 import java.awt.EventQueue;
@@ -19,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -38,12 +27,14 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import GUIComponents.ButtonCustom;
+import GUIComponents.CustomCellEditorRegoleSingole;
 import GiocoDellOca.Dado;
 import GiocoDellOca.GiocoDellOca;
 import GiocoDellOca.Pedina;
 import GiocoDellOca.Personalizzazione;
 import GiocoDellOca.Regola;
 import GiocoDellOca.Scenario;
+import GiocoDellOca.TipologiaRegolaEnum;
 
 public class GiocoDellOcaGUI extends JFrame {
 
@@ -317,6 +308,12 @@ public class GiocoDellOcaGUI extends JFrame {
 		//menuPaneManager.getSelezioneRegoleSingolePanel().add(btnReturnToMenuFromSelRegSing);
 		selezioneRegoleSingolePanel.add(btnReturnToMenuFromSelRegSing);
 		
+		Map<String, String[]> dropdownValuesTableRegoleSelezionate = new HashMap<>();
+		dropdownValuesTableRegoleSelezionate.put("Casella", new String[]{"42", "63","90"});
+		dropdownValuesTableRegoleSelezionate.put("Dado", new String[]{"1","2" ,"3"});
+		TableColumn statusColumn = tableRegoleSelezionate.getColumnModel().getColumn(2);
+        statusColumn.setCellEditor(new CustomCellEditorRegoleSingole(dropdownValuesTableRegoleSelezionate, giocoDellOca));
+		
 		//tableRegoleSelezionate = tableRegoleSelezionateManager.getTableRegoleSelezionate();
 		hideColumn(tableRegoleSelezionate, 0);
 		
@@ -359,7 +356,7 @@ public class GiocoDellOcaGUI extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"Scenario selezionabile", "Descrizione"
+				"CodiceScenario", "Scenario selezionabile"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
@@ -416,7 +413,7 @@ public class GiocoDellOcaGUI extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"Scenario selezionato", "Descrizione"
+				"CodiceScenario", "Scenario selezionato"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
@@ -945,7 +942,16 @@ public class GiocoDellOcaGUI extends JFrame {
 		                var descrizioneRegola = (String) tableRegoleSelezionateModel.getValueAt(row, 1);
 		                var proprietaRegola = (String) tableRegoleSelezionateModel.getValueAt(row, 2);
 		                
-		                var regola = new Regola(codiceRegola, descrizioneRegola, proprietaRegola);
+	                	TipologiaRegolaEnum tipologiaRegola = null;
+                		
+                		for (var elem : listaRegoleSingole) {
+                           	  	if (elem.getCodiceRegola().equals(codiceRegola)){
+                           	  		tipologiaRegola = elem.getTipologiaRegola(); 
+                           	  		break;
+                           	  	}
+                		}
+		                
+		                var regola = new Regola(codiceRegola, descrizioneRegola, proprietaRegola, tipologiaRegola);
 		                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addRegolaToList(regola);		                
 				}
 				SwitchToPanel(layeredPane, selezioneScenarioPanel);
@@ -964,7 +970,19 @@ public class GiocoDellOcaGUI extends JFrame {
 		                var descrizioneRegola = (String) tableRegoleSetSelezionatoModel.getValueAt(row, 1);
 		                var proprietaRegola = (String) tableRegoleSetSelezionatoModel.getValueAt(row, 2);
 		                
-		                var regola = new Regola(codiceRegola, descrizioneRegola, proprietaRegola);
+	                	TipologiaRegolaEnum tipologiaRegola = null;
+		                
+		                outerLoop:
+	                		for (var entry : mapRegoleSet.entrySet()) {
+	                            for (var value :  entry.getValue()) {
+	                           	  	if (value.getCodiceRegola().equals(codiceRegola)) {
+	                           	  		tipologiaRegola = value.getTipologiaRegola();
+	                           	  		break outerLoop;
+	                           	  	}
+	                          	  }                        	                         
+	                		}
+		                
+		                var regola = new Regola(codiceRegola, descrizioneRegola, proprietaRegola, tipologiaRegola);
 		                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addRegolaToList(regola);		                
 				}
 				
@@ -1270,11 +1288,11 @@ public class GiocoDellOcaGUI extends JFrame {
 			public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
 	            	int row = tableRegoleSelezionabili.rowAtPoint(e.getPoint());
-					if(row >= 0) {		
+					if(row >= 0) {								
 						String codiceRegola = (String) tableRegoleSelezionabiliModel.getValueAt(row, 0);
-						String descrizioneRegola = (String) tableRegoleSelezionabiliModel.getValueAt(row, 1);
+						String descrizioneRegola = (String) tableRegoleSelezionabiliModel.getValueAt(row, 1);					
 						tableRegoleSelezionabiliModel.removeRow(row);
-						tableRegoleSelezionateModel.addRow(new Object[] {codiceRegola, descrizioneRegola, ""});
+						tableRegoleSelezionateModel.addRow(new Object[] {codiceRegola, descrizioneRegola});						
 					}
                 }
 			}
@@ -1357,7 +1375,19 @@ public class GiocoDellOcaGUI extends JFrame {
                 		var descrizione = (String) tableRegoleSetSelezionatoModel.getValueAt(row, 1);
                 		var proprieta = (String) tableRegoleSetSelezionatoModel.getValueAt(row, 2);
                 		
-                		var regola = new Regola(codice, descrizione, proprieta);
+                    	TipologiaRegolaEnum tipologiaRegola = null;
+                		
+                    	outerLoop:
+                		for (var entry : mapRegoleSet.entrySet()) {
+                            for (var value :  entry.getValue()) {
+                           	  	if (value.getCodiceRegola().equals(codice)) {
+                           	  		tipologiaRegola = value.getTipologiaRegola();
+                           	  		break outerLoop;
+                           	  	}
+                          	  }                        	                         
+                		}
+                		
+                		var regola = new Regola(codice, descrizione, proprieta, tipologiaRegola);
 
                 		regoleSelezionate.add(regola);      		
             		}

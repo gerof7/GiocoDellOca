@@ -9,11 +9,13 @@ public class Regola {
 	private String codiceRegola;
 	private String descrizione;
 	private String proprietaRegola;
+	private TipologiaRegolaEnum tipologiaRegola;
 	
-	public Regola(String codiceRegola, String descrizione, String proprietaRegola) {
+	public Regola(String codiceRegola, String descrizione, String proprietaRegola, TipologiaRegolaEnum tipologiaRegola) {
         this.codiceRegola = codiceRegola;
         this.descrizione = descrizione;
         this.proprietaRegola = proprietaRegola;
+        this.tipologiaRegola = tipologiaRegola;
     }
 
 	public String getProprietaRegola() {
@@ -32,6 +34,10 @@ public class Regola {
 		return descrizione;
 	}
 	
+	public TipologiaRegolaEnum getTipologiaRegola() {
+		return tipologiaRegola;
+	}
+
 	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
