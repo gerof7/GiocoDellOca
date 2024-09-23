@@ -2,21 +2,15 @@ package GiocoDellOca;
 
 public class CasellaSpeciale extends Casella{
 
-	private int modificatore;
-	private int malus;
+	private TipologiaCasellaSpecialeEnum tipologiaCasellaSpeciale;
 	
-	public CasellaSpeciale(int numero, String descrizione, int modificatore, int malus) {
+	public CasellaSpeciale(int numero, String descrizione, TipologiaCasellaSpecialeEnum tipologiaCasellaSpeciale) {
 		super(numero, descrizione);
-		this.modificatore = modificatore;
-		this.malus = malus;
+		this.tipologiaCasellaSpeciale = tipologiaCasellaSpeciale;	
 	}
 
-	public int getModificatore() {
-		return modificatore;
-	}
-
-	public int getMalus() {
-		return malus;
+	public TipologiaCasellaSpecialeEnum getTipologiaCasellaSpeciale() {
+		return tipologiaCasellaSpeciale;
 	}
 
 }
