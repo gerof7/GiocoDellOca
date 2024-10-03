@@ -1,8 +1,10 @@
 package GUI;
 
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -114,8 +116,13 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		this.giocoDellOca = new GiocoDellOca();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 533, 341);
-        setLocationRelativeTo(null);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+     // Ottieni le dimensioni dello schermo
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        // Imposta il frame per occupare l'intero schermo utilizzando setBounds
+        setBounds(0, 0, screenSize.width, screenSize.height);
+//		setBounds(100, 100, 533, 341);
+//        setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -151,14 +158,14 @@ public class GiocoDellOcaGUI extends JFrame {
 		menuPrincipalePanel.setLayout(null);
 		
 		lblTitleMenuPrincipale = new JLabel("Gioco dell'Oca");
-		lblTitleMenuPrincipale.setFont(new Font("Segoe UI", Font.BOLD, 22));
-		lblTitleMenuPrincipale.setBounds(179, 11, 150, 36);
+		lblTitleMenuPrincipale.setFont(new Font("Segoe UI", Font.BOLD, 99));
+		lblTitleMenuPrincipale.setBounds(420, 10, 672, 112);
 		menuPrincipalePanel.add(lblTitleMenuPrincipale);
 		
 		btnConfiguraNuovaPartitaSP = new ButtonCustom("Nuova partita singleplayer", ButtonCustom.ButtonStyle.PRIMARY);
 		
-		btnConfiguraNuovaPartitaSP.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		btnConfiguraNuovaPartitaSP.setBounds(163, 72, 182, 45);
+		btnConfiguraNuovaPartitaSP.setFont(new Font("Segoe UI", Font.PLAIN, 28));
+		btnConfiguraNuovaPartitaSP.setBounds(564, 220, 384, 92);
 		menuPrincipalePanel.add(btnConfiguraNuovaPartitaSP);
 		
 		selezioneTipologiaRegolePanel = new JPanel();
@@ -166,23 +173,23 @@ public class GiocoDellOcaGUI extends JFrame {
 		selezioneTipologiaRegolePanel.setLayout(null);
 		
 		lblTitleSelezioneTipologiaRegole = new JLabel("Selezione tipologia regole");
-		lblTitleSelezioneTipologiaRegole.setFont(new Font("Segoe UI", Font.BOLD, 22));
-		lblTitleSelezioneTipologiaRegole.setBounds(118, 11, 273, 36);
+		lblTitleSelezioneTipologiaRegole.setFont(new Font("Segoe UI", Font.BOLD, 60));
+		lblTitleSelezioneTipologiaRegole.setBounds(383, 10, 745, 81);
 		selezioneTipologiaRegolePanel.add(lblTitleSelezioneTipologiaRegole);
 		
 		btnTipologiaRegoleSet = new ButtonCustom("Set di regole predefinite", ButtonCustom.ButtonStyle.WHITE);
-		btnTipologiaRegoleSet.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		btnTipologiaRegoleSet.setBounds(265, 108, 167, 42);
+		btnTipologiaRegoleSet.setFont(new Font("Segoe UI", Font.BOLD, 28));
+		btnTipologiaRegoleSet.setBounds(831, 344, 365, 128);
 		selezioneTipologiaRegolePanel.add(btnTipologiaRegoleSet);
 		
 		btnTipologiaRegoleSingole = new ButtonCustom("Regole singole", ButtonCustom.ButtonStyle.WHITE);
-		btnTipologiaRegoleSingole.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		btnTipologiaRegoleSingole.setBounds(83, 108, 167, 42);
+		btnTipologiaRegoleSingole.setFont(new Font("Segoe UI", Font.BOLD, 28));
+		btnTipologiaRegoleSingole.setBounds(316, 344, 326, 128);
 		selezioneTipologiaRegolePanel.add(btnTipologiaRegoleSingole);
 		
 		btnReturnToMenuFromSelTipReg = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
-		btnReturnToMenuFromSelTipReg.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		btnReturnToMenuFromSelTipReg.setBounds(0, 0, 57, 25);
+		btnReturnToMenuFromSelTipReg.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		btnReturnToMenuFromSelTipReg.setBounds(0, 0, 178, 74);
 		selezioneTipologiaRegolePanel.add(btnReturnToMenuFromSelTipReg);
 		
 		selezioneRegoleSingolePanel = new JPanel();
@@ -190,12 +197,13 @@ public class GiocoDellOcaGUI extends JFrame {
 		selezioneRegoleSingolePanel.setLayout(null);
 		
 		lblTitleSelezioneRegoleSingole = new JLabel("Selezione regole singole");
-		lblTitleSelezioneRegoleSingole.setBounds(127, 11, 254, 30);
-		lblTitleSelezioneRegoleSingole.setFont(new Font("Segoe UI", Font.BOLD, 22));
+		lblTitleSelezioneRegoleSingole.setBounds(414, 10, 683, 81);
+		lblTitleSelezioneRegoleSingole.setFont(new Font("Segoe UI", Font.BOLD, 60));
 		selezioneRegoleSingolePanel.add(lblTitleSelezioneRegoleSingole);
 		
 		scrollPaneRegoleSelezionabili = new JScrollPane();
-		scrollPaneRegoleSelezionabili.setBounds(30, 51, 205, 158);
+		scrollPaneRegoleSelezionabili.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		scrollPaneRegoleSelezionabili.setBounds(10, 211, 731, 462);
 		selezioneRegoleSingolePanel.add(scrollPaneRegoleSelezionabili);
 		
         ToolTipManager.sharedInstance().setInitialDelay(200);
@@ -220,6 +228,8 @@ public class GiocoDellOcaGUI extends JFrame {
                 return super.getToolTipText(e);
             }
 		};
+		tableRegoleSelezionabili.setRowHeight(40);
+		tableRegoleSelezionabili.setFont(new Font("Tahoma", Font.PLAIN, 20));
 				
 		tableRegoleSelezionabili.setModel(new DefaultTableModel(
 			new Object[][] {
@@ -254,7 +264,8 @@ public class GiocoDellOcaGUI extends JFrame {
 		ButtonCustom btnReturnToMenuFromSelRegSing;
 		
 		scrollPaneRegoleSelezionate = new JScrollPane();
-		scrollPaneRegoleSelezionate.setBounds(274, 51, 205, 158);
+		scrollPaneRegoleSelezionate.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		scrollPaneRegoleSelezionate.setBounds(771, 211, 731, 462);
 		//menuPaneManager.getSelezioneRegoleSingolePanel().add(scrollPaneRegoleSelezionate);
 		selezioneRegoleSingolePanel.add(scrollPaneRegoleSelezionate);
 		
@@ -272,6 +283,8 @@ public class GiocoDellOcaGUI extends JFrame {
                 return super.getToolTipText(e);
             }
 		};
+		tableRegoleSelezionate.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		tableRegoleSelezionate.setRowHeight(40);
             
 		tableRegoleSelezionate.setModel(new DefaultTableModel(
 			new Object[][] {
@@ -298,13 +311,14 @@ public class GiocoDellOcaGUI extends JFrame {
 
 		//Bottoni
 		btnAvanzaToSelezionaScenarioRegSing = new ButtonCustom("Selezione scenario", ButtonCustom.ButtonStyle.WHITE);
-		btnAvanzaToSelezionaScenarioRegSing.setBounds(326, 227, 153, 30);
+		btnAvanzaToSelezionaScenarioRegSing.setFont(new Font("Tahoma", Font.BOLD, 30));
+		btnAvanzaToSelezionaScenarioRegSing.setBounds(1150, 702, 352, 52);
 		//menuPaneManager.getSelezioneRegoleSingolePanel().add(btnAvanzaToSelezionaScenarioRegSing);
 		selezioneRegoleSingolePanel.add(btnAvanzaToSelezionaScenarioRegSing);
 				
 		btnReturnToMenuFromSelRegSing = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
-		btnReturnToMenuFromSelRegSing.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		btnReturnToMenuFromSelRegSing.setBounds(0, 0, 57, 25);
+		btnReturnToMenuFromSelRegSing.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		btnReturnToMenuFromSelRegSing.setBounds(0, 0, 178, 74);
 		//menuPaneManager.getSelezioneRegoleSingolePanel().add(btnReturnToMenuFromSelRegSing);
 		selezioneRegoleSingolePanel.add(btnReturnToMenuFromSelRegSing);
 		
@@ -330,12 +344,13 @@ public class GiocoDellOcaGUI extends JFrame {
 		selezioneScenarioPanel.setLayout(null);
 		
 		lblTitleSelezioneScenario = new JLabel("Selezione scenario");
-		lblTitleSelezioneScenario.setFont(new Font("Segoe UI", Font.BOLD, 22));
-		lblTitleSelezioneScenario.setBounds(158, 11, 192, 30);
+		lblTitleSelezioneScenario.setFont(new Font("Segoe UI", Font.BOLD, 60));
+		lblTitleSelezioneScenario.setBounds(414, 10, 683, 81);
 		selezioneScenarioPanel.add(lblTitleSelezioneScenario);
 		
 		scrollPaneScenariSelezionabili = new JScrollPane();
-		scrollPaneScenariSelezionabili.setBounds(30, 51, 205, 158);
+		scrollPaneScenariSelezionabili.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		scrollPaneScenariSelezionabili.setBounds(10, 211, 731, 461);
 		selezioneScenarioPanel.add(scrollPaneScenariSelezionabili);
 		
 		tableScenariSelezionabili = new JTable(){
@@ -352,6 +367,8 @@ public class GiocoDellOcaGUI extends JFrame {
                 return super.getToolTipText(e);
             }
 		};
+		tableScenariSelezionabili.setRowHeight(40);
+		tableScenariSelezionabili.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		tableScenariSelezionabili.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -391,7 +408,8 @@ public class GiocoDellOcaGUI extends JFrame {
 		JScrollPane scrollPaneRegoleSetSelezionabili;
 		
 		scrollPaneScenarioSelezionato = new JScrollPane();
-		scrollPaneScenarioSelezionato.setBounds(274, 52, 205, 158);
+		scrollPaneScenarioSelezionato.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		scrollPaneScenarioSelezionato.setBounds(771, 211, 731, 462);
 		//tableScenariSelezionabiliManager.getSelezioneScenarioPanel().add(scrollPaneScenarioSelezionato);
 		selezioneScenarioPanel.add(scrollPaneScenarioSelezionato);
 		
@@ -409,6 +427,8 @@ public class GiocoDellOcaGUI extends JFrame {
                 return super.getToolTipText(e);
             }
 		};
+		tableScenarioSelezionato.setRowHeight(40);
+		tableScenarioSelezionato.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		tableScenarioSelezionato.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -431,18 +451,20 @@ public class GiocoDellOcaGUI extends JFrame {
 				
 		//Bottoni
 		btnReturnToSelRegole = new ButtonCustom("Selezione regole", ButtonCustom.ButtonStyle.WHITE);	
-		btnReturnToSelRegole.setBounds(30, 227, 153, 30);
+		btnReturnToSelRegole.setFont(new Font("Tahoma", Font.BOLD, 30));
+		btnReturnToSelRegole.setBounds(10, 702, 352, 52);
 		//tableScenariSelezionabiliManager.getSelezioneScenarioPanel().add(btnReturnToSelRegole);
 		selezioneScenarioPanel.add(btnReturnToSelRegole);
 		
 		btnReturnToMenuFromSelScen = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
-		btnReturnToMenuFromSelScen.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		btnReturnToMenuFromSelScen.setBounds(0, 0, 57, 25);
+		btnReturnToMenuFromSelScen.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		btnReturnToMenuFromSelScen.setBounds(0, 0, 178, 74);
 		//tableScenariSelezionabiliManager.getSelezioneScenarioPanel().add(btnReturnToMenuFromSelScen);
 		selezioneScenarioPanel.add(btnReturnToMenuFromSelScen);
 		
 		btnAvanzaToSelezionePers = new ButtonCustom("Selezione personalizzazioni", ButtonCustom.ButtonStyle.WHITE);
-		btnAvanzaToSelezionePers.setBounds(284, 227, 195, 30);
+		btnAvanzaToSelezionePers.setFont(new Font("Tahoma", Font.BOLD, 30));
+		btnAvanzaToSelezionePers.setBounds(1032, 702, 470, 52);
 		//tableScenariSelezionabiliManager.getSelezioneScenarioPanel().add(btnAvanzaToSelezionePers);
 		selezioneScenarioPanel.add(btnAvanzaToSelezionePers);
 		
@@ -456,12 +478,13 @@ public class GiocoDellOcaGUI extends JFrame {
 		selezioneRegoleSetPanel.setLayout(null);
 		
 		lblTitleSelezioneRegoleSet = new JLabel("Selezione set di regole");
-		lblTitleSelezioneRegoleSet.setBounds(137, 11, 235, 30);
-		lblTitleSelezioneRegoleSet.setFont(new Font("Segoe UI", Font.BOLD, 22));
+		lblTitleSelezioneRegoleSet.setBounds(439, 10, 634, 81);
+		lblTitleSelezioneRegoleSet.setFont(new Font("Segoe UI", Font.BOLD, 60));
 		selezioneRegoleSetPanel.add(lblTitleSelezioneRegoleSet);
 		
 		scrollPaneRegoleSetSelezionabili = new JScrollPane();
-		scrollPaneRegoleSetSelezionabili.setBounds(30, 51, 205, 158);
+		scrollPaneRegoleSetSelezionabili.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		scrollPaneRegoleSetSelezionabili.setBounds(10, 211, 731, 462);
 		selezioneRegoleSetPanel.add(scrollPaneRegoleSetSelezionabili);
 		
 		//tableScenarioSelezionato = tableScenarioSelezionatoManager.getTableScenarioSelezionato();
@@ -485,6 +508,8 @@ public class GiocoDellOcaGUI extends JFrame {
                 return super.getToolTipText(e);
             }
 		};
+		tableRegoleSetSelezionabili.setRowHeight(40);
+		tableRegoleSetSelezionabili.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		tableRegoleSetSelezionabili.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -517,7 +542,8 @@ public class GiocoDellOcaGUI extends JFrame {
 		ButtonCustom btnReturnToMenuFromSelRegSet;
 		
 		scrollPaneRegoleSetSelezionato = new JScrollPane();
-		scrollPaneRegoleSetSelezionato.setBounds(274, 51, 205, 158);
+		scrollPaneRegoleSetSelezionato.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		scrollPaneRegoleSetSelezionato.setBounds(771, 211, 731, 462);
 		//tableScenarioSelezionatoManager.getSelezioneRegoleSetPanel().add(scrollPaneRegoleSetSelezionato);
 		selezioneRegoleSetPanel.add(scrollPaneRegoleSetSelezionato);
 		
@@ -535,6 +561,8 @@ public class GiocoDellOcaGUI extends JFrame {
                 return super.getToolTipText(e);
             }
 		};
+		tableRegoleSetSelezionato.setRowHeight(40);
+		tableRegoleSetSelezionato.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		tableRegoleSetSelezionato.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -558,14 +586,15 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		tableRegoleSetSelezionatoModel = (DefaultTableModel) tableRegoleSetSelezionato.getModel();
 
-		btnAvanzaToSelezionaScenarioRegSet = new ButtonCustom("Selezione scenario", ButtonCustom.ButtonStyle.WHITE);;		
-		btnAvanzaToSelezionaScenarioRegSet.setBounds(326, 219, 153, 30);
+		btnAvanzaToSelezionaScenarioRegSet = new ButtonCustom("Selezione scenario", ButtonCustom.ButtonStyle.WHITE);
+		btnAvanzaToSelezionaScenarioRegSet.setFont(new Font("Tahoma", Font.BOLD, 30));;		
+		btnAvanzaToSelezionaScenarioRegSet.setBounds(1150, 702, 352, 52);
 		//tableScenarioSelezionatoManager.getSelezioneRegoleSetPanel().add(btnAvanzaToSelezionaScenarioRegSet);
 		selezioneRegoleSetPanel.add(btnAvanzaToSelezionaScenarioRegSet);
 		
 		btnReturnToMenuFromSelRegSet = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
-		btnReturnToMenuFromSelRegSet.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		btnReturnToMenuFromSelRegSet.setBounds(0, 0, 57, 25);
+		btnReturnToMenuFromSelRegSet.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		btnReturnToMenuFromSelRegSet.setBounds(0, 0, 178, 74);
 		//tableScenarioSelezionatoManager.getSelezioneRegoleSetPanel().add(btnReturnToMenuFromSelRegSet);
 		selezioneRegoleSetPanel.add(btnReturnToMenuFromSelRegSet);
 		
@@ -588,28 +617,28 @@ public class GiocoDellOcaGUI extends JFrame {
 		selezioneTipologiaPersonalizzazionePanel.setLayout(null);
 		
 		lblTitleSelezioneTipologiaPersonalizzazione = new JLabel("Selezione personalizzazioni");
-		lblTitleSelezioneTipologiaPersonalizzazione.setBounds(112, 11, 285, 36);
-		lblTitleSelezioneTipologiaPersonalizzazione.setFont(new Font("Segoe UI", Font.BOLD, 22));
+		lblTitleSelezioneTipologiaPersonalizzazione.setBounds(367, 10, 777, 81);
+		lblTitleSelezioneTipologiaPersonalizzazione.setFont(new Font("Segoe UI", Font.BOLD, 60));
 		selezioneTipologiaPersonalizzazionePanel.add(lblTitleSelezioneTipologiaPersonalizzazione);
 		
 		btnReturnToMenuFromSelPers = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
-		btnReturnToMenuFromSelPers.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		btnReturnToMenuFromSelPers.setBounds(0, 0, 57, 25);
+		btnReturnToMenuFromSelPers.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		btnReturnToMenuFromSelPers.setBounds(0, 0, 178, 74);
 		selezioneTipologiaPersonalizzazionePanel.add(btnReturnToMenuFromSelPers);
 		
 		btnTipologiaPersDado = new ButtonCustom("Dadi", ButtonCustom.ButtonStyle.WHITE);
-		btnTipologiaPersDado.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		btnTipologiaPersDado.setBounds(265, 108, 167, 42);
+		btnTipologiaPersDado.setFont(new Font("Segoe UI", Font.BOLD, 30));
+		btnTipologiaPersDado.setBounds(831, 344, 326, 128);
 		selezioneTipologiaPersonalizzazionePanel.add(btnTipologiaPersDado);
 		
 		btnTipologiaPersPedina = new ButtonCustom("Pedina", ButtonCustom.ButtonStyle.WHITE);
-		btnTipologiaPersPedina.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		btnTipologiaPersPedina.setBounds(83, 108, 167, 42);
+		btnTipologiaPersPedina.setFont(new Font("Segoe UI", Font.BOLD, 30));
+		btnTipologiaPersPedina.setBounds(316, 344, 326, 128);
 		selezioneTipologiaPersonalizzazionePanel.add(btnTipologiaPersPedina);
 		
 		btnReturnToSelScenFromSelPers = new ButtonCustom("Selezione scenario", ButtonCustom.ButtonStyle.WHITE);
-		btnReturnToSelScenFromSelPers.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		btnReturnToSelScenFromSelPers.setBounds(10, 242, 167, 42);
+		btnReturnToSelScenFromSelPers.setFont(new Font("Segoe UI", Font.BOLD, 30));
+		btnReturnToSelScenFromSelPers.setBounds(10, 702, 352, 52);
 		selezioneTipologiaPersonalizzazionePanel.add(btnReturnToSelScenFromSelPers);
 		
 		//TablePedineSelezionabili
