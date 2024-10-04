@@ -656,18 +656,19 @@ public class GiocoDellOcaGUI extends JFrame {
 		selezionePedinaPanel.setLayout(null);
 		
 		lblTitleSelezionePedina = new JLabel("Selezione pedina");
-		lblTitleSelezionePedina.setFont(new Font("Segoe UI", Font.BOLD, 22));
-		lblTitleSelezionePedina.setBounds(166, 10, 177, 36);
+		lblTitleSelezionePedina.setFont(new Font("Segoe UI", Font.BOLD, 60));
+		lblTitleSelezionePedina.setBounds(518, 10, 476, 81);
 		selezionePedinaPanel.add(lblTitleSelezionePedina);
 		
 		btnReturnToMenuFromSelPedina = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
-		btnReturnToMenuFromSelPedina.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		btnReturnToMenuFromSelPedina.setBounds(0, 0, 57, 25);
+		btnReturnToMenuFromSelPedina.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		btnReturnToMenuFromSelPedina.setBounds(0, 0, 178, 74);
 		selezionePedinaPanel.add(btnReturnToMenuFromSelPedina);
 		
 		
 		scrollPanePedineSelezionabili = new JScrollPane();
-		scrollPanePedineSelezionabili.setBounds(30, 56, 205, 158);
+		scrollPanePedineSelezionabili.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		scrollPanePedineSelezionabili.setBounds(10, 211, 731, 462);
 		selezionePedinaPanel.add(scrollPanePedineSelezionabili);
 			
 		tablePedineSelezionabili = new JTable(){
@@ -684,6 +685,8 @@ public class GiocoDellOcaGUI extends JFrame {
                 return super.getToolTipText(e);
             }
 		};
+		tablePedineSelezionabili.setRowHeight(40);
+		tablePedineSelezionabili.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		tablePedineSelezionabili.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -716,7 +719,8 @@ public class GiocoDellOcaGUI extends JFrame {
 		ButtonCustom btnAvviaPartitaFromSelPedina;
 		
 		scrollPanePedinaSelezionata = new JScrollPane();
-		scrollPanePedinaSelezionata.setBounds(274, 56, 205, 158);
+		scrollPanePedinaSelezionata.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		scrollPanePedinaSelezionata.setBounds(771, 211, 731, 462);
 		//tablePedineSelezionabiliManager.getSelezionePedinaPanel().add(scrollPanePedinaSelezionata);
 		selezionePedinaPanel.add(scrollPanePedinaSelezionata);
 		
@@ -734,6 +738,8 @@ public class GiocoDellOcaGUI extends JFrame {
                 return super.getToolTipText(e);
             }
 		};
+		tablePedinaSelezionata.setRowHeight(40);
+		tablePedinaSelezionata.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		tablePedinaSelezionata.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -754,13 +760,15 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		tablePedinaSelezionataModel = (DefaultTableModel) tablePedinaSelezionata.getModel();
 
-		btnSelezionePersonalizzazioniFromSelPed = new ButtonCustom("Selezione personalizzazioni", ButtonCustom.ButtonStyle.DESTRUCTIVE);
-		btnSelezionePersonalizzazioniFromSelPed.setBounds(30, 227, 195, 30);
+		btnSelezionePersonalizzazioniFromSelPed = new ButtonCustom("Selezione personalizzazioni", ButtonCustom.ButtonStyle.WHITE);
+		btnSelezionePersonalizzazioniFromSelPed.setFont(new Font("Tahoma", Font.BOLD, 30));
+		btnSelezionePersonalizzazioniFromSelPed.setBounds(10, 702, 463, 52);
 		//tablePedineSelezionabiliManager.getSelezionePedinaPanel().add(btnSelezionePersonalizzazioniFromSelPed);
 		selezionePedinaPanel.add(btnSelezionePersonalizzazioniFromSelPed);
 		
 		btnAvviaPartitaFromSelPedina = new ButtonCustom("Avvia partita", ButtonCustom.ButtonStyle.PRIMARY);
-		btnAvviaPartitaFromSelPedina.setBounds(360, 227, 119, 30);
+		btnAvviaPartitaFromSelPedina.setFont(new Font("Tahoma", Font.BOLD, 30));
+		btnAvviaPartitaFromSelPedina.setBounds(1150, 702, 352, 52);
 		//tablePedineSelezionabiliManager.getSelezionePedinaPanel().add(btnAvviaPartitaFromSelPedina);
 		selezionePedinaPanel.add(btnAvviaPartitaFromSelPedina);
 		
@@ -782,18 +790,19 @@ public class GiocoDellOcaGUI extends JFrame {
 		selezioneDadiPanel.setLayout(null);
 		
 		lblTitleSelezioneDadi = new JLabel("Selezione dadi");
-		lblTitleSelezioneDadi.setFont(new Font("Segoe UI", Font.BOLD, 22));
-		lblTitleSelezioneDadi.setBounds(175, 10, 158, 36);
+		lblTitleSelezioneDadi.setFont(new Font("Segoe UI", Font.BOLD, 60));
+		lblTitleSelezioneDadi.setBounds(550, 10, 411, 81);
 		selezioneDadiPanel.add(lblTitleSelezioneDadi);
 		
 		btnReturnToMenuFromSelDado = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
-		btnReturnToMenuFromSelDado.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		btnReturnToMenuFromSelDado.setBounds(0, 0, 57, 25);
+		btnReturnToMenuFromSelDado.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		btnReturnToMenuFromSelDado.setBounds(0, 0, 178, 74);
 		selezioneDadiPanel.add(btnReturnToMenuFromSelDado);
 		
 		
 		scrollPaneDadiSelezionabili = new JScrollPane();
-		scrollPaneDadiSelezionabili.setBounds(30, 56, 205, 158);
+		scrollPaneDadiSelezionabili.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		scrollPaneDadiSelezionabili.setBounds(10, 211, 731, 462);
 		selezioneDadiPanel.add(scrollPaneDadiSelezionabili);
 		
 		tableDadiSelezionabili = new JTable(){
@@ -810,6 +819,8 @@ public class GiocoDellOcaGUI extends JFrame {
                 return super.getToolTipText(e);
             }
 		};
+		tableDadiSelezionabili.setRowHeight(40);
+		tableDadiSelezionabili.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		tableDadiSelezionabili.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -842,7 +853,8 @@ public class GiocoDellOcaGUI extends JFrame {
 		ButtonCustom btnAvviaPartitaFromSelDado;
 		
 		scrollPaneDadoSelezionato = new JScrollPane();
-		scrollPaneDadoSelezionato.setBounds(274, 56, 205, 158);
+		scrollPaneDadoSelezionato.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		scrollPaneDadoSelezionato.setBounds(771, 211, 731, 462);
 		//tableDadiSelezionabiliManager.getSelezioneDadiPanel().add(scrollPaneDadoSelezionato);
 		selezioneDadiPanel.add(scrollPaneDadoSelezionato);
 		
@@ -860,6 +872,8 @@ public class GiocoDellOcaGUI extends JFrame {
                 return super.getToolTipText(e);
             }
 		};
+		tableDadoSelezionato.setRowHeight(40);
+		tableDadoSelezionato.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		tableDadoSelezionato.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -883,12 +897,14 @@ public class GiocoDellOcaGUI extends JFrame {
 
 		//Bottoni
 		btnSelezionePersonalizzazioniFromSelDadi = new ButtonCustom("Selezione personalizzazioni", ButtonCustom.ButtonStyle.WHITE);
-		btnSelezionePersonalizzazioniFromSelDadi.setBounds(30, 227, 195, 30);
+		btnSelezionePersonalizzazioniFromSelDadi.setFont(new Font("Tahoma", Font.BOLD, 30));
+		btnSelezionePersonalizzazioniFromSelDadi.setBounds(10, 702, 454, 52);
 		//tableDadiSelezionabiliManager.getSelezioneDadiPanel().add(btnSelezionePersonalizzazioniFromSelDadi);
 		selezioneDadiPanel.add(btnSelezionePersonalizzazioniFromSelDadi);
 				
-		btnAvviaPartitaFromSelDado = new ButtonCustom("Avvia partita", ButtonCustom.ButtonStyle.WHITE);
-		btnAvviaPartitaFromSelDado.setBounds(360, 227, 119, 30);
+		btnAvviaPartitaFromSelDado = new ButtonCustom("Avvia partita", ButtonCustom.ButtonStyle.PRIMARY);
+		btnAvviaPartitaFromSelDado.setFont(new Font("Tahoma", Font.BOLD, 30));
+		btnAvviaPartitaFromSelDado.setBounds(1150, 702, 352, 52);
 		//tableDadiSelezionabiliManager.getSelezioneDadiPanel().add(btnAvviaPartitaFromSelDado);
 		selezioneDadiPanel.add(btnAvviaPartitaFromSelDado);
 		
