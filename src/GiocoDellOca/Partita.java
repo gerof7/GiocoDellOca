@@ -26,6 +26,10 @@ public class Partita {
 		return tabellone;
 	}
 
+	public Giocatore getGiocatoreInSessione() {
+		return giocatoreInSessione;
+	}
+
 	public void setTabellone(Tabellone tabellone) {
 		this.tabellone = tabellone;
 	}
