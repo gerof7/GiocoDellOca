@@ -107,7 +107,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		        @Override
 		        public void actionPerformed(ActionEvent e) {
 		            int numeroDado = random.nextInt(6) + 1; 
-		            dadoLabel.setIcon(new ImageIcon("dado" + numeroDado + ".png")); // "path"
+		            dadoLabel.setIcon(new ImageIcon("./src/images/dadoclassico_" + numeroDado + ".png"));
 		            counter++;
 		            
 		            if (counter >= 10) {
@@ -758,9 +758,24 @@ public class GiocoDellOcaGUI extends JFrame {
                 int column = columnAtPoint(e.getPoint());
                 
                 if (row >= 0 && column >= 0) {
-                    String text = (String) getValueAt(row, column);
+                	String codice = (String) getModel().getValueAt(row, 0);
+                    Personalizzazione personalizzazione = null;
+                    
+                    for(var p : listPersonalizzazioni) {
+                    	if(p.getCodicePersonalizzazione().equals(codice))
+                    	{
+                    		personalizzazione = p;
+                    		break;
+                    	}                  		
+                    }
 
-                    return "<html>" + text + "</html>";
+                    return "<html>"
+                    + "<div style='text-align: center;'>"
+                    + personalizzazione.getDescrizione() + "<br>"
+                    + "<img src='file:" + personalizzazione.getPath() 
+                    + "' width='50' height='50' style='display: block; margin: 0 auto;' />"
+                    + "</div>"
+                    + "</html>";
                 }
                 return super.getToolTipText(e);
             }
@@ -811,9 +826,24 @@ public class GiocoDellOcaGUI extends JFrame {
                 int column = columnAtPoint(e.getPoint());
                 
                 if (row >= 0 && column >= 0) {
-                    String text = (String) getValueAt(row, column);
+                	String codice = (String) getModel().getValueAt(row, 0);
+                    Personalizzazione personalizzazione = null;
+                    
+                    for(var p : listPersonalizzazioni) {
+                    	if(p.getCodicePersonalizzazione().equals(codice))
+                    	{
+                    		personalizzazione = p;
+                    		break;
+                    	}                  		
+                    }
 
-                    return "<html>" + text + "</html>";
+                    return "<html>"
+                    + "<div style='text-align: center;'>"
+                    + personalizzazione.getDescrizione() + "<br>"
+                    + "<img src='file:" + personalizzazione.getPath() 
+                    + "' width='50' height='50' style='display: block; margin: 0 auto;' />"
+                    + "</div>"
+                    + "</html>";
                 }
                 return super.getToolTipText(e);
             }
@@ -892,9 +922,24 @@ public class GiocoDellOcaGUI extends JFrame {
                 int column = columnAtPoint(e.getPoint());
                 
                 if (row >= 0 && column >= 0) {
-                    String text = (String) getValueAt(row, column);
+                	String codice = (String) getModel().getValueAt(row, 0);
+                    Personalizzazione personalizzazione = null;
+                    
+                    for(var p : listPersonalizzazioni) {
+                    	if(p.getCodicePersonalizzazione().equals(codice))
+                    	{
+                    		personalizzazione = p;
+                    		break;
+                    	}                  		
+                    }
 
-                    return "<html>" + text + "</html>";
+                    return "<html>"
+                    + "<div style='text-align: center;'>"
+                    + personalizzazione.getDescrizione() + "<br>"
+                    + "<img src='file:" + personalizzazione.getPath() 
+                    + "' width='50' height='50' style='display: block; margin: 0 auto;' />"
+                    + "</div>"
+                    + "</html>";
                 }
                 return super.getToolTipText(e);
             }
@@ -945,9 +990,25 @@ public class GiocoDellOcaGUI extends JFrame {
                 int column = columnAtPoint(e.getPoint());
                 
                 if (row >= 0 && column >= 0) {
-                    String text = (String) getValueAt(row, column);
+                    String codice = (String) getModel().getValueAt(row, 0);
+                    Personalizzazione personalizzazione = null;
+                    
+                    for(var p : listPersonalizzazioni) {
+                    	if(p.getCodicePersonalizzazione().equals(codice))
+                    	{
+                    		personalizzazione = p;
+                    		break;
+                    	}                  		
+                    }
 
-                    return "<html>" + text + "</html>";
+                    return "<html>"
+                    + "<div style='text-align: center;'>"
+                    + personalizzazione.getDescrizione() + "<br>"
+                    + "<img src='file:" + personalizzazione.getPath() 
+                    + "' width='50' height='50' style='display: block; margin: 0 auto;' />"
+                    + "</div>"
+                    + "</html>";
+                                       
                 }
                 return super.getToolTipText(e);
             }
@@ -1267,7 +1328,7 @@ public class GiocoDellOcaGUI extends JFrame {
 				var pedinaGiocatore = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getGiocatoreInSessione().getPedina();
 				
 				pedine.add(pedinaGiocatore);
-				pedine.add(new Pedina("pedina_bot", "Pedina Bot", "path"));
+				pedine.add(new Pedina("pedina_bot", "Pedina Bot", "./src/images/KratosGoose.png"));
 				
 				 for (int i = 1; i <= numeroCaselle; i++) {
 			            Casella casella = caselleMap.get(i);
@@ -1287,7 +1348,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		        });
 		        tabellonePanel.add(lanciaDadoButton);
 		        
-		        GiocoDellOcaGUI.this.dadoLabel = new JLabel(new ImageIcon("path"));
+		        GiocoDellOcaGUI.this.dadoLabel = new JLabel(new ImageIcon("./src/images/dadoclassico_1.png"));
 		        add(dadoLabel);
 				
 		        aggiornaTabellone();

@@ -38,9 +38,8 @@ public class Partita {
 		var regole = impostazioni.getElencoRegole();
 		var scenario = impostazioni.getScenario();
 		var personalizzazioni = impostazioni.getElencoPersonalizzazioni();
-		var dado = new Dado();
-		var pedina = new Pedina();
-		
+		var dado = new Dado("Dado_Classico", "Il dado del giocatore è il dado classico", "./src/images/dadoclassico_1.png");
+		var pedina = new Pedina("Pedina_Oca", "La pedina del giocatore è un'oca", "./src/images/ScarfGoose.png");
 		
 		for(var personalizzazione : personalizzazioni){
 			if(personalizzazione instanceof Dado)

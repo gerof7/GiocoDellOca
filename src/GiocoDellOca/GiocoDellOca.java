@@ -59,8 +59,8 @@ public class GiocoDellOca {
 	
 	
 	public void loadPersonalizzazioni() {
-		Personalizzazione personalizzazione1 = new Dado("Dado_Classico", "Il dado del giocatore è il dado classico", "path");
-		Personalizzazione personalizzazione2 = new Pedina("Pedina_Oca", "La pedina del giocatore è un'oca", "path");
+		Personalizzazione personalizzazione1 = new Dado("Dado_Classico", "Il dado del giocatore è il dado classico", "./src/images/dadoclassico_1.png");
+		Personalizzazione personalizzazione2 = new Pedina("Pedina_Oca", "La pedina del giocatore è un'oca", "./src/images/ScarfGoose.png");
 		listaPersonalizzazioni.add(personalizzazione1);
 		listaPersonalizzazioni.add(personalizzazione2);
 	}
