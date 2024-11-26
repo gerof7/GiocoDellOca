@@ -1,8 +1,10 @@
 package GUI;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -126,16 +128,16 @@ public class GiocoDellOcaGUI extends JFrame {
 		        public void actionPerformed(ActionEvent e) {
 		            int risultatoDado = random.nextInt(6) + 1;
 		            Pedina pedinaCorrente = pedine.get(turnoCorrente);
-		            
-		            if(turnoCorrente == 0)
-		            	JOptionPane.showMessageDialog(null, giocatoreInSessione.getNome() + " ha lanciato: " + risultatoDado);
-		            else
-		            	JOptionPane.showMessageDialog(null, "L'avversario ha lanciato: " + risultatoDado);
 
-		            
+		            if (turnoCorrente == 0) {
+		                JOptionPane.showMessageDialog(null, giocatoreInSessione.getNome() + " ha lanciato: " + risultatoDado);
+		            } else {
+		                JOptionPane.showMessageDialog(null, "Il bot ha lanciato: " + risultatoDado);
+		            }
+
 		            pedinaCorrente.Muovi(risultatoDado, caselleMap.size());
-
 		            Casella casellaAttuale = caselleMap.get(pedinaCorrente.getPosizione());
+
 		            if (casellaAttuale.getNumero() == 6) {
 		                JOptionPane.showMessageDialog(null, "Ponte! Vai avanti di 3 caselle.");
 		                pedinaCorrente.Muovi(3, caselleMap.size());
@@ -145,8 +147,19 @@ public class GiocoDellOcaGUI extends JFrame {
 		            }
 
 		            aggiornaTabellone();
-		            
+
 		            turnoCorrente = (turnoCorrente + 1) % pedine.size();
+
+		            if (turnoCorrente == 1) {
+		                Timer botTimer = new Timer(1000, new ActionListener() {
+		                    @Override
+		                    public void actionPerformed(ActionEvent e) {
+		                        lanciaDado();
+		                    }
+		                });
+		                botTimer.setRepeats(false);
+		                botTimer.start();
+		            }
 		        }
 		    });
 		}
@@ -1052,8 +1065,8 @@ public class GiocoDellOcaGUI extends JFrame {
 		//tableDadoSelezionato = tableDadoSelezionatoManager.getTableDadoSelezionato();
 		hideColumn(tableDadoSelezionato, 0);
 		
-		JPanel tabellonePanel = new JPanel();
-		layeredPane.add(tabellonePanel, "name_20382102642300");
+		JPanel tabelloneMainPanel = new JPanel();
+		layeredPane.add(tabelloneMainPanel, "name_20382102642300");
 				
 		//Action listeners
         //menuPaneManager.getBtnConfiguraNuovaPartitaSP()
@@ -1262,102 +1275,126 @@ public class GiocoDellOcaGUI extends JFrame {
 			}
 		});
 		
-
+		
 		btnAvviaPartitaFromSelPedina.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				if(tablePedinaSelezionataModel.getRowCount() > 0) {
-					var codicePedina = (String) tablePedinaSelezionataModel.getValueAt(0, 0);
-	                var descrizionePedina= (String) tablePedinaSelezionataModel.getValueAt(0, 1);
-	                String pathPedina = "";
-	                
-	                for(var personalizzazione : listPersonalizzazioni) {
-						if(personalizzazione instanceof Pedina) {
-							if(personalizzazione.getCodicePersonalizzazione().equals(codicePedina)) {
-								pathPedina = personalizzazione.getPath();
-								break;
-							}
-							else
-								continue;
-						}
-					}
-	                
-	                var pedina = new Pedina(codicePedina, descrizionePedina, pathPedina);
-	                
-	                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addPersonalizzazioneToList(pedina);      
-				}
-				
-				if(tableDadoSelezionatoModel.getRowCount() > 0) {
-					var codiceDado = (String) tableDadoSelezionatoModel.getValueAt(0, 0);
-	                var descrizioneDado= (String) tableDadoSelezionatoModel.getValueAt(0, 1);
-	                String pathDado = "";
-	                
-	                for(var personalizzazione : listPersonalizzazioni) {
-						if(personalizzazione instanceof Dado) {
-							if(personalizzazione.getCodicePersonalizzazione().equals(codiceDado)) {
-								pathDado = personalizzazione.getPath();
-								break;
-							}
-							else
-								continue;
-						}
-					}
-	                
-	                var dado = new Dado(codiceDado, descrizioneDado, pathDado);
-	                
-	                GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addPersonalizzazioneToList(dado);      
-				}
-                			
-				GiocoDellOcaGUI.this.giocoDellOca.avviaPartita();
-				
-				GiocoDellOcaGUI.this.buttonsCaselle = new ArrayList<>();
-				GiocoDellOcaGUI.this.pedine = new ArrayList<>();
-				GiocoDellOcaGUI.this.turnoCorrente = 0;
-				GiocoDellOcaGUI.this.giocatoreInSessione = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getGiocatoreInSessione();
-				GiocoDellOcaGUI.this.random = new Random();
-				
-				var tabellone = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getTabellone();
-				var caselleMap = tabellone.getCaselleMap();
-				GiocoDellOcaGUI.this.caselleMap = caselleMap;
-				
-				int numeroCaselle = caselleMap.size();
-				int lato = (int) Math.ceil(Math.sqrt(numeroCaselle));
-
-				tabellonePanel.setLayout(new GridLayout(lato, lato));			
-				
-				var pedinaGiocatore = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getGiocatoreInSessione().getPedina();
-				
-				pedine.add(pedinaGiocatore);
-				pedine.add(new Pedina("pedina_bot", "Pedina Bot", "./src/images/KratosGoose.png"));
-				
-				 for (int i = 1; i <= numeroCaselle; i++) {
-			            Casella casella = caselleMap.get(i);
-			            ButtonCustom button = new ButtonCustom("Casella " + i, ButtonStyle.WHITE );
-			            button.setToolTipText(casella.getDescrizione());
-
-			            buttonsCaselle.add(button);
-			            tabellonePanel.add(button);
+		    public void actionPerformed(ActionEvent e) {
+		        if (tablePedinaSelezionataModel.getRowCount() > 0) {
+		            var codicePedina = (String) tablePedinaSelezionataModel.getValueAt(0, 0);
+		            var descrizionePedina = (String) tablePedinaSelezionataModel.getValueAt(0, 1);
+		            String pathPedina = "";
+		
+		            for (var personalizzazione : listPersonalizzazioni) {
+		                if (personalizzazione instanceof Pedina) {
+		                    if (personalizzazione.getCodicePersonalizzazione().equals(codicePedina)) {
+		                        pathPedina = personalizzazione.getPath();
+		                        break;
+		                    }
+		                }
+		            }
+		
+		            var pedina = new Pedina(codicePedina, descrizionePedina, pathPedina);
+		            GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addPersonalizzazioneToList(pedina);
 		        }
-				 
-				ButtonCustom lanciaDadoButton = new ButtonCustom("Lancia il dado", ButtonStyle.PRIMARY);
+		
+		        if (tableDadoSelezionatoModel.getRowCount() > 0) {
+		            var codiceDado = (String) tableDadoSelezionatoModel.getValueAt(0, 0);
+		            var descrizioneDado = (String) tableDadoSelezionatoModel.getValueAt(0, 1);
+		            String pathDado = "";
+		
+		            for (var personalizzazione : listPersonalizzazioni) {
+		                if (personalizzazione instanceof Dado) {
+		                    if (personalizzazione.getCodicePersonalizzazione().equals(codiceDado)) {
+		                        pathDado = personalizzazione.getPath();
+		                        break;
+		                    }
+		                }
+		            }
+		
+		            var dado = new Dado(codiceDado, descrizioneDado, pathDado);
+		            GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addPersonalizzazioneToList(dado);
+		        }
+		
+		        GiocoDellOcaGUI.this.giocoDellOca.avviaPartita();
+		
+		        // Inizializzazioni
+		        GiocoDellOcaGUI.this.buttonsCaselle = new ArrayList<>();
+		        GiocoDellOcaGUI.this.pedine = new ArrayList<>();
+		        GiocoDellOcaGUI.this.turnoCorrente = 0;
+		        GiocoDellOcaGUI.this.giocatoreInSessione = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getGiocatoreInSessione();
+		        GiocoDellOcaGUI.this.random = new Random();
+		
+		        var tabellone = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getTabellone();
+		        var caselleMap = tabellone.getCaselleMap();
+		        GiocoDellOcaGUI.this.caselleMap = caselleMap;
+		
+		        int numeroCaselle = caselleMap.size();
+		        int lato = (int) Math.ceil(Math.sqrt(numeroCaselle));
+		
+		        JPanel tabellonePanel = new JPanel(new GridLayout(lato, lato));
+		
+		        var pedinaGiocatore = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getGiocatoreInSessione().getPedina();
+		
+		        pedine.add(pedinaGiocatore);
+		        pedine.add(new Pedina("pedina_bot", "Pedina Bot", "./src/images/KratosGoose.png"));
+		
+		        // Aggiungi le caselle
+		        for (int i = 1; i <= numeroCaselle; i++) {
+		            Casella casella = caselleMap.get(i);
+		            ButtonCustom button = new ButtonCustom("Casella " + i, ButtonStyle.WHITE);
+		            if (casella.getDescrizione() != null && !casella.getDescrizione().isEmpty()) {
+		                button.setToolTipText(casella.getDescrizione());
+		            }
+		            buttonsCaselle.add(button);
+		            tabellonePanel.add(button);
+		        }
+		
+		        // Layout principale del tabellone
+		        tabelloneMainPanel.setLayout(new BorderLayout());
+	
+		        // Pulsante "Menu"
+		        ButtonCustom menuButton = new ButtonCustom("Menu", ButtonStyle.SECONDARY);
+		        menuButton.addActionListener(new ActionListener() {
+		            @Override
+		            public void actionPerformed(ActionEvent e) {
+		                int conferma = JOptionPane.showConfirmDialog(null, "Vuoi tornare al menu principale?", "Conferma", JOptionPane.YES_NO_OPTION);
+		                if (conferma == JOptionPane.YES_OPTION) {
+		                    dispose(); // Chiude la finestra attuale
+		                    // Codice per tornare al menu principale
+		                }
+		            }
+		        });
+		
+		        // Aggiungi il pulsante "Menu" nella parte superiore
+		        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		        topPanel.add(menuButton);
+		        tabelloneMainPanel.add(topPanel, BorderLayout.NORTH);
+		
+		        // Aggiungi il tabellone al centro
+		        tabelloneMainPanel.add(tabellonePanel, BorderLayout.CENTER);
+		
+		        // Pulsante "Lancia il dado" e dado
+		        ButtonCustom lanciaDadoButton = new ButtonCustom("Lancia il dado", ButtonStyle.PRIMARY);
 		        lanciaDadoButton.addActionListener(new ActionListener() {
 		            @Override
 		            public void actionPerformed(ActionEvent e) {
 		                lanciaDado();
 		            }
 		        });
-		        tabellonePanel.add(lanciaDadoButton);
-		        
-		        GiocoDellOcaGUI.this.dadoLabel = new JLabel(new ImageIcon("./src/images/dadoclassico_1.png"));
-		        add(dadoLabel);
-				
-		        aggiornaTabellone();
-		        
-				SwitchToPanel(layeredPane, tabellonePanel);
-			
-			}
-		});
 		
+		        GiocoDellOcaGUI.this.dadoLabel = new JLabel(new ImageIcon("./src/images/dadoclassico_1.png"));
+		
+		        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		        bottomPanel.add(lanciaDadoButton);
+		        bottomPanel.add(dadoLabel);
+		
+		        tabelloneMainPanel.add(bottomPanel, BorderLayout.SOUTH);
+		
+		        // Cambia il pannello
+		        SwitchToPanel(layeredPane, tabelloneMainPanel);
+		
+		        aggiornaTabellone();
+		    }
+		});		
 
 		btnAvviaPartitaFromSelDado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
