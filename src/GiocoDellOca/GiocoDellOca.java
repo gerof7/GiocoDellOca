@@ -128,5 +128,9 @@ public class GiocoDellOca {
 	public Partita getPartitaCorrente() {
 		return partitaCorrente;
 	}
+	
+	public void resetPartita() {
+	    this.partitaCorrente = null;
+	}
 
 }

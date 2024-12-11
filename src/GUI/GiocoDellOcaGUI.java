@@ -74,12 +74,14 @@ public class GiocoDellOcaGUI extends JFrame {
     private Random random;
     private JLabel dadoLabel;
     private Map<Integer, Casella> caselleMap;
+    private JPanel tabellonePanel;
+    private ButtonCustom lanciaDadoButton;
 	
 	private void SwitchToPanel (JLayeredPane layeredPane, JPanel panel) {
 		layeredPane.removeAll();
 		layeredPane.add(panel);
-		layeredPane.repaint();
 		layeredPane.revalidate();
+		layeredPane.repaint();
 	}
 	
 	private void hideColumn(JTable table, int columnIndex) {
@@ -123,46 +125,80 @@ public class GiocoDellOcaGUI extends JFrame {
 		}
 	 
 	 private void lanciaDado() {
-		    animaDado(dadoLabel, new ActionListener() {
-		        @Override
-		        public void actionPerformed(ActionEvent e) {
-		            int risultatoDado = random.nextInt(6) + 1;
-		            Pedina pedinaCorrente = pedine.get(turnoCorrente);
+	    // Disabilita il pulsante al lancio del dado
+	    lanciaDadoButton.setEnabled(false);
+	
+	    if (turnoCorrente == 0) { // Turno del giocatore umano
+	        animaDado(dadoLabel, new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	                int risultatoDado = random.nextInt(6) + 1;
+	
+	                // Aggiorna l'immagine del dado con il risultato
+	                dadoLabel.setIcon(new ImageIcon("./src/images/dadoclassico_" + risultatoDado + ".png"));
+	
+	                Pedina pedinaCorrente = pedine.get(turnoCorrente);
+	
+	                JOptionPane.showMessageDialog(null, giocatoreInSessione.getNome() + " ha lanciato: " + risultatoDado);
+	
+	                eseguiMossa(pedinaCorrente, risultatoDado);
+	                aggiornaTabellone();
+	
+	                // Passa il turno al bot
+	                turnoCorrente = (turnoCorrente + 1) % pedine.size();
+	                avviaTurnoBot();
+	            }
+	        });
+	    } else { // Turno del bot
+	        int risultatoDado = random.nextInt(6) + 1;
+	
+	        // Aggiorna l'immagine del dado con il risultato
+	        dadoLabel.setIcon(new ImageIcon("./src/images/dadoclassico_" + risultatoDado + ".png"));
+	
+	        JOptionPane.showMessageDialog(null, "Il bot ha lanciato: " + risultatoDado);
+	
+	        Pedina pedinaCorrente = pedine.get(turnoCorrente);
+	
+	        eseguiMossa(pedinaCorrente, risultatoDado);
+	        aggiornaTabellone();
+	
+	        // Passa il turno al giocatore
+	        turnoCorrente = (turnoCorrente + 1) % pedine.size();
+	
+	        // Riabilita il pulsante al turno del giocatore
+	        if (turnoCorrente == 0) {
+	            lanciaDadoButton.setEnabled(true);
+	        }
+	    }
+	}
+	// Metodo per gestire la mossa
+	private void eseguiMossa(Pedina pedinaCorrente, int risultatoDado) {
+	    pedinaCorrente.Muovi(risultatoDado, caselleMap.size());
+	    Casella casellaAttuale = caselleMap.get(pedinaCorrente.getPosizione());
+	
+	    // Regole speciali
+	    if (casellaAttuale.getNumero() == 6) {
+	        JOptionPane.showMessageDialog(null, "Ponte! Vai avanti di 3 caselle.");
+	        pedinaCorrente.Muovi(3, caselleMap.size());
+	    } else if (casellaAttuale.getNumero() == 19) {
+	        JOptionPane.showMessageDialog(null, "Oca! Torna indietro di 2 caselle.");
+	        pedinaCorrente.Muovi(-2, caselleMap.size());
+	    }
+	}
+	
+	// Metodo per avviare il turno del bot
+	private void avviaTurnoBot() {
+	    Timer botTimer = new Timer(500, new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            lanciaDado();
+	        }
+	    });
+	    botTimer.setRepeats(false);
+	    botTimer.start();
+	}
 
-		            if (turnoCorrente == 0) {
-		                JOptionPane.showMessageDialog(null, giocatoreInSessione.getNome() + " ha lanciato: " + risultatoDado);
-		            } else {
-		                JOptionPane.showMessageDialog(null, "Il bot ha lanciato: " + risultatoDado);
-		            }
-
-		            pedinaCorrente.Muovi(risultatoDado, caselleMap.size());
-		            Casella casellaAttuale = caselleMap.get(pedinaCorrente.getPosizione());
-
-		            if (casellaAttuale.getNumero() == 6) {
-		                JOptionPane.showMessageDialog(null, "Ponte! Vai avanti di 3 caselle.");
-		                pedinaCorrente.Muovi(3, caselleMap.size());
-		            } else if (casellaAttuale.getNumero() == 19) {
-		                JOptionPane.showMessageDialog(null, "Oca! Torna indietro di 2 caselle.");
-		                pedinaCorrente.Muovi(-2, caselleMap.size());
-		            }
-
-		            aggiornaTabellone();
-
-		            turnoCorrente = (turnoCorrente + 1) % pedine.size();
-
-		            if (turnoCorrente == 1) {
-		                Timer botTimer = new Timer(1000, new ActionListener() {
-		                    @Override
-		                    public void actionPerformed(ActionEvent e) {
-		                        lanciaDado();
-		                    }
-		                });
-		                botTimer.setRepeats(false);
-		                botTimer.start();
-		            }
-		        }
-		    });
-		}
+	
 
 	/**
 	 * Launch the application.
@@ -1067,6 +1103,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		JPanel tabelloneMainPanel = new JPanel();
 		layeredPane.add(tabelloneMainPanel, "name_20382102642300");
+		tabellonePanel = new JPanel();
 				
 		//Action listeners
         //menuPaneManager.getBtnConfiguraNuovaPartitaSP()
@@ -1330,7 +1367,8 @@ public class GiocoDellOcaGUI extends JFrame {
 		        int numeroCaselle = caselleMap.size();
 		        int lato = (int) Math.ceil(Math.sqrt(numeroCaselle));
 		
-		        JPanel tabellonePanel = new JPanel(new GridLayout(lato, lato));
+		        tabellonePanel.removeAll();
+		        tabellonePanel.setLayout(new GridLayout(lato, lato));
 		
 		        var pedinaGiocatore = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getGiocatoreInSessione().getPedina();
 		
@@ -1347,7 +1385,11 @@ public class GiocoDellOcaGUI extends JFrame {
 		            buttonsCaselle.add(button);
 		            tabellonePanel.add(button);
 		        }
+		        
+		        tabellonePanel.revalidate();
+		        tabellonePanel.repaint();
 		
+		        tabelloneMainPanel.removeAll();
 		        // Layout principale del tabellone
 		        tabelloneMainPanel.setLayout(new BorderLayout());
 	
@@ -1358,9 +1400,26 @@ public class GiocoDellOcaGUI extends JFrame {
 		            public void actionPerformed(ActionEvent e) {
 		                int conferma = JOptionPane.showConfirmDialog(null, "Vuoi tornare al menu principale?", "Conferma", JOptionPane.YES_NO_OPTION);
 		                if (conferma == JOptionPane.YES_OPTION) {
-		                    dispose(); // Chiude la finestra attuale
-		                    // Codice per tornare al menu principale
-		                }
+		                	GiocoDellOcaGUI.this.giocoDellOca.resetPartita();
+		                	buttonsCaselle.clear(); // Svuota la lista dei pulsanti delle caselle
+		                    pedine.clear(); // Svuota la lista delle pedine
+		                    turnoCorrente = 0; // Resetta il turno
+		                    dadoLabel.setIcon(new ImageIcon("./src/images/dadoclassico_1.png")); // Resetta il dado
+		                    tabellonePanel.removeAll(); // Rimuove tutti i componenti dal pannello
+		                    tabellonePanel.revalidate();
+		                    tabellonePanel.repaint();		    
+		                    tableRegoleSetSelezionabiliModel.setRowCount(0);
+		    				tableRegoleSetSelezionatoModel.setRowCount(0);	
+		                	tableRegoleSelezionabiliModel.setRowCount(0);
+		                	tableRegoleSelezionateModel.setRowCount(0);	
+		                	tableScenariSelezionabiliModel.setRowCount(0);
+		                	tableScenarioSelezionatoModel.setRowCount(0);
+		                	tablePedineSelezionabiliModel.setRowCount(0);
+		                	tablePedinaSelezionataModel.setRowCount(0);
+		                	tableDadiSelezionabiliModel.setRowCount(0);
+		                	tableDadoSelezionatoModel.setRowCount(0);
+		    				SwitchToPanel(layeredPane, menuPrincipalePanel);		              
+	    				}
 		            }
 		        });
 		
@@ -1368,12 +1427,16 @@ public class GiocoDellOcaGUI extends JFrame {
 		        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		        topPanel.add(menuButton);
 		        tabelloneMainPanel.add(topPanel, BorderLayout.NORTH);
+		        
+		        JScrollPane scrollPane = new JScrollPane(tabellonePanel);
+		        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 		        // Aggiungi il tabellone al centro
-		        tabelloneMainPanel.add(tabellonePanel, BorderLayout.CENTER);
+		        tabelloneMainPanel.add(scrollPane, BorderLayout.CENTER);
 		
 		        // Pulsante "Lancia il dado" e dado
-		        ButtonCustom lanciaDadoButton = new ButtonCustom("Lancia il dado", ButtonStyle.PRIMARY);
+		        lanciaDadoButton = new ButtonCustom("Lancia il dado", ButtonStyle.PRIMARY);
 		        lanciaDadoButton.addActionListener(new ActionListener() {
 		            @Override
 		            public void actionPerformed(ActionEvent e) {
@@ -1388,7 +1451,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		        bottomPanel.add(dadoLabel);
 		
 		        tabelloneMainPanel.add(bottomPanel, BorderLayout.SOUTH);
-		
+		        		
 		        // Cambia il pannello
 		        SwitchToPanel(layeredPane, tabelloneMainPanel);
 		
