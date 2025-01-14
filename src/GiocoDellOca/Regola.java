@@ -1,7 +1,5 @@
 package GiocoDellOca;
 
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class Regola {

@@ -60,9 +60,11 @@ public class GiocoDellOca {
 	
 	public void loadPersonalizzazioni() {
 		Personalizzazione personalizzazione1 = new Dado("Dado_Classico", "Il dado del giocatore è il dado classico", "./src/images/dadoclassico_1.png");
+		Personalizzazione personalizzazione3 = new Dado("Dado_Rosso", "Il dado del giocatore è un dado nero e rosso", "./src/images/dadorosso_1.png");
 		Personalizzazione personalizzazione2 = new Pedina("Pedina_Oca", "La pedina del giocatore è un'oca", "./src/images/ScarfGoose.png");
 		listaPersonalizzazioni.add(personalizzazione1);
 		listaPersonalizzazioni.add(personalizzazione2);
+		listaPersonalizzazioni.add(personalizzazione3);
 	}
 	
 	public void loadScenari() {
