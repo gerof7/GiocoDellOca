@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -47,6 +49,7 @@ import GiocoDellOca.Regola;
 import GiocoDellOca.Scenario;
 import GiocoDellOca.TipologiaRegolaEnum;
 import java.awt.GridLayout;
+import java.awt.Image;
 
 public class GiocoDellOcaGUI extends JFrame {
 
@@ -91,20 +94,32 @@ public class GiocoDellOcaGUI extends JFrame {
         columnModel.removeColumn(column);
     }
 	
-	 private void aggiornaTabellone() {
-	        for (int i = 0; i < buttonsCaselle.size(); i++) {
-	        	buttonsCaselle.get(i).setText("Casella " + (i + 1));
-	        	buttonsCaselle.get(i).setIcon(null);
-	        }
+	private void aggiornaTabellone() {
+	    for (int i = 0; i < caselleMap.size(); i++) {
+	        JPanel casellaPanel = (JPanel) tabellonePanel.getComponent(i);
+	        casellaPanel.removeAll(); 
+	        JLabel casellaLabel = new JLabel("Casella " + (i + 1));
+	        casellaPanel.add(casellaLabel);
+	    }
 
-	        for (Pedina pedina : pedine) {
-	            int posizioneCorrente = pedina.getPosizione();
-	            var bottone = buttonsCaselle.get(posizioneCorrente - 1);
-	            bottone.setText("");
-	            bottone.setIcon(new ImageIcon(pedina.getPath()));
-	        }
-    }
-	 
+	    for (Pedina pedina : pedine) {
+	        int posizioneCorrente = pedina.getPosizione();
+	        JPanel casellaPanel = (JPanel) tabellonePanel.getComponent(posizioneCorrente - 1);
+
+	        ImageIcon originalIcon = new ImageIcon(pedina.getPath());
+	        Image scaledImage = originalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+	        JLabel pedinaLabel = new JLabel(new ImageIcon(scaledImage));
+
+	        if (pedina == pedine.get(0))
+	            pedinaLabel.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 2)); 
+	            
+	        casellaPanel.add(pedinaLabel);
+	    }
+
+	    tabellonePanel.revalidate();
+	    tabellonePanel.repaint();
+	}
+ 
 	 private void animaDado(JLabel dadoLabel, ActionListener afterAnimation) {
 		    Timer timer = new Timer(100, new ActionListener() {
 		        int counter = 0;
@@ -1391,13 +1406,22 @@ public class GiocoDellOcaGUI extends JFrame {
 		        // Aggiungi le caselle
 		        for (int i = 1; i <= numeroCaselle; i++) {
 		            Casella casella = caselleMap.get(i);
+		            JPanel casellaPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5)); 
+		            casellaPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		            casellaPanel.setBackground(Color.LIGHT_GRAY);
 		            ButtonCustom button = new ButtonCustom("Casella " + i, ButtonStyle.WHITE);
+		            
 		            if (casella.getDescrizione() != null && !casella.getDescrizione().isEmpty()) {
-		                button.setToolTipText(casella.getDescrizione());
+		                casellaPanel.setToolTipText("Casella " + i + ": " + casella.getDescrizione());
+		            } else {
+		                casellaPanel.setToolTipText("Casella " + i);
 		            }
+		            
+		            casellaPanel.add(button);
 		            buttonsCaselle.add(button);
-		            tabellonePanel.add(button);
+		            tabellonePanel.add(casellaPanel);
 		        }
+
 		        
 		        tabellonePanel.revalidate();
 		        tabellonePanel.repaint();
@@ -1407,7 +1431,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		        tabelloneMainPanel.setLayout(new BorderLayout());
 	
 		        // Pulsante "Menu"
-		        ButtonCustom menuButton = new ButtonCustom("Menu", ButtonStyle.SECONDARY);
+		        ButtonCustom menuButton = new ButtonCustom("Menu", ButtonStyle.DESTRUCTIVE);
 		        menuButton.addActionListener(new ActionListener() {
 		            @Override
 		            public void actionPerformed(ActionEvent e) {
