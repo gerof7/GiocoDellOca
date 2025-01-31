@@ -1,5 +1,7 @@
 package GiocoDellOca;
 
+import javax.swing.JOptionPane;
+
 public class Pedina extends Personalizzazione{
 
 	private int stato;
@@ -8,11 +10,13 @@ public class Pedina extends Personalizzazione{
 	public Pedina(String codicePersonalizzazione, String descrizione, String path) {
 		super(codicePersonalizzazione, descrizione, path);
 		this.posizione = 1;
+		this.stato = 1;
 	}
 
 	public Pedina() {
 		super();
 		this.posizione = 1;
+		this.stato = 1;
 	}
 
 	public int getStato() {
@@ -31,12 +35,19 @@ public class Pedina extends Personalizzazione{
 	}
 		
 	public void Muovi(int spostamento, int maxPosizione) {
-		posizione += spostamento;
-        if (posizione > maxPosizione) {
-        	posizione = maxPosizione;
-        } else if (posizione < 1) {
-        	posizione = 1;
-        }
-    }
+	    posizione += spostamento;
+
+	    // Se supera la casella finale, calcola il rimbalzo
+	    if (posizione > maxPosizione) {
+	        int differenza = posizione - maxPosizione;
+	        posizione = maxPosizione - differenza; // Rimbalza all'indietro
+
+	        JOptionPane.showMessageDialog(null, 
+	            "Hai superato la casella finale! Torni indietro di " + differenza + " caselle.");
+	    } else if (posizione < 1) {
+	        posizione = 1; // Evita di andare sotto la prima casella
+	    }
+	}
+
 	
 }

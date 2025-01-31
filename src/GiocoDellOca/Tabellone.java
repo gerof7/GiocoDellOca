@@ -8,6 +8,7 @@ import java.util.Map;
 public class Tabellone {
 	
 	private Map<Integer, Casella> caselleMap;
+	private int numeroDadi;
 
 	public Tabellone(List<Regola> listaRegole, Scenario scenario) {
 		
@@ -18,7 +19,9 @@ public class Tabellone {
 		for (var regola : listaRegole) {
 			if (regola.getTipologiaRegola() == TipologiaRegolaEnum.NumeroCaselle) {
 				numeroCasellaFine = Integer.parseInt(regola.getProprietaRegola());
-				break;
+			}
+			else if (regola.getTipologiaRegola() == TipologiaRegolaEnum.NumeroDadi) {
+				this.numeroDadi = Integer.parseInt(regola.getProprietaRegola());
 			}
 			else
 				continue;
@@ -103,5 +106,9 @@ public class Tabellone {
         
         return nuovePosizioni;
     }
+
+	public int getNumeroDadi() {
+		return numeroDadi;
+	}
 	
 }
