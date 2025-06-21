@@ -6,22 +6,22 @@ package GiocoDellOca;
 public class Giocatore {
 	
 	private String nomeGiocatore;
-	private int idGiocatore;
+	private int numeroGiocatore;
 	private Pedina pedina;
 	private Dado dado;
 	
-	public Giocatore(String nomeGiocatore, int idGiocatore) {
+	public Giocatore(String nomeGiocatore, int numeroGiocatore) {
 		
 		this.nomeGiocatore = nomeGiocatore;
-		this.idGiocatore = idGiocatore;
+		this.numeroGiocatore = numeroGiocatore;
 	}
 	
 	public String getNome() {
 		return nomeGiocatore;
 	}
 	
-	public int getId() {
-		return idGiocatore;
+	public int getNumero() {
+		return numeroGiocatore;
 	}
 
 	public Pedina getPedina() {

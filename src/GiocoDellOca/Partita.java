@@ -1,4 +1,8 @@
 package GiocoDellOca;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
 *
 * @author Francesco
@@ -7,11 +11,11 @@ public class Partita {
 	
 	private Impostazioni impostazioni;
 	private Tabellone tabellone;
-	private Giocatore giocatoreInSessione;
+	private Map<Integer, Giocatore> giocatori = new HashMap<>();
 	
 	public Partita(Giocatore giocatore) {      
         this.impostazioni = new Impostazioni();
-        this.giocatoreInSessione = giocatore;
+        this.giocatori.put(giocatore.getNumero(), giocatore);
     }
 	
 	public Impostazioni getImpostazioni() {
@@ -23,7 +27,11 @@ public class Partita {
 	}
 
 	public Giocatore getGiocatoreInSessione() {
-		return giocatoreInSessione;
+		return giocatori.get(1);
+	}
+	
+	public Giocatore getGiocatore(int numero) {
+	    return giocatori.get(numero);
 	}
 
 	public void setTabellone(Tabellone tabellone) {
@@ -45,8 +53,9 @@ public class Partita {
 		}
 		
 		this.tabellone = new Tabellone(regole, scenario);
-		this.giocatoreInSessione.setDado(dado);
-		this.giocatoreInSessione.setPedina(pedina);
+		Giocatore giocatoreInSessione = this.getGiocatoreInSessione();
+		giocatoreInSessione.setDado(dado);
+		giocatoreInSessione.setPedina(pedina);
 	}
 	
 }
