@@ -98,6 +98,7 @@ public class GiocoDellOcaGUI extends JFrame {
 	private JLayeredPane layeredPane;
 	private JPanel menuPrincipalePanel;
 	private boolean giocoTerminato;
+	private boolean isPartitaMultiplayer;
 
 	private void SwitchToPanel (JLayeredPane layeredPane, JPanel panel) {
 		layeredPane.removeAll();
@@ -636,6 +637,12 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnConfiguraNuovaPartitaSP.setFont(new Font("Segoe UI", Font.PLAIN, 28));
 		btnConfiguraNuovaPartitaSP.setBounds(564, 220, 384, 92);
 		menuPrincipalePanel.add(btnConfiguraNuovaPartitaSP);
+		
+		ButtonCustom btnConfiguraNuovaPartitaMP = new ButtonCustom("Nuova partita multiplayer", ButtonStyle.PRIMARY);
+		
+		btnConfiguraNuovaPartitaMP.setFont(new Font("Segoe UI", Font.PLAIN, 28));
+		btnConfiguraNuovaPartitaMP.setBounds(564, 365, 384, 92);
+		menuPrincipalePanel.add(btnConfiguraNuovaPartitaMP);
 		
 		selezioneTipologiaRegolePanel = new JPanel();
 		layeredPane.add(selezioneTipologiaRegolePanel, "name_610398291392000");
@@ -1354,6 +1361,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		JScrollPane scrollPaneDadoSelezionato;
 		ButtonCustom btnSelezionePersonalizzazioniFromSelDadi;
 		ButtonCustom btnAvviaPartitaFromSelDado;
+		ButtonCustom btnConfiguraUtentiOspitiFromSelDado;
 		
 		scrollPaneDadoSelezionato = new JScrollPane();
 		scrollPaneDadoSelezionato.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -1424,9 +1432,11 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnAvviaPartitaFromSelDado = new ButtonCustom("Avvia partita", ButtonCustom.ButtonStyle.PRIMARY);
 		btnAvviaPartitaFromSelDado.setFont(new Font("Tahoma", Font.BOLD, 30));
 		btnAvviaPartitaFromSelDado.setBounds(1150, 702, 352, 52);
-		//tableDadiSelezionabiliManager.getSelezioneDadiPanel().add(btnAvviaPartitaFromSelDado);
-		selezioneDadiPanel.add(btnAvviaPartitaFromSelDado);
 		
+		btnConfiguraUtentiOspitiFromSelDado = new ButtonCustom("Configura utenti ospiti", ButtonCustom.ButtonStyle.PRIMARY);
+		btnConfiguraUtentiOspitiFromSelDado.setFont(new Font("Tahoma", Font.BOLD, 30));
+		btnConfiguraUtentiOspitiFromSelDado.setBounds(1150, 702, 352, 52);
+			
 		//tableDadoSelezionato = tableDadoSelezionatoManager.getTableDadoSelezionato();
 		hideColumn(tableDadoSelezionato, 0);
 		
@@ -1436,11 +1446,12 @@ public class GiocoDellOcaGUI extends JFrame {
 				
 		//Action listeners
         //menuPaneManager.getBtnConfiguraNuovaPartitaSP()
-		btnConfiguraNuovaPartitaSP.addActionListener(new ActionListener() {
+		btnConfiguraNuovaPartitaMP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				GiocoDellOcaGUI.this.giocoTerminato = false;
-				
-				GiocoDellOcaGUI.this.giocoDellOca.configuraNuovaPartitaSP();
+				GiocoDellOcaGUI.this.isPartitaMultiplayer = true;
+			
+				GiocoDellOcaGUI.this.giocoDellOca.configuraNuovaPartita();
 				
 				GiocoDellOcaGUI.this.listaRegoleSingole = giocoDellOca.getListaRegoleSingole();
 				GiocoDellOcaGUI.this.mapRegoleSet = giocoDellOca.getMapRegoleSet();
@@ -1490,6 +1501,63 @@ public class GiocoDellOcaGUI extends JFrame {
 				SwitchToPanel(layeredPane, selezioneTipologiaRegolePanel);
 			}
 		});
+		
+		btnConfiguraNuovaPartitaSP.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GiocoDellOcaGUI.this.giocoTerminato = false;
+				GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
+				
+				GiocoDellOcaGUI.this.giocoDellOca.configuraNuovaPartita();
+				
+				GiocoDellOcaGUI.this.listaRegoleSingole = giocoDellOca.getListaRegoleSingole();
+				GiocoDellOcaGUI.this.mapRegoleSet = giocoDellOca.getMapRegoleSet();
+				GiocoDellOcaGUI.this.listScenari = giocoDellOca.getListaScenari();
+				GiocoDellOcaGUI.this.listPersonalizzazioni = giocoDellOca.getListaPersonalizzazioni();
+				
+				//tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel() (tutti i model sono dentro i metodi get dei rispettivi manager)
+				
+				if(tableRegoleSelezionabiliModel.getRowCount() == 0 &&  tableRegoleSelezionateModel.getRowCount() == 0) 
+				{
+					for(var regola : listaRegoleSingole) {
+						tableRegoleSelezionabiliModel.addRow(new Object[] {regola.getCodiceRegola(), regola.getDescrizione()});
+					}
+				}
+				
+				if(tableRegoleSetSelezionabiliModel.getRowCount() == 0 && tableRegoleSetSelezionatoModel.getRowCount() == 0) 
+				{
+					for (var key : mapRegoleSet.keySet()) {
+						tableRegoleSetSelezionabiliModel.addRow(new Object[] {key});
+					}
+				}
+				
+				if(tableScenariSelezionabiliModel.getRowCount() == 0 && tableScenarioSelezionatoModel.getRowCount() == 0) 
+				{
+					for(var scenario : listScenari) {
+						tableScenariSelezionabiliModel.addRow(new Object[] {scenario.getCodiceScenario(), scenario.getDescrizione()});
+					}
+				}
+				
+				if(tablePedineSelezionabili.getRowCount() == 0 && tablePedinaSelezionata.getRowCount() == 0) 
+				{
+					for(var personalizzazione : listPersonalizzazioni) {
+						if(personalizzazione instanceof Pedina)
+							tablePedineSelezionabiliModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
+					}
+				}
+				
+				if(tableDadiSelezionabiliModel.getRowCount() == 0 && tableDadoSelezionatoModel.getRowCount() == 0) 
+				{
+					for(var personalizzazione : listPersonalizzazioni) {
+						if(personalizzazione instanceof Dado)
+							tableDadiSelezionabiliModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
+					}
+				}
+									
+				//SwitchToPanel(menuPaneManager.getLayeredPane(), menuPaneManager.getSelezioneTipologiaRegolePanel());
+				SwitchToPanel(layeredPane, selezioneTipologiaRegolePanel);
+			}
+		});
+
 		
 		//menuPaneManager.getBtnTipologiaRegoleSingole()
 		
@@ -1624,6 +1692,20 @@ public class GiocoDellOcaGUI extends JFrame {
 
 		btnTipologiaPersDado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+								
+				if(!GiocoDellOcaGUI.this.isPartitaMultiplayer) {
+					selezioneDadiPanel.remove(btnConfiguraUtentiOspitiFromSelDado);
+					selezioneDadiPanel.add(btnAvviaPartitaFromSelDado);
+					selezioneDadiPanel.revalidate(); 
+					selezioneDadiPanel.repaint(); 
+
+				}
+				else {
+					selezioneDadiPanel.remove(btnAvviaPartitaFromSelDado);
+					selezioneDadiPanel.add(btnConfiguraUtentiOspitiFromSelDado);
+					selezioneDadiPanel.revalidate(); 
+					selezioneDadiPanel.repaint(); 
+				}
 				SwitchToPanel(layeredPane, selezioneDadiPanel);
 			}
 		});
@@ -1681,7 +1763,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		            GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addPersonalizzazioneToList(dado);
 		        }
 		
-		        GiocoDellOcaGUI.this.giocoDellOca.avviaPartita();
+		        GiocoDellOcaGUI.this.giocoDellOca.avviaPartita(false);
 		
 		        // Inizializzazioni
 		        GiocoDellOcaGUI.this.buttonsCaselle = new ArrayList<>();
@@ -1910,7 +1992,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		            GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getImpostazioni().addPersonalizzazioneToList(dado);
 		        }
 		
-		        GiocoDellOcaGUI.this.giocoDellOca.avviaPartita();
+		        GiocoDellOcaGUI.this.giocoDellOca.avviaPartita(false);
 		
 		        // Inizializzazioni
 		        GiocoDellOcaGUI.this.buttonsCaselle = new ArrayList<>();

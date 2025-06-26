@@ -87,7 +87,7 @@ public class GiocoDellOca {
 		listaScenari.add(scenario2);
 	}
 	
-	public void configuraNuovaPartitaSP() {
+	public void configuraNuovaPartita() {
 		
 		var partitaCorrente = new Partita(giocatoreInSessione);
 		
@@ -107,8 +107,9 @@ public class GiocoDellOca {
 	}
 	
 	
-	public void avviaPartita() {		
-		partitaCorrente.impostaPartitaSP();
+	public void avviaPartita(boolean isMultiplayer) {		
+		if(!isMultiplayer)
+			partitaCorrente.impostaPartitaSP();
 	}
 
 	public List<Regola> getListaRegoleSingole() {

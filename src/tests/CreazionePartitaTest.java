@@ -9,7 +9,7 @@ class CreazionePartitaTest {
 	@Test
 	void creaPartita() {
 		var controller = new GiocoDellOca();
-		controller.configuraNuovaPartitaSP();
+		controller.configuraNuovaPartita();
 		
 		var impostazioni = controller.getPartitaCorrente().getImpostazioni();
 		
