@@ -3,6 +3,7 @@ package GUI;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -21,6 +22,8 @@ import java.util.Random;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -1199,6 +1202,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		JScrollPane scrollPanePedinaSelezionata;
 		ButtonCustom btnSelezionePersonalizzazioniFromSelPed;
 		ButtonCustom btnAvviaPartitaFromSelPedina;
+		ButtonCustom btnConfiguraUtentiOspitiFromSelPedina;
 		
 		scrollPanePedinaSelezionata = new JScrollPane();
 		scrollPanePedinaSelezionata.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -1267,8 +1271,11 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnAvviaPartitaFromSelPedina.setFont(new Font("Tahoma", Font.BOLD, 30));
 		btnAvviaPartitaFromSelPedina.setBounds(1150, 702, 352, 52);
 		//tablePedineSelezionabiliManager.getSelezionePedinaPanel().add(btnAvviaPartitaFromSelPedina);
-		selezionePedinaPanel.add(btnAvviaPartitaFromSelPedina);
 		
+		btnConfiguraUtentiOspitiFromSelPedina = new ButtonCustom("Configura utenti ospiti", ButtonCustom.ButtonStyle.PRIMARY);
+		btnConfiguraUtentiOspitiFromSelPedina.setFont(new Font("Tahoma", Font.BOLD, 25));
+		btnConfiguraUtentiOspitiFromSelPedina.setBounds(1150, 702, 352, 52);
+				
 		//tablePedinaSelezionata = tablePedineSelezionataManager.getTablePedinaSelezionata();
 		hideColumn(tablePedinaSelezionata, 0);
 
@@ -1434,15 +1441,52 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnAvviaPartitaFromSelDado.setBounds(1150, 702, 352, 52);
 		
 		btnConfiguraUtentiOspitiFromSelDado = new ButtonCustom("Configura utenti ospiti", ButtonCustom.ButtonStyle.PRIMARY);
-		btnConfiguraUtentiOspitiFromSelDado.setFont(new Font("Tahoma", Font.BOLD, 30));
+		btnConfiguraUtentiOspitiFromSelDado.setFont(new Font("Tahoma", Font.BOLD, 25));
 		btnConfiguraUtentiOspitiFromSelDado.setBounds(1150, 702, 352, 52);
 			
 		//tableDadoSelezionato = tableDadoSelezionatoManager.getTableDadoSelezionato();
 		hideColumn(tableDadoSelezionato, 0);
 		
 		JPanel tabelloneMainPanel = new JPanel();
-		layeredPane.add(tabelloneMainPanel, "name_20382102642300");
+		layeredPane.add(tabelloneMainPanel, "name_20382102642300");		
 		tabellonePanel = new JPanel();
+		
+		JPanel selezioneNumeroGiocatoriPanel = new JPanel(new BorderLayout());
+		layeredPane.add(selezioneNumeroGiocatoriPanel, "name_9545681007400");
+
+		JPanel contenutoCentratoselezioneNumeroGiocatoriPanel = new JPanel();
+		contenutoCentratoselezioneNumeroGiocatoriPanel.setLayout(new BoxLayout(contenutoCentratoselezioneNumeroGiocatoriPanel, BoxLayout.Y_AXIS));
+		contenutoCentratoselezioneNumeroGiocatoriPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		JLabel titoloSelezioneNumeroGiocatori = new JLabel("Seleziona il numero di giocatori", JLabel.CENTER);
+		titoloSelezioneNumeroGiocatori.setFont(new Font("Arial", Font.BOLD, 28));
+		titoloSelezioneNumeroGiocatori.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		contenutoCentratoselezioneNumeroGiocatoriPanel.add(Box.createVerticalStrut(30));
+		contenutoCentratoselezioneNumeroGiocatoriPanel.add(titoloSelezioneNumeroGiocatori);
+		contenutoCentratoselezioneNumeroGiocatoriPanel.add(Box.createVerticalStrut(30));
+
+		ButtonCustom btn2Players = new ButtonCustom("2", ButtonStyle.WHITE);
+		ButtonCustom btn3Players = new ButtonCustom("3", ButtonStyle.WHITE);
+		ButtonCustom btn4Players = new ButtonCustom("4", ButtonStyle.WHITE);
+
+		Dimension buttonSize = new Dimension(150, 50);
+		btn2Players.setMaximumSize(buttonSize);
+		btn3Players.setMaximumSize(buttonSize);
+		btn4Players.setMaximumSize(buttonSize);
+
+		btn2Players.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btn3Players.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btn4Players.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		contenutoCentratoselezioneNumeroGiocatoriPanel.add(btn2Players);
+		contenutoCentratoselezioneNumeroGiocatoriPanel.add(Box.createVerticalStrut(15));
+		contenutoCentratoselezioneNumeroGiocatoriPanel.add(btn3Players);
+		contenutoCentratoselezioneNumeroGiocatoriPanel.add(Box.createVerticalStrut(15));
+		contenutoCentratoselezioneNumeroGiocatoriPanel.add(btn4Players);
+
+		selezioneNumeroGiocatoriPanel.add(contenutoCentratoselezioneNumeroGiocatoriPanel, BorderLayout.CENTER);
+
 				
 		//Action listeners
         //menuPaneManager.getBtnConfiguraNuovaPartitaSP()
@@ -1685,6 +1729,19 @@ public class GiocoDellOcaGUI extends JFrame {
 
 		btnTipologiaPersPedina.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(!GiocoDellOcaGUI.this.isPartitaMultiplayer) {
+					selezionePedinaPanel.remove(btnConfiguraUtentiOspitiFromSelPedina);
+					selezionePedinaPanel.add(btnAvviaPartitaFromSelPedina);
+					selezionePedinaPanel.revalidate(); 
+					selezionePedinaPanel.repaint(); 
+
+				}
+				else {
+					selezionePedinaPanel.remove(btnAvviaPartitaFromSelPedina);
+					selezionePedinaPanel.add(btnConfiguraUtentiOspitiFromSelPedina);
+					selezionePedinaPanel.revalidate(); 
+					selezionePedinaPanel.repaint(); 
+				}
 				SwitchToPanel(layeredPane, selezionePedinaPanel);
 			}
 		});
@@ -2479,6 +2536,18 @@ public class GiocoDellOcaGUI extends JFrame {
 						tableDadiSelezionabiliModel.addRow(new Object[] {codiceDado, descrizioneDado});
 					}
                 }
+			}
+		});
+		
+		btnConfiguraUtentiOspitiFromSelDado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwitchToPanel(layeredPane, selezioneNumeroGiocatoriPanel);
+			}
+		});
+		
+		btnConfiguraUtentiOspitiFromSelPedina.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwitchToPanel(layeredPane, selezioneNumeroGiocatoriPanel);
 			}
 		});
 		
