@@ -32,6 +32,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
@@ -102,6 +103,8 @@ public class GiocoDellOcaGUI extends JFrame {
 	private JPanel menuPrincipalePanel;
 	private boolean giocoTerminato;
 	private boolean isPartitaMultiplayer;
+	private int numeroGiocatoriMP;
+	private int numeroGiocatoreCorrente;
 
 	private void SwitchToPanel (JLayeredPane layeredPane, JPanel panel) {
 		layeredPane.removeAll();
@@ -542,6 +545,9 @@ public class GiocoDellOcaGUI extends JFrame {
     	tablePedinaSelezionataModel.setRowCount(0);
     	tableDadiSelezionabiliModel.setRowCount(0);
     	tableDadoSelezionatoModel.setRowCount(0);
+    	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
+    	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
+    	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
 		SwitchToPanel(layeredPane, menuPrincipalePanel);	
 		this.giocoTerminato = true;
 	}
@@ -1082,6 +1088,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		ButtonCustom btnTipologiaPersDado;
 		ButtonCustom btnTipologiaPersPedina;
 		ButtonCustom btnReturnToSelScenFromSelPers;
+		JLabel lblGiocatoreCorrente;
 		
 		selezioneTipologiaPersonalizzazionePanel = new JPanel();
 		//menuPaneManager.getLayeredPane().add(selezioneTipologiaPersonalizzazionePanel, "name_1048915761636599");
@@ -1112,6 +1119,12 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnReturnToSelScenFromSelPers.setFont(new Font("Segoe UI", Font.BOLD, 30));
 		btnReturnToSelScenFromSelPers.setBounds(10, 702, 352, 52);
 		selezioneTipologiaPersonalizzazionePanel.add(btnReturnToSelScenFromSelPers);
+		
+		lblGiocatoreCorrente = new JLabel("", SwingConstants.CENTER);
+		lblGiocatoreCorrente.setFont(new Font("Segoe UI", Font.PLAIN, 30));
+		lblGiocatoreCorrente.setBounds(367, 90, 777, 50);
+		lblGiocatoreCorrente.setVisible(false);
+		selezioneTipologiaPersonalizzazionePanel.add(lblGiocatoreCorrente);
 		
 		//TablePedineSelezionabili
 		//var tablePedineSelezionabiliManager = new TabellaPedineSelezionabiliManager(menuPaneManager);	
@@ -1203,6 +1216,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		ButtonCustom btnSelezionePersonalizzazioniFromSelPed;
 		ButtonCustom btnAvviaPartitaFromSelPedina;
 		ButtonCustom btnConfiguraUtentiOspitiFromSelPedina;
+		ButtonCustom btnConfiguraProssimoUtenteFromSelPedina;
 		
 		scrollPanePedinaSelezionata = new JScrollPane();
 		scrollPanePedinaSelezionata.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -1275,6 +1289,10 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnConfiguraUtentiOspitiFromSelPedina = new ButtonCustom("Configura utenti ospiti", ButtonCustom.ButtonStyle.PRIMARY);
 		btnConfiguraUtentiOspitiFromSelPedina.setFont(new Font("Tahoma", Font.BOLD, 25));
 		btnConfiguraUtentiOspitiFromSelPedina.setBounds(1150, 702, 352, 52);
+		
+		btnConfiguraProssimoUtenteFromSelPedina = new ButtonCustom("", ButtonCustom.ButtonStyle.PRIMARY);
+		btnConfiguraProssimoUtenteFromSelPedina.setFont(new Font("Tahoma", Font.BOLD, 25));
+		btnConfiguraProssimoUtenteFromSelPedina.setBounds(1150, 702, 352, 52);
 				
 		//tablePedinaSelezionata = tablePedineSelezionataManager.getTablePedinaSelezionata();
 		hideColumn(tablePedinaSelezionata, 0);
@@ -1369,6 +1387,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		ButtonCustom btnSelezionePersonalizzazioniFromSelDadi;
 		ButtonCustom btnAvviaPartitaFromSelDado;
 		ButtonCustom btnConfiguraUtentiOspitiFromSelDado;
+		ButtonCustom btnConfiguraProssimoUtenteFromSelDado;
 		
 		scrollPaneDadoSelezionato = new JScrollPane();
 		scrollPaneDadoSelezionato.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -1443,6 +1462,10 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnConfiguraUtentiOspitiFromSelDado = new ButtonCustom("Configura utenti ospiti", ButtonCustom.ButtonStyle.PRIMARY);
 		btnConfiguraUtentiOspitiFromSelDado.setFont(new Font("Tahoma", Font.BOLD, 25));
 		btnConfiguraUtentiOspitiFromSelDado.setBounds(1150, 702, 352, 52);
+		
+		btnConfiguraProssimoUtenteFromSelDado = new ButtonCustom("", ButtonCustom.ButtonStyle.PRIMARY);
+		btnConfiguraProssimoUtenteFromSelDado.setFont(new Font("Tahoma", Font.BOLD, 25));
+		btnConfiguraProssimoUtenteFromSelDado.setBounds(1150, 702, 352, 52);
 			
 		//tableDadoSelezionato = tableDadoSelezionatoManager.getTableDadoSelezionato();
 		hideColumn(tableDadoSelezionato, 0);
@@ -1731,16 +1754,41 @@ public class GiocoDellOcaGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(!GiocoDellOcaGUI.this.isPartitaMultiplayer) {
 					selezionePedinaPanel.remove(btnConfiguraUtentiOspitiFromSelPedina);
+					selezionePedinaPanel.remove(btnConfiguraProssimoUtenteFromSelPedina);
 					selezionePedinaPanel.add(btnAvviaPartitaFromSelPedina);
 					selezionePedinaPanel.revalidate(); 
 					selezionePedinaPanel.repaint(); 
 
 				}
 				else {
-					selezionePedinaPanel.remove(btnAvviaPartitaFromSelPedina);
-					selezionePedinaPanel.add(btnConfiguraUtentiOspitiFromSelPedina);
-					selezionePedinaPanel.revalidate(); 
-					selezionePedinaPanel.repaint(); 
+					if(GiocoDellOcaGUI.this.numeroGiocatoriMP == 0) {
+						selezionePedinaPanel.remove(btnAvviaPartitaFromSelPedina);
+						selezionePedinaPanel.remove(btnConfiguraProssimoUtenteFromSelPedina);
+						selezionePedinaPanel.add(btnConfiguraUtentiOspitiFromSelPedina);
+						selezionePedinaPanel.revalidate(); 
+						selezionePedinaPanel.repaint(); 
+					}
+					else {
+						if(GiocoDellOcaGUI.this.numeroGiocatoriMP > 2 && GiocoDellOcaGUI.this.numeroGiocatoreCorrente < GiocoDellOcaGUI.this.numeroGiocatoriMP) 
+						{
+							
+							var numeroGiocatore = GiocoDellOcaGUI.this.numeroGiocatoreCorrente + 1;
+							btnConfiguraProssimoUtenteFromSelPedina.setText("Configura Giocatore " + numeroGiocatore);
+							
+							selezionePedinaPanel.remove(btnConfiguraUtentiOspitiFromSelPedina);
+							selezionePedinaPanel.remove(btnAvviaPartitaFromSelPedina);
+							selezionePedinaPanel.add(btnConfiguraProssimoUtenteFromSelPedina);
+							selezionePedinaPanel.revalidate(); 
+							selezionePedinaPanel.repaint(); 
+						}
+						else {
+							selezionePedinaPanel.remove(btnConfiguraProssimoUtenteFromSelPedina);
+							selezionePedinaPanel.remove(btnConfiguraUtentiOspitiFromSelPedina);
+							selezionePedinaPanel.add(btnAvviaPartitaFromSelPedina);
+							selezionePedinaPanel.revalidate(); 
+							selezionePedinaPanel.repaint(); 
+						}
+					}
 				}
 				SwitchToPanel(layeredPane, selezionePedinaPanel);
 			}
@@ -1752,16 +1800,40 @@ public class GiocoDellOcaGUI extends JFrame {
 								
 				if(!GiocoDellOcaGUI.this.isPartitaMultiplayer) {
 					selezioneDadiPanel.remove(btnConfiguraUtentiOspitiFromSelDado);
+					selezioneDadiPanel.remove(btnConfiguraProssimoUtenteFromSelDado);
 					selezioneDadiPanel.add(btnAvviaPartitaFromSelDado);
 					selezioneDadiPanel.revalidate(); 
 					selezioneDadiPanel.repaint(); 
 
 				}
-				else {
-					selezioneDadiPanel.remove(btnAvviaPartitaFromSelDado);
-					selezioneDadiPanel.add(btnConfiguraUtentiOspitiFromSelDado);
-					selezioneDadiPanel.revalidate(); 
-					selezioneDadiPanel.repaint(); 
+				else {					
+					if(GiocoDellOcaGUI.this.numeroGiocatoriMP == 0) {
+						selezioneDadiPanel.remove(btnAvviaPartitaFromSelDado);
+						selezioneDadiPanel.remove(btnConfiguraProssimoUtenteFromSelDado);
+						selezioneDadiPanel.add(btnConfiguraUtentiOspitiFromSelDado);
+						selezioneDadiPanel.revalidate(); 
+						selezioneDadiPanel.repaint(); 
+					}
+					else {
+						if(GiocoDellOcaGUI.this.numeroGiocatoriMP > 2 && GiocoDellOcaGUI.this.numeroGiocatoreCorrente < GiocoDellOcaGUI.this.numeroGiocatoriMP) 
+						{
+							var numeroGiocatore = GiocoDellOcaGUI.this.numeroGiocatoreCorrente + 1;
+							btnConfiguraProssimoUtenteFromSelDado.setText("Configura Giocatore " + numeroGiocatore);
+							
+							selezioneDadiPanel.remove(btnAvviaPartitaFromSelDado);
+							selezioneDadiPanel.remove(btnConfiguraUtentiOspitiFromSelDado);
+							selezioneDadiPanel.add(btnConfiguraProssimoUtenteFromSelDado);
+							selezioneDadiPanel.revalidate(); 
+							selezioneDadiPanel.repaint(); 
+						}
+						else {
+							selezioneDadiPanel.remove(btnConfiguraProssimoUtenteFromSelDado);
+							selezioneDadiPanel.remove(btnConfiguraUtentiOspitiFromSelDado);
+							selezioneDadiPanel.add(btnAvviaPartitaFromSelDado);
+							selezioneDadiPanel.revalidate(); 
+							selezioneDadiPanel.repaint(); 
+						}
+					}
 				}
 				SwitchToPanel(layeredPane, selezioneDadiPanel);
 			}
@@ -1930,6 +2002,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		                
 		                if (conferma == JOptionPane.YES_OPTION) {
 		                	terminaGioco();
+		            		lblGiocatoreCorrente.setText("");
 	    				}
 		            }
 		        });
@@ -2252,6 +2325,10 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
+            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
+            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
+            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
+				lblGiocatoreCorrente.setText("");
 				SwitchToPanel(layeredPane, menuPrincipalePanel);
 			}
 		});
@@ -2268,6 +2345,10 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
+            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
+            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
+            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
+				lblGiocatoreCorrente.setText("");
 				SwitchToPanel(layeredPane, menuPrincipalePanel);
 			}
 		});
@@ -2284,6 +2365,10 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
+            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
+            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
+            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
+				lblGiocatoreCorrente.setText("");
 				SwitchToPanel(layeredPane, menuPrincipalePanel);
 			}
 		});
@@ -2300,6 +2385,10 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
+            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
+            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
+            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
+				lblGiocatoreCorrente.setText("");
 				SwitchToPanel(layeredPane, menuPrincipalePanel);
 			}
 		});
@@ -2316,6 +2405,10 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
+            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
+            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
+            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
+				lblGiocatoreCorrente.setText("");
 				SwitchToPanel(layeredPane, menuPrincipalePanel);
 			}
 		});
@@ -2333,6 +2426,10 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
+            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
+            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
+            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
+				lblGiocatoreCorrente.setText("");
 				SwitchToPanel(layeredPane, menuPrincipalePanel);
 			}
 		});
@@ -2350,6 +2447,10 @@ public class GiocoDellOcaGUI extends JFrame {
             	tablePedinaSelezionataModel.setRowCount(0);
             	tableDadiSelezionabiliModel.setRowCount(0);
             	tableDadoSelezionatoModel.setRowCount(0);
+            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
+            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
+            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
+				lblGiocatoreCorrente.setText("");
 				SwitchToPanel(layeredPane, menuPrincipalePanel);
 			}
 		});
@@ -2548,6 +2649,55 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnConfiguraUtentiOspitiFromSelPedina.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SwitchToPanel(layeredPane, selezioneNumeroGiocatoriPanel);
+			}
+		});
+		
+		btn2Players.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 2;
+				GiocoDellOcaGUI.this.numeroGiocatoriMP = 2;
+				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+				lblGiocatoreCorrente.setText("Giocatore 2");
+				lblGiocatoreCorrente.setVisible(true);
+				btnReturnToSelScenFromSelPers.setVisible(false);
+			}
+		});
+		
+		btn3Players.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 2;
+				GiocoDellOcaGUI.this.numeroGiocatoriMP = 3;
+				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+				lblGiocatoreCorrente.setText("Giocatore 2");
+				lblGiocatoreCorrente.setVisible(true);
+				btnReturnToSelScenFromSelPers.setVisible(false);
+			}
+		});
+		
+		btn4Players.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 2;
+				GiocoDellOcaGUI.this.numeroGiocatoriMP = 4;
+				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+				lblGiocatoreCorrente.setText("Giocatore 2");
+				lblGiocatoreCorrente.setVisible(true);
+				btnReturnToSelScenFromSelPers.setVisible(false);
+			}
+		});
+		
+		btnConfiguraProssimoUtenteFromSelDado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GiocoDellOcaGUI.this.numeroGiocatoreCorrente++;
+				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+				lblGiocatoreCorrente.setText("Giocatore " + GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
+			}
+		});
+		
+		btnConfiguraProssimoUtenteFromSelPedina.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GiocoDellOcaGUI.this.numeroGiocatoreCorrente++;
+				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+				lblGiocatoreCorrente.setText("Giocatore " + GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
 			}
 		});
 		
