@@ -58,4 +58,11 @@ public class Partita {
 		giocatoreInSessione.setPedina(pedina);
 	}
 	
+	public void aggiungiGiocatoriOspiti(int numeroTotaleGiocatori) {
+	    for (int i = 2; i <= numeroTotaleGiocatori; i++) {
+	        Giocatore giocatoreOspite = new Giocatore("Giocatore " + i, i);
+	        giocatori.put(i, giocatoreOspite);
+	    }
+	}
+	
 }
