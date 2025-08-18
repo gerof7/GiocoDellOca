@@ -61,10 +61,19 @@ public class GiocoDellOca {
 	public void loadPersonalizzazioni() {
 		Personalizzazione personalizzazione1 = new Dado("Dado_Classico", "Il dado del giocatore è il dado classico", "./src/images/dadoclassico_1.png");
 		Personalizzazione personalizzazione3 = new Dado("Dado_Rosso", "Il dado del giocatore è un dado nero e rosso", "./src/images/dadorosso_1.png");
-		Personalizzazione personalizzazione2 = new Pedina("Pedina_Oca", "La pedina del giocatore è un'oca", "./src/images/ScarfGoose.png");
+		Personalizzazione personalizzazione2 = new Pedina("Pedina_Oca", "La pedina del giocatore è l'oca classica", "./src/images/ScarfGoose.png");
+		Personalizzazione personalizzazione4 = new Pedina("Pedina_OcaDonald", "La pedina del giocatore è un'oca con le sembianze di Paperino", "./src/images/DonaldGoose.png");
+		Personalizzazione personalizzazione5 = new Pedina("Pedina_OcaGangster", "La pedina del giocatore è un'oca gangster", "./src/images/GangsterGoose.png");
+		Personalizzazione personalizzazione6 = new Pedina("Pedina_OcaLady", "La pedina del giocatore è un'oca femminile", "./src/images/LadyGoose.png");
+		Personalizzazione personalizzazione7 = new Pedina("Pedina_OcaKratos", "La pedina del giocatore è un'oca con le sembianze di Kratos", "./src/images/KratosGoose.png");
 		listaPersonalizzazioni.add(personalizzazione1);
 		listaPersonalizzazioni.add(personalizzazione2);
 		listaPersonalizzazioni.add(personalizzazione3);
+		listaPersonalizzazioni.add(personalizzazione4);
+		listaPersonalizzazioni.add(personalizzazione5);
+		listaPersonalizzazioni.add(personalizzazione6);
+		listaPersonalizzazioni.add(personalizzazione7);
+
 	}
 	
 	public void loadScenari() {
@@ -107,9 +116,8 @@ public class GiocoDellOca {
 	}
 	
 	
-	public void avviaPartita(boolean isMultiplayer) {		
-		if(!isMultiplayer)
-			partitaCorrente.impostaPartitaSP();
+	public void avviaPartita() {		
+		partitaCorrente.impostaPartita();
 	}
 
 	public List<Regola> getListaRegoleSingole() {

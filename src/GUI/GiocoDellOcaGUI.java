@@ -178,6 +178,8 @@ public class GiocoDellOcaGUI extends JFrame {
 	        JLabel casellaLabel = new JLabel("Casella " + (i + 1));
 	        casellaPanel.add(casellaLabel);
 	    }
+	    
+        var giocatori = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getAllGiocatori().values();
 
 	    for (Pedina pedina : pedine) {
 	        int posizioneCorrente = pedina.getPosizione();
@@ -186,8 +188,20 @@ public class GiocoDellOcaGUI extends JFrame {
 	        ImageIcon originalIcon = new ImageIcon(pedina.getPath());
 	        Image scaledImage = originalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 	        JLabel pedinaLabel = new JLabel(new ImageIcon(scaledImage));
+	        
+	        Giocatore giocatoreAssociato = null;
+	        for (Giocatore g : giocatori) {
+	            if (g.getPedina().getCodicePersonalizzazione().equals(pedina.getCodicePersonalizzazione())) {
+	                giocatoreAssociato = g;
+	                break;
+	            }
+	        }
 
-	        if (pedina == pedine.get(0))
+	        if (giocatoreAssociato != null) {
+	            pedinaLabel.setToolTipText(giocatoreAssociato.getNome());
+	        }
+
+	        if (!GiocoDellOcaGUI.this.isPartitaMultiplayer && pedina == pedine.get(0))
 	            pedinaLabel.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 2)); 
 	            
 	        casellaPanel.add(pedinaLabel);
@@ -1949,7 +1963,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		    		}
 		    	}
 		
-		        GiocoDellOcaGUI.this.giocoDellOca.avviaPartita(false);
+		        GiocoDellOcaGUI.this.giocoDellOca.avviaPartita();
 		
 		        // Inizializzazioni
 		        GiocoDellOcaGUI.this.buttonsCaselle = new ArrayList<>();
@@ -1972,10 +1986,20 @@ public class GiocoDellOcaGUI extends JFrame {
 		        tabellonePanel.removeAll();
 		        tabellonePanel.setLayout(new GridLayout(lato, lato));
 		
-		        var pedinaGiocatore = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getGiocatoreInSessione().getPedina();
-		
-		        pedine.add(pedinaGiocatore);
-		        pedine.add(new Pedina("pedina_bot", "Pedina Bot", "./src/images/KratosGoose.png"));
+		        if (!GiocoDellOcaGUI.this.isPartitaMultiplayer) {
+			        var pedinaGiocatore = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getGiocatoreInSessione().getPedina();
+			
+			        pedine.add(pedinaGiocatore);
+			        pedine.add(new Pedina("pedina_bot", "Pedina Bot", "./src/images/KratosGoose.png"));
+		        }
+		        else {
+		        	var giocatori = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getAllGiocatori();
+		        	
+		        	for (Giocatore giocatore: giocatori.values()) {
+		        		var pedina = giocatore.getPedina();
+		        		pedine.add(pedina);
+		        	}
+		        }
 		
 		        // Aggiungi le caselle
 				/*
@@ -2236,7 +2260,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		    		}
 		    	}
 		
-		        GiocoDellOcaGUI.this.giocoDellOca.avviaPartita(false);
+		        GiocoDellOcaGUI.this.giocoDellOca.avviaPartita();
 		
 		        // Inizializzazioni
 		        GiocoDellOcaGUI.this.buttonsCaselle = new ArrayList<>();

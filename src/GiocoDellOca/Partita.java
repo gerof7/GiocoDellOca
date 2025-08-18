@@ -38,7 +38,11 @@ public class Partita {
 		this.tabellone = tabellone;
 	}
 	
-	public void impostaPartitaSP() {
+	public Map<Integer, Giocatore> getAllGiocatori() {
+		return giocatori;
+	}
+
+	public void impostaPartita() {
 		var regole = impostazioni.getElencoRegole();
 		var scenario = impostazioni.getScenario();
 		var personalizzazioni = impostazioni.getElencoPersonalizzazioni();
