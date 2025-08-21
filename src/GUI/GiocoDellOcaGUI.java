@@ -107,6 +107,7 @@ public class GiocoDellOcaGUI extends JFrame {
 	private int numeroGiocatoreCorrente;
 	private int numeroGiocatoreInTurno = 1;
 	private JLabel lblGiocatoreInTurno;
+	private JLabel lblGiocatoreCorrente;
 
 	private void SwitchToPanel (JLayeredPane layeredPane, JPanel panel) {
 		layeredPane.removeAll();
@@ -121,27 +122,6 @@ public class GiocoDellOcaGUI extends JFrame {
         columnModel.removeColumn(column);
     }
 	
-	/*
-	 * private void aggiornaTabellone() { for (int i = 0; i < caselleMap.size();
-	 * i++) { JPanel casellaPanel = (JPanel) tabellonePanel.getComponent(i);
-	 * casellaPanel.removeAll(); JLabel casellaLabel = new JLabel("Casella " + (i +
-	 * 1)); casellaPanel.add(casellaLabel); }
-	 * 
-	 * for (Pedina pedina : pedine) { int posizioneCorrente = pedina.getPosizione();
-	 * JPanel casellaPanel = (JPanel) tabellonePanel.getComponent(posizioneCorrente
-	 * - 1);
-	 * 
-	 * ImageIcon originalIcon = new ImageIcon(pedina.getPath()); Image scaledImage =
-	 * originalIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH); JLabel
-	 * pedinaLabel = new JLabel(new ImageIcon(scaledImage));
-	 * 
-	 * if (pedina == pedine.get(0))
-	 * pedinaLabel.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 2));
-	 * 
-	 * casellaPanel.add(pedinaLabel); }
-	 * 
-	 * tabellonePanel.revalidate(); tabellonePanel.repaint(); }
-	 */
 	private void aggiornaTabellone() {
 	    for (int i = 0; i < caselleMap.size(); i++) {
 	        Casella casella = caselleMap.get(i + 1); // Ottieni la casella corrente
@@ -209,31 +189,7 @@ public class GiocoDellOcaGUI extends JFrame {
 	    tabellonePanel.repaint();
 	}
 
- 
-	/*
-	 * private void animaDado(JLabel dadoLabel, ActionListener afterAnimation) {
-	 * Timer timer = new Timer(100, new ActionListener() { int counter = 0;
-	 * 
-	 * @Override public void actionPerformed(ActionEvent e) { int numeroDado =
-	 * random.nextInt(6) + 1;
-	 * 
-	 * int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_'); int
-	 * dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
-	 * 
-	 * if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex <
-	 * dotIndex) { String path = GiocoDellOcaGUI.this.dadoPath.substring(0,
-	 * lastUnderscoreIndex + 1) + numeroDado +
-	 * GiocoDellOcaGUI.this.dadoPath.substring(dotIndex); dadoLabel.setIcon(new
-	 * ImageIcon(path)); } else dadoLabel.setIcon(new
-	 * ImageIcon("./src/images/dadoclassico_" + numeroDado + ".png"));
-	 * 
-	 * counter++;
-	 * 
-	 * if (counter >= 10) { ((Timer) e.getSource()).stop();
-	 * afterAnimation.actionPerformed(null); } } });
-	 * 
-	 * timer.start(); }
-	 */
+
 	private void animaDadi(List<JLabel> dadiLabels, ActionListener afterAnimation) {
 	    Timer timer = new Timer(100, new ActionListener() {
 	        int counter = 0;
@@ -268,47 +224,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	    timer.start();
 	}
 	 
-		/*
-		 * private void lanciaDado() { lanciaDadoButton.setEnabled(false);
-		 * 
-		 * if (turnoCorrente == 0) { animaDado(dadoLabel, new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) { int risultatoDado =
-		 * random.nextInt(6) + 1;
-		 * 
-		 * int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_'); int
-		 * dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
-		 * 
-		 * if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex <
-		 * dotIndex) { String path = GiocoDellOcaGUI.this.dadoPath.substring(0,
-		 * lastUnderscoreIndex + 1) + risultatoDado +
-		 * GiocoDellOcaGUI.this.dadoPath.substring(dotIndex); dadoLabel.setIcon(new
-		 * ImageIcon(path)); } else dadoLabel.setIcon(new
-		 * ImageIcon("./src/images/dadoclassico_" + risultatoDado + ".png"));
-		 * 
-		 * Pedina pedinaCorrente = pedine.get(turnoCorrente);
-		 * 
-		 * JOptionPane.showMessageDialog(null, giocatoreInSessione.getNome() +
-		 * " ha lanciato: " + risultatoDado);
-		 * 
-		 * eseguiMossa(pedinaCorrente, risultatoDado); aggiornaTabellone();
-		 * 
-		 * turnoCorrente = (turnoCorrente + 1) % pedine.size(); avviaTurnoBot(); } }); }
-		 * else { int risultatoDado = random.nextInt(6) + 1;
-		 * 
-		 * dadoLabel.setIcon(new ImageIcon("./src/images/dadoclassico_" + risultatoDado
-		 * + ".png"));
-		 * 
-		 * JOptionPane.showMessageDialog(null, "Il bot ha lanciato: " + risultatoDado);
-		 * 
-		 * Pedina pedinaCorrente = pedine.get(turnoCorrente);
-		 * 
-		 * eseguiMossa(pedinaCorrente, risultatoDado); aggiornaTabellone();
-		 * 
-		 * turnoCorrente = (turnoCorrente + 1) % pedine.size();
-		 * 
-		 * if (turnoCorrente == 0) { lanciaDadoButton.setEnabled(true); } } }
-		 */
 	 private void lanciaDado() {
 		    lanciaDadoButton.setEnabled(false);
 		    
@@ -398,7 +313,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		}
 
 	 
-	// Metodo per gestire la mossa
 	private void eseguiMossa(Pedina pedinaCorrente, int risultatoDado) {
 		
 		if (pedinaCorrente.getStato() == 0) {
@@ -418,27 +332,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		    pedinaCorrente.setStato(1); // Resetta lo stato a 1 per il prossimo turno
 		    return; // Esci dal metodo
 		}
-		
-		/*
-		 * int posizioneCorrente = pedinaCorrente.getPosizione(); Casella casellaAttuale
-		 * = caselleMap.get(posizioneCorrente);
-		 * 
-		 * int posizioneFinale = caselleMap.size(); boolean superataCasellaFinale =
-		 * false;
-		 * 
-		 * if (posizioneCorrente > posizioneFinale) { // Calcola la differenza int
-		 * differenza = posizioneCorrente - posizioneFinale;
-		 * 
-		 * // Torna indietro della differenza pedinaCorrente.Muovi(-differenza,
-		 * caselleMap.size()); posizioneCorrente = pedinaCorrente.getPosizione(); //
-		 * Aggiorna la posizione corrente
-		 * 
-		 * JOptionPane.showMessageDialog(null,
-		 * "Hai superato la casella finale! Torni indietro di " + differenza +
-		 * " caselle.");
-		 * 
-		 * superataCasellaFinale = true; }
-		 */	
 		
 		int posizioneIniziale = pedinaCorrente.getPosizione();
 		int posizioneFinale = caselleMap.size();
@@ -547,7 +440,22 @@ public class GiocoDellOcaGUI extends JFrame {
         tabellonePanel.removeAll(); // Rimuove tutti i componenti dal pannello
         tabellonePanel.revalidate();
         tabellonePanel.repaint();		    
-        tableRegoleSetSelezionabiliModel.setRowCount(0);
+        returnToMenuActions();	
+		this.giocoTerminato = true;
+	}
+	
+	private void aggiornaGiocatoreAttuale() {
+		var giocatori = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getAllGiocatori();
+	    Giocatore g = giocatori.get(numeroGiocatoreInTurno);
+	    if (g != null) {
+	    	lblGiocatoreInTurno.setText("Giocatore attuale: " + g.getNome());
+	    } else {
+	    	lblGiocatoreInTurno.setText("");
+	    }
+	}
+	
+	private void returnToMenuActions() {
+		tableRegoleSetSelezionabiliModel.setRowCount(0);
 		tableRegoleSetSelezionatoModel.setRowCount(0);	
     	tableRegoleSelezionabiliModel.setRowCount(0);
     	tableRegoleSelezionateModel.setRowCount(0);	
@@ -560,18 +468,9 @@ public class GiocoDellOcaGUI extends JFrame {
     	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
     	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
     	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
-		SwitchToPanel(layeredPane, menuPrincipalePanel);	
-		this.giocoTerminato = true;
-	}
-	
-	private void aggiornaGiocatoreAttuale() {
-		var giocatori = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getAllGiocatori();
-	    Giocatore g = giocatori.get(numeroGiocatoreInTurno);
-	    if (g != null) {
-	    	lblGiocatoreInTurno.setText("Giocatore attuale: " + g.getNome());
-	    } else {
-	    	lblGiocatoreInTurno.setText("");
-	    }
+    	GiocoDellOcaGUI.this.numeroGiocatoreInTurno = 1;
+		lblGiocatoreCorrente.setText("");
+		SwitchToPanel(layeredPane, menuPrincipalePanel);
 	}
 
 	/**
@@ -595,27 +494,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	 */
 	@SuppressWarnings("serial")
 	public GiocoDellOcaGUI() {		
-//		this.giocoDellOca = new GiocoDellOca();
-//		//Creazione panel
-//		this.setTitle("Gioco dell'Oca");
-//        ImageIcon icon = new ImageIcon("./src/images/Icon.png");
-//        
-//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        contentPane = new JPanel();
-//        
-//        this.setIconImage(icon.getImage());
-//        this.getContentPane().add(contentPane);
-//        this.pack();
-//        this.setLocationByPlatform(true);
-//        
-//        
-//		setBounds(100, 100, 533, 341);
-//        setLocationRelativeTo(null);
-//		
-//		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-//
-//		setContentPane(contentPane);
-//		contentPane.setLayout(new CardLayout(0, 0));
 		
 		this.giocoDellOca = new GiocoDellOca();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -624,8 +502,6 @@ public class GiocoDellOcaGUI extends JFrame {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         // Imposta il frame per occupare l'intero schermo utilizzando setBounds
         setBounds(0, 0, screenSize.width, screenSize.height);
-//		setBounds(100, 100, 533, 341);
-//        setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -636,9 +512,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		ImageIcon icon = new ImageIcon("./src/images/Icon.png");
 		this.setIconImage(icon.getImage());
 		
-		//Inizio semplificazione con i manager
-		
-		//MenuPanelManager menuPaneManager = new MenuPanelManager(contentPane);
 		JLabel lblTitleMenuPrincipale;
 		ButtonCustom btnConfiguraNuovaPartitaSP;
 		JPanel selezioneTipologiaRegolePanel;
@@ -713,12 +586,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneRegoleSelezionabili.setBounds(10, 211, 731, 462);
 		selezioneRegoleSingolePanel.add(scrollPaneRegoleSelezionabili);
 		
-        ToolTipManager.sharedInstance().setInitialDelay(200);
-        
-		//TableRegoleSelezionabili
-		//var tableRegoleSelezionabiliManager = new TabellaRegoleSelezionabiliManager(menuPaneManager);
-		//tableRegoleSelezionabili = tableRegoleSelezionabiliManager.getTableRegoleSelezionabili();
-		
+        ToolTipManager.sharedInstance().setInitialDelay(200);		
 		
 		tableRegoleSelezionabili = new JTable() {
 			@Override
@@ -754,15 +622,11 @@ public class GiocoDellOcaGUI extends JFrame {
 		tableRegoleSelezionabili.getColumnModel().getColumn(0).setResizable(false);
 		tableRegoleSelezionabili.getColumnModel().getColumn(1).setResizable(false);
 		tableRegoleSelezionabili.getColumnModel().getColumn(1).setPreferredWidth(103);
-		//menuPaneManager.getScrollPaneRegoleSelezionabili().setViewportView(tableRegoleSelezionabili);
 		scrollPaneRegoleSelezionabili.setViewportView(tableRegoleSelezionabili);
 		
 		tableRegoleSelezionabiliModel = (DefaultTableModel) tableRegoleSelezionabili.getModel();
 		
 		hideColumn(tableRegoleSelezionabili, 0);
-		
-		//TableRegoleSelezionate
-		//var tableRegoleSelezionateManager = new TabellaRegoleSelezionateManager(menuPaneManager);
 		
 		JScrollPane scrollPaneRegoleSelezionate;
 		ButtonCustom btnAvanzaToSelezionaScenarioRegSing;
@@ -771,7 +635,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneRegoleSelezionate = new JScrollPane();
 		scrollPaneRegoleSelezionate.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		scrollPaneRegoleSelezionate.setBounds(771, 211, 731, 462);
-		//menuPaneManager.getSelezioneRegoleSingolePanel().add(scrollPaneRegoleSelezionate);
 		selezioneRegoleSingolePanel.add(scrollPaneRegoleSelezionate);
 		
 		tableRegoleSelezionate = new JTable(){
@@ -818,13 +681,11 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnAvanzaToSelezionaScenarioRegSing = new ButtonCustom("Selezione scenario", ButtonCustom.ButtonStyle.WHITE);
 		btnAvanzaToSelezionaScenarioRegSing.setFont(new Font("Tahoma", Font.BOLD, 30));
 		btnAvanzaToSelezionaScenarioRegSing.setBounds(1150, 702, 352, 52);
-		//menuPaneManager.getSelezioneRegoleSingolePanel().add(btnAvanzaToSelezionaScenarioRegSing);
 		selezioneRegoleSingolePanel.add(btnAvanzaToSelezionaScenarioRegSing);
 				
 		btnReturnToMenuFromSelRegSing = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
 		btnReturnToMenuFromSelRegSing.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		btnReturnToMenuFromSelRegSing.setBounds(0, 0, 178, 74);
-		//menuPaneManager.getSelezioneRegoleSingolePanel().add(btnReturnToMenuFromSelRegSing);
 		selezioneRegoleSingolePanel.add(btnReturnToMenuFromSelRegSing);
 		
 		Map<String, String[]> dropdownValuesTableRegoleSelezionate = new HashMap<>();
@@ -833,11 +694,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		TableColumn statusColumn = tableRegoleSelezionate.getColumnModel().getColumn(2);
         statusColumn.setCellEditor(new CustomCellEditorRegoleSingole(dropdownValuesTableRegoleSelezionate, giocoDellOca));
 		
-		//tableRegoleSelezionate = tableRegoleSelezionateManager.getTableRegoleSelezionate();
 		hideColumn(tableRegoleSelezionate, 0);
-		
-		//TableScenariSelezionabili
-		//var tableScenariSelezionabiliManager = new TabellaScenariSelezionabiliManager(menuPaneManager);
 		
 		JPanel selezioneScenarioPanel;
 		JLabel lblTitleSelezioneScenario;
@@ -897,11 +754,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		hideColumn(tableScenariSelezionabili, 0);
 		
-		//tableScenariSelezionabili = tableScenariSelezionabiliManager.getTableScenariSelezionabili();
-		
-		//TableScenarioSelezionato
-		//var tableScenarioSelezionatoManager = new TabellaScenarioSelezionatoManager(menuPaneManager, tableScenariSelezionabiliManager);
-		
 		JScrollPane scrollPaneScenarioSelezionato;
 		ButtonCustom btnReturnToSelRegole;
 		ButtonCustom btnReturnToMenuFromSelScen;
@@ -913,7 +765,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneScenarioSelezionato = new JScrollPane();
 		scrollPaneScenarioSelezionato.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		scrollPaneScenarioSelezionato.setBounds(771, 211, 731, 462);
-		//tableScenariSelezionabiliManager.getSelezioneScenarioPanel().add(scrollPaneScenarioSelezionato);
 		selezioneScenarioPanel.add(scrollPaneScenarioSelezionato);
 		
 		tableScenarioSelezionato = new JTable(){
@@ -956,19 +807,16 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnReturnToSelRegole = new ButtonCustom("Selezione regole", ButtonCustom.ButtonStyle.WHITE);	
 		btnReturnToSelRegole.setFont(new Font("Tahoma", Font.BOLD, 30));
 		btnReturnToSelRegole.setBounds(10, 702, 352, 52);
-		//tableScenariSelezionabiliManager.getSelezioneScenarioPanel().add(btnReturnToSelRegole);
 		selezioneScenarioPanel.add(btnReturnToSelRegole);
 		
 		btnReturnToMenuFromSelScen = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
 		btnReturnToMenuFromSelScen.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		btnReturnToMenuFromSelScen.setBounds(0, 0, 178, 74);
-		//tableScenariSelezionabiliManager.getSelezioneScenarioPanel().add(btnReturnToMenuFromSelScen);
 		selezioneScenarioPanel.add(btnReturnToMenuFromSelScen);
 		
 		btnAvanzaToSelezionePers = new ButtonCustom("Selezione personalizzazioni", ButtonCustom.ButtonStyle.WHITE);
 		btnAvanzaToSelezionePers.setFont(new Font("Tahoma", Font.BOLD, 30));
 		btnAvanzaToSelezionePers.setBounds(1032, 702, 470, 52);
-		//tableScenariSelezionabiliManager.getSelezioneScenarioPanel().add(btnAvanzaToSelezionePers);
 		selezioneScenarioPanel.add(btnAvanzaToSelezionePers);
 		
 		tableScenarioSelezionatoModel = (DefaultTableModel) tableScenarioSelezionato.getModel();
@@ -976,7 +824,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		hideColumn(tableScenarioSelezionato, 0);
 		
 		selezioneRegoleSetPanel = new JPanel();
-		//menuPaneManager.getLayeredPane().add(selezioneRegoleSetPanel, "name_790010692461100");
 		layeredPane.add(selezioneRegoleSetPanel, "name_790010692461100");
 		selezioneRegoleSetPanel.setLayout(null);
 		
@@ -989,11 +836,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneRegoleSetSelezionabili.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		scrollPaneRegoleSetSelezionabili.setBounds(10, 211, 731, 462);
 		selezioneRegoleSetPanel.add(scrollPaneRegoleSetSelezionabili);
-		
-		//tableScenarioSelezionato = tableScenarioSelezionatoManager.getTableScenarioSelezionato();
-		
-		//TableRegoleSetSelezionabili
-		//var tableRegoleSetSelezionabiliManager = new TabellaRegoleSetSelezionabiliManager(tableScenarioSelezionatoManager);
 				
 		tableRegoleSetSelezionabili = new JTable(){
 			@Override
@@ -1027,15 +869,9 @@ public class GiocoDellOcaGUI extends JFrame {
 		});
 		tableRegoleSetSelezionabili.getColumnModel().getColumn(0).setResizable(false);
 		tableRegoleSetSelezionabili.getColumnModel().getColumn(0).setPreferredWidth(134);
-		//tableScenarioSelezionatoManager.getScrollPaneRegoleSetSelezionabili().setViewportView(tableRegoleSetSelezionabili);
 		scrollPaneRegoleSetSelezionabili.setViewportView(tableRegoleSetSelezionabili);
 		
 		tableRegoleSetSelezionabiliModel = (DefaultTableModel) tableRegoleSetSelezionabili.getModel();
-		
-		//tableRegoleSetSelezionabili = tableRegoleSetSelezionabiliManager.getTableRegoleSetSelezionabili();
-		
-		//TableRegoleSetSelezionato
-		//var tableRegoleSetSelezionatoManager = new TabellaRegoleSetSelezionatoManager(tableScenarioSelezionatoManager);
 		
 		JScrollPane scrollPaneRegoleSetSelezionato;
 		ButtonCustom btnAvanzaToSelezionaScenarioRegSet;
@@ -1044,7 +880,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneRegoleSetSelezionato = new JScrollPane();
 		scrollPaneRegoleSetSelezionato.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		scrollPaneRegoleSetSelezionato.setBounds(771, 211, 731, 462);
-		//tableScenarioSelezionatoManager.getSelezioneRegoleSetPanel().add(scrollPaneRegoleSetSelezionato);
 		selezioneRegoleSetPanel.add(scrollPaneRegoleSetSelezionato);
 		
 		tableRegoleSetSelezionato = new JTable(){
@@ -1089,20 +924,14 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnAvanzaToSelezionaScenarioRegSet = new ButtonCustom("Selezione scenario", ButtonCustom.ButtonStyle.WHITE);
 		btnAvanzaToSelezionaScenarioRegSet.setFont(new Font("Tahoma", Font.BOLD, 30));;		
 		btnAvanzaToSelezionaScenarioRegSet.setBounds(1150, 702, 352, 52);
-		//tableScenarioSelezionatoManager.getSelezioneRegoleSetPanel().add(btnAvanzaToSelezionaScenarioRegSet);
 		selezioneRegoleSetPanel.add(btnAvanzaToSelezionaScenarioRegSet);
 		
 		btnReturnToMenuFromSelRegSet = new ButtonCustom("Menu", ButtonCustom.ButtonStyle.DESTRUCTIVE);
 		btnReturnToMenuFromSelRegSet.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		btnReturnToMenuFromSelRegSet.setBounds(0, 0, 178, 74);
-		//tableScenarioSelezionatoManager.getSelezioneRegoleSetPanel().add(btnReturnToMenuFromSelRegSet);
 		selezioneRegoleSetPanel.add(btnReturnToMenuFromSelRegSet);
 		
-		//tableRegoleSetSelezionato = tableRegoleSetSelezionatoManager.getTableRegoleSetSelezionato();
 		hideColumn(tableRegoleSetSelezionato, 0);
-		
-		//TipologiaPersonalizzazioni
-		//var tipologiaPersonalizzazioniManager = new TipologiaPersonalizzazioniManager(menuPaneManager);
 		
 		JPanel selezioneTipologiaPersonalizzazionePanel;
 		JLabel lblTitleSelezioneTipologiaPersonalizzazione;
@@ -1110,10 +939,8 @@ public class GiocoDellOcaGUI extends JFrame {
 		ButtonCustom btnTipologiaPersDado;
 		ButtonCustom btnTipologiaPersPedina;
 		ButtonCustom btnReturnToSelScenFromSelPers;
-		JLabel lblGiocatoreCorrente;
 		
 		selezioneTipologiaPersonalizzazionePanel = new JPanel();
-		//menuPaneManager.getLayeredPane().add(selezioneTipologiaPersonalizzazionePanel, "name_1048915761636599");
 		layeredPane.add(selezioneTipologiaPersonalizzazionePanel, "name_1048915761636599");
 		selezioneTipologiaPersonalizzazionePanel.setLayout(null);
 		
@@ -1148,16 +975,12 @@ public class GiocoDellOcaGUI extends JFrame {
 		lblGiocatoreCorrente.setVisible(false);
 		selezioneTipologiaPersonalizzazionePanel.add(lblGiocatoreCorrente);
 		
-		//TablePedineSelezionabili
-		//var tablePedineSelezionabiliManager = new TabellaPedineSelezionabiliManager(menuPaneManager);	
-		
 		JPanel selezionePedinaPanel;
 		JLabel lblTitleSelezionePedina;
 		ButtonCustom btnReturnToMenuFromSelPedina;
 		JScrollPane scrollPanePedineSelezionabili;
 		
 		selezionePedinaPanel = new JPanel();
-		//menuPaneManager.getLayeredPane().add(selezionePedinaPanel, "name_1050308981416700");
 		layeredPane.add(selezionePedinaPanel, "name_1050308981416700");
 		selezionePedinaPanel.setLayout(null);
 		
@@ -1228,11 +1051,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		tablePedineSelezionabiliModel = (DefaultTableModel) tablePedineSelezionabili.getModel();
 		
-		//tablePedineSelezionabili = tablePedineSelezionabiliManager.getTablePedineSelezionabili();
 		hideColumn(tablePedineSelezionabili, 0);
-		
-		//TablePedinaSelezionata
-		//var tablePedineSelezionataManager = new TabellaPedinaSelezionataManager(tablePedineSelezionabiliManager);
 		
 		JScrollPane scrollPanePedinaSelezionata;
 		ButtonCustom btnSelezionePersonalizzazioniFromSelPed;
@@ -1243,7 +1062,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPanePedinaSelezionata = new JScrollPane();
 		scrollPanePedinaSelezionata.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		scrollPanePedinaSelezionata.setBounds(771, 211, 731, 462);
-		//tablePedineSelezionabiliManager.getSelezionePedinaPanel().add(scrollPanePedinaSelezionata);
 		selezionePedinaPanel.add(scrollPanePedinaSelezionata);
 		
 		tablePedinaSelezionata = new JTable(){
@@ -1300,13 +1118,11 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnSelezionePersonalizzazioniFromSelPed = new ButtonCustom("Selezione personalizzazioni", ButtonCustom.ButtonStyle.WHITE);
 		btnSelezionePersonalizzazioniFromSelPed.setFont(new Font("Tahoma", Font.BOLD, 30));
 		btnSelezionePersonalizzazioniFromSelPed.setBounds(10, 702, 463, 52);
-		//tablePedineSelezionabiliManager.getSelezionePedinaPanel().add(btnSelezionePersonalizzazioniFromSelPed);
 		selezionePedinaPanel.add(btnSelezionePersonalizzazioniFromSelPed);
 		
 		btnAvviaPartitaFromSelPedina = new ButtonCustom("Avvia partita", ButtonCustom.ButtonStyle.PRIMARY);
 		btnAvviaPartitaFromSelPedina.setFont(new Font("Tahoma", Font.BOLD, 30));
 		btnAvviaPartitaFromSelPedina.setBounds(1150, 702, 352, 52);
-		//tablePedineSelezionabiliManager.getSelezionePedinaPanel().add(btnAvviaPartitaFromSelPedina);
 		
 		btnConfiguraUtentiOspitiFromSelPedina = new ButtonCustom("Configura utenti ospiti", ButtonCustom.ButtonStyle.PRIMARY);
 		btnConfiguraUtentiOspitiFromSelPedina.setFont(new Font("Tahoma", Font.BOLD, 25));
@@ -1316,11 +1132,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnConfiguraProssimoUtenteFromSelPedina.setFont(new Font("Tahoma", Font.BOLD, 25));
 		btnConfiguraProssimoUtenteFromSelPedina.setBounds(1150, 702, 352, 52);
 				
-		//tablePedinaSelezionata = tablePedineSelezionataManager.getTablePedinaSelezionata();
 		hideColumn(tablePedinaSelezionata, 0);
-
-		//TableDadiSelezionabili
-		//var tableDadiSelezionabiliManager = new TabellaDadiSelezionabiliManager(menuPaneManager);
 		
 		JPanel selezioneDadiPanel;
 		JLabel lblTitleSelezioneDadi;
@@ -1328,7 +1140,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		JScrollPane scrollPaneDadiSelezionabili;
 		
 		selezioneDadiPanel = new JPanel();
-		//menuPaneManager.getLayeredPane().add(selezioneDadiPanel, "name_1050468066312900");
 		layeredPane.add(selezioneDadiPanel, "name_1050468066312900");
 		selezioneDadiPanel.setLayout(null);
 		
@@ -1399,11 +1210,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		tableDadiSelezionabiliModel = (DefaultTableModel) tableDadiSelezionabili.getModel();
 		
-		//tableDadiSelezionabili = tableDadiSelezionabiliManager.getTableDadiSelezionabili();
 		hideColumn(tableDadiSelezionabili, 0);
-
-		//TableDadoSelezionato
-		//var tableDadoSelezionatoManager = new TabellaDadoSelezionatoManager(tableDadiSelezionabiliManager);
 		
 		JScrollPane scrollPaneDadoSelezionato;
 		ButtonCustom btnSelezionePersonalizzazioniFromSelDadi;
@@ -1414,7 +1221,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		scrollPaneDadoSelezionato = new JScrollPane();
 		scrollPaneDadoSelezionato.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		scrollPaneDadoSelezionato.setBounds(771, 211, 731, 462);
-		//tableDadiSelezionabiliManager.getSelezioneDadiPanel().add(scrollPaneDadoSelezionato);
 		selezioneDadiPanel.add(scrollPaneDadoSelezionato);
 		
 		tableDadoSelezionato = new JTable(){
@@ -1474,7 +1280,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnSelezionePersonalizzazioniFromSelDadi = new ButtonCustom("Selezione personalizzazioni", ButtonCustom.ButtonStyle.WHITE);
 		btnSelezionePersonalizzazioniFromSelDadi.setFont(new Font("Tahoma", Font.BOLD, 30));
 		btnSelezionePersonalizzazioniFromSelDadi.setBounds(10, 702, 454, 52);
-		//tableDadiSelezionabiliManager.getSelezioneDadiPanel().add(btnSelezionePersonalizzazioniFromSelDadi);
 		selezioneDadiPanel.add(btnSelezionePersonalizzazioniFromSelDadi);
 				
 		btnAvviaPartitaFromSelDado = new ButtonCustom("Avvia partita", ButtonCustom.ButtonStyle.PRIMARY);
@@ -1489,7 +1294,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnConfiguraProssimoUtenteFromSelDado.setFont(new Font("Tahoma", Font.BOLD, 25));
 		btnConfiguraProssimoUtenteFromSelDado.setBounds(1150, 702, 352, 52);
 			
-		//tableDadoSelezionato = tableDadoSelezionatoManager.getTableDadoSelezionato();
 		hideColumn(tableDadoSelezionato, 0);
 		
 		JPanel tabelloneMainPanel = new JPanel();
@@ -1534,7 +1338,6 @@ public class GiocoDellOcaGUI extends JFrame {
 
 				
 		//Action listeners
-        //menuPaneManager.getBtnConfiguraNuovaPartitaSP()
 		btnConfiguraNuovaPartitaMP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				GiocoDellOcaGUI.this.giocoTerminato = false;
@@ -1546,9 +1349,7 @@ public class GiocoDellOcaGUI extends JFrame {
 				GiocoDellOcaGUI.this.mapRegoleSet = giocoDellOca.getMapRegoleSet();
 				GiocoDellOcaGUI.this.listScenari = giocoDellOca.getListaScenari();
 				GiocoDellOcaGUI.this.listPersonalizzazioni = giocoDellOca.getListaPersonalizzazioni();
-				
-				//tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel() (tutti i model sono dentro i metodi get dei rispettivi manager)
-				
+								
 				if(tableRegoleSelezionabiliModel.getRowCount() == 0 &&  tableRegoleSelezionateModel.getRowCount() == 0) 
 				{
 					for(var regola : listaRegoleSingole) {
@@ -1586,7 +1387,6 @@ public class GiocoDellOcaGUI extends JFrame {
 					}
 				}
 									
-				//SwitchToPanel(menuPaneManager.getLayeredPane(), menuPaneManager.getSelezioneTipologiaRegolePanel());
 				SwitchToPanel(layeredPane, selezioneTipologiaRegolePanel);
 			}
 		});
@@ -1602,9 +1402,7 @@ public class GiocoDellOcaGUI extends JFrame {
 				GiocoDellOcaGUI.this.mapRegoleSet = giocoDellOca.getMapRegoleSet();
 				GiocoDellOcaGUI.this.listScenari = giocoDellOca.getListaScenari();
 				GiocoDellOcaGUI.this.listPersonalizzazioni = giocoDellOca.getListaPersonalizzazioni();
-				
-				//tableRegoleSelezionabiliManager.getTableRegoleSelezionabiliModel() (tutti i model sono dentro i metodi get dei rispettivi manager)
-				
+								
 				if(tableRegoleSelezionabiliModel.getRowCount() == 0 &&  tableRegoleSelezionateModel.getRowCount() == 0) 
 				{
 					for(var regola : listaRegoleSingole) {
@@ -1642,22 +1440,17 @@ public class GiocoDellOcaGUI extends JFrame {
 					}
 				}
 									
-				//SwitchToPanel(menuPaneManager.getLayeredPane(), menuPaneManager.getSelezioneTipologiaRegolePanel());
 				SwitchToPanel(layeredPane, selezioneTipologiaRegolePanel);
 			}
 		});
 
-		
-		//menuPaneManager.getBtnTipologiaRegoleSingole()
-		
+				
 		btnTipologiaRegoleSingole.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SwitchToPanel(layeredPane, selezioneRegoleSingolePanel);
 			}
 		});
-		
-		//tableRegoleSelezionateManager.getBtnAvanzaToSelezionaScenarioRegSing()
-		
+				
 		btnAvanzaToSelezionaScenarioRegSing.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -1683,9 +1476,7 @@ public class GiocoDellOcaGUI extends JFrame {
 				SwitchToPanel(layeredPane, selezioneScenarioPanel);
 			}
 		});
-		
-		//anche gli altri button sono nei vari manager, accessibili dai getter
-		
+				
 		btnAvanzaToSelezionaScenarioRegSet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -2009,23 +1800,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		        	}
 		        }
 		
-		        // Aggiungi le caselle
-				/*
-				 * for (int i = 1; i <= numeroCaselle; i++) { Casella casella =
-				 * caselleMap.get(i); JPanel casellaPanel = new JPanel(new
-				 * FlowLayout(FlowLayout.CENTER, 5, 5));
-				 * casellaPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				 * casellaPanel.setBackground(Color.LIGHT_GRAY); ButtonCustom button = new
-				 * ButtonCustom("Casella " + i, ButtonStyle.WHITE);
-				 * 
-				 * if (casella.getDescrizione() != null && !casella.getDescrizione().isEmpty())
-				 * { casellaPanel.setToolTipText("Casella " + i + ": " +
-				 * casella.getDescrizione()); } else { casellaPanel.setToolTipText("Casella " +
-				 * i); }
-				 * 
-				 * casellaPanel.add(button); buttonsCaselle.add(button);
-				 * tabellonePanel.add(casellaPanel); }
-				 */
 		        for (int i = 1; i <= numeroCaselle; i++) {
 		            Casella casella = caselleMap.get(i);
 		            JPanel casellaPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5)); 
@@ -2116,32 +1890,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		        // Aggiungi il tabellone al centro
 		        tabelloneMainPanel.add(scrollPane, BorderLayout.CENTER);
-		
-				/*
-				 * // Pulsante "Lancia il dado" e dado lanciaDadoButton = new
-				 * ButtonCustom("Lancia il dado", ButtonStyle.PRIMARY);
-				 * lanciaDadoButton.addActionListener(new ActionListener() {
-				 * 
-				 * @Override public void actionPerformed(ActionEvent e) { lanciaDado(); } });
-				 * 
-				 * var path = "./src/images/dadoclassico_1.png";
-				 * 
-				 * if(GiocoDellOcaGUI.this.giocatoreInSessione != null &&
-				 * GiocoDellOcaGUI.this.giocatoreInSessione.getDado() != null) path =
-				 * GiocoDellOcaGUI.this.giocatoreInSessione.getDado().getPath();
-				 * 
-				 * GiocoDellOcaGUI.this.dadoLabel = new JLabel(new ImageIcon(path));
-				 * GiocoDellOcaGUI.this.dadoPath = path;
-				 * 
-				 * JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-				 * bottomPanel.add(lanciaDadoButton); bottomPanel.add(dadoLabel);
-				 * 
-				 * tabelloneMainPanel.add(bottomPanel, BorderLayout.SOUTH);
-				 * 
-				 * // Cambia il pannello SwitchToPanel(layeredPane, tabelloneMainPanel);
-				 * 
-				 * aggiornaTabellone();
-				 */
 		        
 		        dadiLabels = new ArrayList<>();
 
@@ -2304,24 +2052,7 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		        pedine.add(pedinaGiocatore);
 		        pedine.add(new Pedina("pedina_bot", "Pedina Bot", "./src/images/KratosGoose.png"));
-		
-		        // Aggiungi le caselle
-				/*
-				 * for (int i = 1; i <= numeroCaselle; i++) { Casella casella =
-				 * caselleMap.get(i); JPanel casellaPanel = new JPanel(new
-				 * FlowLayout(FlowLayout.CENTER, 5, 5));
-				 * casellaPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				 * casellaPanel.setBackground(Color.LIGHT_GRAY); ButtonCustom button = new
-				 * ButtonCustom("Casella " + i, ButtonStyle.WHITE);
-				 * 
-				 * if (casella.getDescrizione() != null && !casella.getDescrizione().isEmpty())
-				 * { casellaPanel.setToolTipText("Casella " + i + ": " +
-				 * casella.getDescrizione()); } else { casellaPanel.setToolTipText("Casella " +
-				 * i); }
-				 * 
-				 * casellaPanel.add(button); buttonsCaselle.add(button);
-				 * tabellonePanel.add(casellaPanel); }
-				 */
+
 		        for (int i = 1; i <= numeroCaselle; i++) {
 		            Casella casella = caselleMap.get(i);
 		            JPanel casellaPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5)); 
@@ -2402,32 +2133,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		        // Aggiungi il tabellone al centro
 		        tabelloneMainPanel.add(scrollPane, BorderLayout.CENTER);
-		
-				/*
-				 * // Pulsante "Lancia il dado" e dado lanciaDadoButton = new
-				 * ButtonCustom("Lancia il dado", ButtonStyle.PRIMARY);
-				 * lanciaDadoButton.addActionListener(new ActionListener() {
-				 * 
-				 * @Override public void actionPerformed(ActionEvent e) { lanciaDado(); } });
-				 * 
-				 * var path = "./src/images/dadoclassico_1.png";
-				 * 
-				 * if(GiocoDellOcaGUI.this.giocatoreInSessione != null &&
-				 * GiocoDellOcaGUI.this.giocatoreInSessione.getDado() != null) path =
-				 * GiocoDellOcaGUI.this.giocatoreInSessione.getDado().getPath();
-				 * 
-				 * GiocoDellOcaGUI.this.dadoLabel = new JLabel(new ImageIcon(path));
-				 * GiocoDellOcaGUI.this.dadoPath = path;
-				 * 
-				 * JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-				 * bottomPanel.add(lanciaDadoButton); bottomPanel.add(dadoLabel);
-				 * 
-				 * tabelloneMainPanel.add(bottomPanel, BorderLayout.SOUTH);
-				 * 
-				 * // Cambia il pannello SwitchToPanel(layeredPane, tabelloneMainPanel);
-				 * 
-				 * aggiornaTabellone();
-				 */
 		        
 		        dadiLabels = new ArrayList<>();
 
@@ -2470,143 +2175,45 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		btnReturnToMenuFromSelTipReg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tableRegoleSetSelezionabiliModel.setRowCount(0);
-				tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
-            	tableRegoleSelezionateModel.setRowCount(0);	
-            	tableScenariSelezionabiliModel.setRowCount(0);
-            	tableScenarioSelezionatoModel.setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
-            	tablePedinaSelezionataModel.setRowCount(0);
-            	tableDadiSelezionabiliModel.setRowCount(0);
-            	tableDadoSelezionatoModel.setRowCount(0);
-            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
-            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
-            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
-				lblGiocatoreCorrente.setText("");
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				returnToMenuActions();
 			}
 		});
 		
 		btnReturnToMenuFromSelRegSing.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tableRegoleSetSelezionabiliModel.setRowCount(0);
-				tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
-            	tableRegoleSelezionateModel.setRowCount(0);	
-            	tableScenariSelezionabiliModel.setRowCount(0);
-            	tableScenarioSelezionatoModel.setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
-            	tablePedinaSelezionataModel.setRowCount(0);
-            	tableDadiSelezionabiliModel.setRowCount(0);
-            	tableDadoSelezionatoModel.setRowCount(0);
-            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
-            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
-            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
-				lblGiocatoreCorrente.setText("");
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				returnToMenuActions();
 			}
 		});
 		
 		btnReturnToMenuFromSelRegSet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tableRegoleSetSelezionabiliModel.setRowCount(0);
-				tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
-            	tableRegoleSelezionateModel.setRowCount(0);	
-            	tableScenariSelezionabiliModel.setRowCount(0);
-            	tableScenarioSelezionatoModel.setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
-            	tablePedinaSelezionataModel.setRowCount(0);
-            	tableDadiSelezionabiliModel.setRowCount(0);
-            	tableDadoSelezionatoModel.setRowCount(0);
-            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
-            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
-            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
-				lblGiocatoreCorrente.setText("");
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				returnToMenuActions();
 			}
 		});
 		
 		btnReturnToMenuFromSelScen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tableRegoleSetSelezionabiliModel.setRowCount(0);
-				tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
-            	tableRegoleSelezionateModel.setRowCount(0);	
-            	tableScenariSelezionabiliModel.setRowCount(0);
-            	tableScenarioSelezionatoModel.setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
-            	tablePedinaSelezionataModel.setRowCount(0);
-            	tableDadiSelezionabiliModel.setRowCount(0);
-            	tableDadoSelezionatoModel.setRowCount(0);
-            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
-            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
-            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
-				lblGiocatoreCorrente.setText("");
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				returnToMenuActions();
 			}
 		});
 		
 		btnReturnToMenuFromSelPers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tableRegoleSetSelezionabiliModel.setRowCount(0);
-				tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
-            	tableRegoleSelezionateModel.setRowCount(0);	
-            	tableScenariSelezionabiliModel.setRowCount(0);
-            	tableScenarioSelezionatoModel.setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
-            	tablePedinaSelezionataModel.setRowCount(0);
-            	tableDadiSelezionabiliModel.setRowCount(0);
-            	tableDadoSelezionatoModel.setRowCount(0);
-            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
-            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
-            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
-				lblGiocatoreCorrente.setText("");
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				returnToMenuActions();
 			}
 		});
 		
 
 		btnReturnToMenuFromSelPedina.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tableRegoleSetSelezionabiliModel.setRowCount(0);
-				tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
-            	tableRegoleSelezionateModel.setRowCount(0);	
-            	tableScenariSelezionabiliModel.setRowCount(0);
-            	tableScenarioSelezionatoModel.setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
-            	tablePedinaSelezionataModel.setRowCount(0);
-            	tableDadiSelezionabiliModel.setRowCount(0);
-            	tableDadoSelezionatoModel.setRowCount(0);
-            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
-            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
-            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
-				lblGiocatoreCorrente.setText("");
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				returnToMenuActions();
 			}
 		});
 		
 
 		btnReturnToMenuFromSelDado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tableRegoleSetSelezionabiliModel.setRowCount(0);
-				tableRegoleSetSelezionatoModel.setRowCount(0);	
-            	tableRegoleSelezionabiliModel.setRowCount(0);
-            	tableRegoleSelezionateModel.setRowCount(0);	
-            	tableScenariSelezionabiliModel.setRowCount(0);
-            	tableScenarioSelezionatoModel.setRowCount(0);
-            	tablePedineSelezionabiliModel.setRowCount(0);
-            	tablePedinaSelezionataModel.setRowCount(0);
-            	tableDadiSelezionabiliModel.setRowCount(0);
-            	tableDadoSelezionatoModel.setRowCount(0);
-            	GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
-            	GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 0;
-            	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
-				lblGiocatoreCorrente.setText("");
-				SwitchToPanel(layeredPane, menuPrincipalePanel);
+				returnToMenuActions();
 			}
 		});
 		

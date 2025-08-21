@@ -11,6 +11,7 @@ import javax.swing.table.TableCellEditor;
 import GiocoDellOca.GiocoDellOca;
 import GiocoDellOca.TipologiaRegolaEnum;
 
+@SuppressWarnings("serial")
 public class CustomCellEditorRegoleSingole extends AbstractCellEditor implements TableCellEditor {
     private JComboBox<String> comboBox;
     private Map<String, String[]> dropdownValues;
