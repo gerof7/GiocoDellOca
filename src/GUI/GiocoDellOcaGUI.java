@@ -108,6 +108,7 @@ public class GiocoDellOcaGUI extends JFrame {
 	private int numeroGiocatoreInTurno = 1;
 	private JLabel lblGiocatoreInTurno;
 	private JLabel lblGiocatoreCorrente;
+	private JPanel dadiPanel;
 
 	private void SwitchToPanel (JLayeredPane layeredPane, JPanel panel) {
 		layeredPane.removeAll();
@@ -224,94 +225,189 @@ public class GiocoDellOcaGUI extends JFrame {
 	    timer.start();
 	}
 	 
-	 private void lanciaDado() {
-		    lanciaDadoButton.setEnabled(false);
-		    
-		    int numeroDadi = GiocoDellOcaGUI.this.numeroDadi;
-
-		    if (turnoCorrente == 0) { // Turno giocatore
-		        animaDadi(dadiLabels, new ActionListener() {
-		            @Override
-		            public void actionPerformed(ActionEvent e) {
-		                int risultatoTotale = 0;
-
-		                for (int i = 0; i < numeroDadi; i++) {
-		                    int risultatoDado = random.nextInt(6) + 1;
-		                    risultatoTotale += risultatoDado;
-		                    
-		           		 int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_');
-		        		 int dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
-
-		                    // Aggiorna l'immagine del dado
-		                    if (i < dadiLabels.size()) { 
-		                        JLabel dadoCorrente = dadiLabels.get(i);
-		                        if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex) 
-		                        {
-		                        	String path = GiocoDellOcaGUI.this.dadoPath.substring(0,
-                    				lastUnderscoreIndex + 1) + risultatoDado +
-                    				GiocoDellOcaGUI.this.dadoPath.substring(dotIndex); 
-		                        	dadoCorrente.setIcon(new ImageIcon(path)); 
-                       		    } 
-		                        else 
-	                       			dadoCorrente.setIcon(new ImageIcon("./src/images/dadoclassico_" + risultatoDado + ".png"));		                        
-		                    }
-		                }
-
-		                Pedina pedinaCorrente = pedine.get(turnoCorrente);
-
-		                JOptionPane.showMessageDialog(null, giocatoreInSessione.getNome() + " ha lanciato un totale di: " + risultatoTotale);
-
-		                eseguiMossa(pedinaCorrente, risultatoTotale);
-		                if(!GiocoDellOcaGUI.this.giocoTerminato) {
-			                aggiornaTabellone();
+	private void lanciaDado() {
+	    lanciaDadoButton.setEnabled(false);
 	
-			                turnoCorrente = (turnoCorrente + 1) % pedine.size();
-			                avviaTurnoBot();
-		                }
-		            }
-		        });
-		    } else { // Turno bot
-		        int risultatoTotale = 0;
-
-		        for (int i = 0; i < numeroDadi; i++) {
-		            int risultatoDado = random.nextInt(6) + 1;
-		            risultatoTotale += risultatoDado;
-		            
-		            int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_');
-        		    int dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
-
-		            // Aggiorna l'immagine del dado
-		            if (i < dadiLabels.size()) { // Assicurati che esista il JLabel per questo dado
-		                JLabel dadoCorrente = dadiLabels.get(i);
-		                if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex) 
-                        {
-                        	String path = GiocoDellOcaGUI.this.dadoPath.substring(0,
-            				lastUnderscoreIndex + 1) + risultatoDado +
-            				GiocoDellOcaGUI.this.dadoPath.substring(dotIndex); 
-                        	dadoCorrente.setIcon(new ImageIcon(path)); 
-               		    } 
-                        else 
-                   			dadoCorrente.setIcon(new ImageIcon("./src/images/dadoclassico_" + risultatoDado + ".png"));	
-		            }
-		        }
-
-		        JOptionPane.showMessageDialog(null, "Il bot ha lanciato un totale di: " + risultatoTotale);
-
-		        Pedina pedinaCorrente = pedine.get(turnoCorrente);
-
-		        eseguiMossa(pedinaCorrente, risultatoTotale);
-                if(!GiocoDellOcaGUI.this.giocoTerminato) {
-			        aggiornaTabellone();
+	    int numeroDadi = GiocoDellOcaGUI.this.numeroDadi;
+	    boolean isMultiplayer = GiocoDellOcaGUI.this.isPartitaMultiplayer;
 	
-			        turnoCorrente = (turnoCorrente + 1) % pedine.size();
+	    if (isMultiplayer) {
+	        // Recupero il giocatore corrente
+	        Giocatore giocatoreCorrente = GiocoDellOcaGUI.this.giocoDellOca
+	                .getPartitaCorrente()
+	                .getAllGiocatori()
+	                .get(numeroGiocatoreInTurno);
 	
-			        if (turnoCorrente == 0) {
-			            lanciaDadoButton.setEnabled(true);	            
-			        }
-                }
-		    }
-		}
+	        impostaDadiGiocatore(giocatoreCorrente);
+	
+	        animaDadi(dadiLabels, new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	                int risultatoTotale = 0;
+	
+	                // Lancia i dadi specifici del giocatore corrente
+	                for (int i = 0; i < numeroDadi; i++) {
+	                    int risultatoDado = random.nextInt(6) + 1;
+	                    risultatoTotale += risultatoDado;
+	
+	                    int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_');
+	                    int dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
+	
+	                    if (i < dadiLabels.size()) {
+	                        JLabel dadoCorrente = dadiLabels.get(i);
+	                        if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex) {
+	                            String path = GiocoDellOcaGUI.this.dadoPath.substring(0, lastUnderscoreIndex + 1)
+	                                    + risultatoDado
+	                                    + GiocoDellOcaGUI.this.dadoPath.substring(dotIndex);
+	                            dadoCorrente.setIcon(new ImageIcon(path));
+	                        } else {
+	                            dadoCorrente.setIcon(new ImageIcon("./src/images/dadoclassico_" + risultatoDado + ".png"));
+	                        }
+	                    }
+	                }
+	
+	                // Muovo la pedina corrispondente al giocatore corrente
+	                Pedina pedinaCorrente = pedine.get(numeroGiocatoreInTurno - 1);
+	
+	                JOptionPane.showMessageDialog(
+	                    null,
+	                    giocatoreCorrente.getNome() + " ha lanciato un totale di: " + risultatoTotale
+	                );
+	
+	                eseguiMossa(pedinaCorrente, risultatoTotale);
+	
+	                if (!GiocoDellOcaGUI.this.giocoTerminato) {
+	                    aggiornaTabellone();
+	
+	                    // Passo al prossimo giocatore
+	                    numeroGiocatoreInTurno = calcolaProssimoGiocatore(numeroGiocatoreInTurno);
+	
+	                    // Aggiorno la label con il prossimo giocatore
+	                    Giocatore prossimoGiocatore = GiocoDellOcaGUI.this.giocoDellOca
+	                            .getPartitaCorrente()
+	                            .getAllGiocatori()
+	                            .get(numeroGiocatoreInTurno);
+	
+	                    lblGiocatoreInTurno.setText("Turno attuale: " + prossimoGiocatore.getNome());
+	
+	                    lanciaDadoButton.setEnabled(true);
+	                }
+	            }
+	        });
+	        return;
+	    }
+	
+	    // ---------------- SINGLEPLAYER ----------------
+	    if (turnoCorrente == 0) {  // Turno giocatore umano
+	        animaDadi(dadiLabels, new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	                int risultatoTotale = 0;
+	
+	                for (int i = 0; i < numeroDadi; i++) {
+	                    int risultatoDado = random.nextInt(6) + 1;
+	                    risultatoTotale += risultatoDado;
+	
+	                    int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_');
+	                    int dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
+	
+	                    if (i < dadiLabels.size()) {
+	                        JLabel dadoCorrente = dadiLabels.get(i);
+	                        if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex) {
+	                            String path = GiocoDellOcaGUI.this.dadoPath.substring(0, lastUnderscoreIndex + 1)
+	                                    + risultatoDado
+	                                    + GiocoDellOcaGUI.this.dadoPath.substring(dotIndex);
+	                            dadoCorrente.setIcon(new ImageIcon(path));
+	                        } else {
+	                            dadoCorrente.setIcon(new ImageIcon("./src/images/dadoclassico_" + risultatoDado + ".png"));
+	                        }
+	                    }
+	                }
+	
+	                Pedina pedinaCorrente = pedine.get(turnoCorrente);
+	                JOptionPane.showMessageDialog(null,
+	                        giocatoreInSessione.getNome() + " ha lanciato un totale di: " + risultatoTotale);
+	
+	                eseguiMossa(pedinaCorrente, risultatoTotale);
+	
+	                if (!GiocoDellOcaGUI.this.giocoTerminato) {
+	                    aggiornaTabellone();
+	                    turnoCorrente = (turnoCorrente + 1) % pedine.size();
+	                    avviaTurnoBot();
+	                }
+	            }
+	        });
+	    } 
+	    // Turno BOT
+	    else {
+	        int risultatoTotale = 0;
+	
+	        for (int i = 0; i < numeroDadi; i++) {
+	            int risultatoDado = random.nextInt(6) + 1;
+	            risultatoTotale += risultatoDado;
+	
+	            int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_');
+	            int dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
+	
+	            if (i < dadiLabels.size()) {
+	                JLabel dadoCorrente = dadiLabels.get(i);
+	                if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex) {
+	                    String path = GiocoDellOcaGUI.this.dadoPath.substring(0, lastUnderscoreIndex + 1)
+	                            + risultatoDado
+	                            + GiocoDellOcaGUI.this.dadoPath.substring(dotIndex);
+	                    dadoCorrente.setIcon(new ImageIcon(path));
+	                } else {
+	                    dadoCorrente.setIcon(new ImageIcon("./src/images/dadoclassico_" + risultatoDado + ".png"));
+	                }
+	            }
+	        }
+	
+	        JOptionPane.showMessageDialog(null,
+	                "Il bot ha lanciato un totale di: " + risultatoTotale);
+	
+	        Pedina pedinaCorrente = pedine.get(turnoCorrente);
+	        eseguiMossa(pedinaCorrente, risultatoTotale);
+	
+	        if (!GiocoDellOcaGUI.this.giocoTerminato) {
+	            aggiornaTabellone();
+	            turnoCorrente = (turnoCorrente + 1) % pedine.size();
+	
+	            if (turnoCorrente == 0) {
+	                lanciaDadoButton.setEnabled(true);
+	            }
+	        }
+	    }
+	}
+	
+	private void impostaDadiGiocatore(Giocatore giocatore) {
+		dadiPanel.removeAll(); 
+		dadiPanel.revalidate();  
+		dadiPanel.repaint(); 
+		
+	    int numeroDadi = GiocoDellOcaGUI.this.numeroDadi;
 
+	    String dadoPath = (giocatore.getDado() != null)
+	            ? giocatore.getDado().getPath()
+	            : "./src/images/dadoclassico_1.png";
+	    
+        GiocoDellOcaGUI.this.dadoPath = dadoPath;
+
+	    GiocoDellOcaGUI.this.dadiLabels.clear();
+	    
+	    for (int i = 0; i < numeroDadi; i++) {
+	        JLabel dadoLabel = new JLabel(new ImageIcon(dadoPath));
+	        GiocoDellOcaGUI.this.dadiLabels.add(dadoLabel);
+            dadiPanel.add(dadoLabel);
+	    }
+	   
+	}
+	
+	private int calcolaProssimoGiocatore(int giocatoreAttuale) {
+        if (giocatoreAttuale >= GiocoDellOcaGUI.this.numeroGiocatoriMP) {
+            return 1; // Torna al giocatore 1
+        }
+        return giocatoreAttuale + 1;
+    }
 	 
 	private void eseguiMossa(Pedina pedinaCorrente, int risultatoDado) {
 		
@@ -1903,16 +1999,19 @@ public class GiocoDellOcaGUI extends JFrame {
 		        });
 
 		        // Creazione delle immagini dei dadi
-		        JPanel dadiPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		        for (int i = 0; i < numeroDadi; i++) {
-		            var path = "./src/images/dadoclassico_1.png";
-		            if (GiocoDellOcaGUI.this.giocatoreInSessione != null && GiocoDellOcaGUI.this.giocatoreInSessione.getDado() != null) {
-		                path = GiocoDellOcaGUI.this.giocatoreInSessione.getDado().getPath();
-		            }
-		            JLabel dadoLabel = new JLabel(new ImageIcon(path));
-					GiocoDellOcaGUI.this.dadoPath = path;		           
-					GiocoDellOcaGUI.this.dadiLabels.add(dadoLabel);
-		            dadiPanel.add(dadoLabel);
+		        dadiPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		        
+		        if(!GiocoDellOcaGUI.this.isPartitaMultiplayer) {
+			        for (int i = 0; i < numeroDadi; i++) {
+			            var path = "./src/images/dadoclassico_1.png";
+			            if (GiocoDellOcaGUI.this.giocatoreInSessione != null && GiocoDellOcaGUI.this.giocatoreInSessione.getDado() != null) {
+			                path = GiocoDellOcaGUI.this.giocatoreInSessione.getDado().getPath();
+			            }
+			            JLabel dadoLabel = new JLabel(new ImageIcon(path));
+						GiocoDellOcaGUI.this.dadoPath = path;		           
+						GiocoDellOcaGUI.this.dadiLabels.add(dadoLabel);
+			            dadiPanel.add(dadoLabel);
+			        }
 		        }
 
 		        // Aggiungi il pulsante e i dadi al pannello inferiore
