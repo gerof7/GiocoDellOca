@@ -2147,10 +2147,20 @@ public class GiocoDellOcaGUI extends JFrame {
 		        tabellonePanel.removeAll();
 		        tabellonePanel.setLayout(new GridLayout(lato, lato));
 		
-		        var pedinaGiocatore = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getGiocatoreInSessione().getPedina();
-		
-		        pedine.add(pedinaGiocatore);
-		        pedine.add(new Pedina("pedina_bot", "Pedina Bot", "./src/images/KratosGoose.png"));
+		        if (!GiocoDellOcaGUI.this.isPartitaMultiplayer) {
+			        var pedinaGiocatore = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getGiocatoreInSessione().getPedina();
+			
+			        pedine.add(pedinaGiocatore);
+			        pedine.add(new Pedina("pedina_bot", "Pedina Bot", "./src/images/KratosGoose.png"));
+		        }
+		        else {
+		        	var giocatori = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().getAllGiocatori();
+		        	
+		        	for (Giocatore giocatore: giocatori.values()) {
+		        		var pedina = giocatore.getPedina();
+		        		pedine.add(pedina);
+		        	}
+		        }
 
 		        for (int i = 1; i <= numeroCaselle; i++) {
 		            Casella casella = caselleMap.get(i);
@@ -2217,13 +2227,22 @@ public class GiocoDellOcaGUI extends JFrame {
 		                
 		                if (conferma == JOptionPane.YES_OPTION) {
 		                	terminaGioco();
+		                	lblGiocatoreCorrente.setText("");
 	    				}
 		            }
 		        });
 		
 		        // Aggiungi il pulsante "Menu" nella parte superiore
-		        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		        topPanel.add(menuButton);
+		        JPanel topPanel = new JPanel(new BorderLayout());
+		        topPanel.add(menuButton, BorderLayout.WEST);
+		        
+		        if(GiocoDellOcaGUI.this.isPartitaMultiplayer) {
+			        lblGiocatoreInTurno = new JLabel("Turno attuale: ");
+			        lblGiocatoreInTurno.setFont(new Font("Segoe UI", Font.BOLD, 18));
+			        lblGiocatoreInTurno.setHorizontalAlignment(SwingConstants.CENTER);
+			        topPanel.add(lblGiocatoreInTurno, BorderLayout.CENTER);
+			        aggiornaGiocatoreAttuale();
+		        }
 		        tabelloneMainPanel.add(topPanel, BorderLayout.NORTH);
 		        
 		        JScrollPane scrollPane = new JScrollPane(tabellonePanel);
@@ -2245,16 +2264,19 @@ public class GiocoDellOcaGUI extends JFrame {
 		        });
 
 		        // Creazione delle immagini dei dadi
-		        JPanel dadiPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		        for (int i = 0; i < numeroDadi; i++) {
-		            var path = "./src/images/dadoclassico_1.png";
-		            if (GiocoDellOcaGUI.this.giocatoreInSessione != null && GiocoDellOcaGUI.this.giocatoreInSessione.getDado() != null) {
-		                path = GiocoDellOcaGUI.this.giocatoreInSessione.getDado().getPath();
-		            }
-		            JLabel dadoLabel = new JLabel(new ImageIcon(path));
-					GiocoDellOcaGUI.this.dadoPath = path;		           
-					GiocoDellOcaGUI.this.dadiLabels.add(dadoLabel);
-		            dadiPanel.add(dadoLabel);
+	        	dadiPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		        
+		        if(!GiocoDellOcaGUI.this.isPartitaMultiplayer) {
+			        for (int i = 0; i < numeroDadi; i++) {
+			            var path = "./src/images/dadoclassico_1.png";
+			            if (GiocoDellOcaGUI.this.giocatoreInSessione != null && GiocoDellOcaGUI.this.giocatoreInSessione.getDado() != null) {
+			                path = GiocoDellOcaGUI.this.giocatoreInSessione.getDado().getPath();
+			            }
+			            JLabel dadoLabel = new JLabel(new ImageIcon(path));
+						GiocoDellOcaGUI.this.dadoPath = path;		           
+						GiocoDellOcaGUI.this.dadiLabels.add(dadoLabel);
+			            dadiPanel.add(dadoLabel);
+			        }
 		        }
 
 		        // Aggiungi il pulsante e i dadi al pannello inferiore
