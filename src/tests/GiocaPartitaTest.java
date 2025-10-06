@@ -7,13 +7,15 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import GiocoDellOca.Giocatore;
+import GiocoDellOca.Partita;
 import GiocoDellOca.Pedina;
 import GiocoDellOca.Regola;
 import GiocoDellOca.Scenario;
 import GiocoDellOca.Tabellone;
 import GiocoDellOca.TipologiaRegolaEnum;
 
-class GiocaPartitaSPTest {
+class GiocaPartitaTest {
 
 	@Test
 	void pedinaTest() {
@@ -36,5 +38,16 @@ class GiocaPartitaSPTest {
 		var tabellone = new Tabellone(regole, scenario);
 		assertNotNull(tabellone);	
 	}
+	
+	 @Test
+	 void partitaTest() {
+		 var giocatoreHost = new Giocatore("Giocatore 1", 1);
+		 var partita = new Partita(giocatoreHost);
+		 
+		 partita.aggiungiGiocatoriOspiti(4);
+		 
+		 assertEquals(partita.getAllGiocatori().size(), 4);		
+
+	 }
 
 }
