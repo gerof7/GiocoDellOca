@@ -25,6 +25,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -58,6 +59,12 @@ import GiocoDellOca.TipologiaCasellaSpecialeEnum;
 import GiocoDellOca.TipologiaRegolaEnum;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.LayoutManager;
+import javax.swing.JTextField;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class GiocoDellOcaGUI extends JFrame {
 
@@ -643,6 +650,12 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnConfiguraNuovaPartitaMP.setFont(new Font("Segoe UI", Font.PLAIN, 28));
 		btnConfiguraNuovaPartitaMP.setBounds(564, 365, 384, 92);
 		menuPrincipalePanel.add(btnConfiguraNuovaPartitaMP);
+		
+		ButtonCustom btnGestisciImpostazioni = new ButtonCustom("Nuova partita multiplayer", ButtonStyle.PRIMARY);
+		btnGestisciImpostazioni.setText("Gestisci impostazioni");
+		btnGestisciImpostazioni.setFont(new Font("Segoe UI", Font.PLAIN, 28));
+		btnGestisciImpostazioni.setBounds(564, 510, 384, 92);
+		menuPrincipalePanel.add(btnGestisciImpostazioni);
 		
 		selezioneTipologiaRegolePanel = new JPanel();
 		layeredPane.add(selezioneTipologiaRegolePanel, "name_610398291392000");
@@ -1431,8 +1444,155 @@ public class GiocoDellOcaGUI extends JFrame {
 		contenutoCentratoselezioneNumeroGiocatoriPanel.add(btn4Players);
 
 		selezioneNumeroGiocatoriPanel.add(contenutoCentratoselezioneNumeroGiocatoriPanel, BorderLayout.CENTER);
+		
+		JLabel gestioneImpostazioniTitle = new JLabel("Impostazioni");
+        gestioneImpostazioniTitle.setFont(new Font("Segoe UI", Font.BOLD, 60));
+        gestioneImpostazioniTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
-				
+        // 🔹 FONT STANDARD
+        Font labelFont = new Font("Segoe UI", Font.PLAIN, 20);
+
+        // 🔹 SEZIONE NOMI GIOCATORI
+        JLabel[] nomeLabel = new JLabel[4];
+        JTextField[] nomeField = new JTextField[4];
+        for (int i = 0; i < 4; i++) {
+            nomeLabel[i] = new JLabel("Nome Giocatore " + (i + 1) + ":");
+            nomeLabel[i].setFont(labelFont);
+            nomeField[i] = new JTextField(15);
+        }
+
+        // 🔹 SEZIONE PRINCIPALE: REGOLESET + SCENARIO
+        JLabel regoleSetLabel = new JLabel("RegoleSet:");
+        JLabel scenarioLabel = new JLabel("Scenario:");
+        regoleSetLabel.setFont(labelFont);
+        scenarioLabel.setFont(labelFont);
+
+        JComboBox<String> regoleSetDropdown = new JComboBox<>();
+        JComboBox<String> scenarioDropdown = new JComboBox<>();
+        regoleSetDropdown.setFont(labelFont);
+        scenarioDropdown.setFont(labelFont);
+
+        // 🔹 SEZIONE DADI E PEDINE
+        JLabel[] dadoLabel = new JLabel[4];
+        JLabel[] pedinaLabel = new JLabel[4];
+        @SuppressWarnings("unchecked")
+		JComboBox<String>[] dadoDropdown = new JComboBox[4];
+        @SuppressWarnings("unchecked")
+		JComboBox<String>[] pedinaDropdown = new JComboBox[4];
+
+        for (int i = 0; i < 4; i++) {
+            dadoLabel[i] = new JLabel("Dado Giocatore " + (i + 1) + ":");
+            dadoLabel[i].setFont(labelFont);
+            dadoDropdown[i] = new JComboBox<>();
+            dadoDropdown[i].setFont(labelFont);
+
+            pedinaLabel[i] = new JLabel("Pedina Giocatore " + (i + 1) + ":");
+            pedinaLabel[i].setFont(labelFont);
+            pedinaDropdown[i] = new JComboBox<>();
+            pedinaDropdown[i].setFont(labelFont);
+        }
+
+        // 🔹 LAYOUT GROUPLAYOUT
+        JPanel gestioneImpostazioniFormPanel = new JPanel();
+        GroupLayout layout = new GroupLayout(gestioneImpostazioniFormPanel);
+        gestioneImpostazioniFormPanel.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+
+        // 🔹 STRUTTURA ORIZZONTALE
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                // Riga nomi 1 e 2
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(nomeLabel[0]).addComponent(nomeField[0])
+                    .addGap(30)
+                    .addComponent(nomeLabel[1]).addComponent(nomeField[1]))
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(nomeLabel[2]).addComponent(nomeField[2])
+                    .addGap(30)
+                    .addComponent(nomeLabel[3]).addComponent(nomeField[3]))
+                // Riga regoleset/scenario
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(regoleSetLabel)
+                    .addComponent(regoleSetDropdown, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
+                    .addGap(40)
+                    .addComponent(scenarioLabel)
+                    .addComponent(scenarioDropdown, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE))
+                // Riga dadi
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(dadoLabel[0]).addComponent(dadoDropdown[0])
+                    .addGap(20)
+                    .addComponent(dadoLabel[1]).addComponent(dadoDropdown[1])
+                    .addGap(20)
+                    .addComponent(dadoLabel[2]).addComponent(dadoDropdown[2])
+                    .addGap(20)
+                    .addComponent(dadoLabel[3]).addComponent(dadoDropdown[3]))
+                // Riga pedine
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(pedinaLabel[0]).addComponent(pedinaDropdown[0])
+                    .addGap(20)
+                    .addComponent(pedinaLabel[1]).addComponent(pedinaDropdown[1])
+                    .addGap(20)
+                    .addComponent(pedinaLabel[2]).addComponent(pedinaDropdown[2])
+                    .addGap(20)
+                    .addComponent(pedinaLabel[3]).addComponent(pedinaDropdown[3]))
+        );
+
+        // 🔹 STRUTTURA VERTICALE
+        layout.setVerticalGroup(
+            layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(nomeLabel[0]).addComponent(nomeField[0])
+                    .addComponent(nomeLabel[1]).addComponent(nomeField[1]))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(nomeLabel[2]).addComponent(nomeField[2])
+                    .addComponent(nomeLabel[3]).addComponent(nomeField[3]))
+                .addGap(30)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(regoleSetLabel).addComponent(regoleSetDropdown)
+                    .addComponent(scenarioLabel).addComponent(scenarioDropdown))
+                .addGap(40)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(dadoLabel[0]).addComponent(dadoDropdown[0])
+                    .addComponent(dadoLabel[1]).addComponent(dadoDropdown[1])
+                    .addComponent(dadoLabel[2]).addComponent(dadoDropdown[2])
+                    .addComponent(dadoLabel[3]).addComponent(dadoDropdown[3]))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(pedinaLabel[0]).addComponent(pedinaDropdown[0])
+                    .addComponent(pedinaLabel[1]).addComponent(pedinaDropdown[1])
+                    .addComponent(pedinaLabel[2]).addComponent(pedinaDropdown[2])
+                    .addComponent(pedinaLabel[3]).addComponent(pedinaDropdown[3]))
+        );
+        
+     // 🔹 PANNELLO DEI PULSANTI IN BASSO
+        JPanel gestioneImpostazioniBottomPanel = new JPanel(new BorderLayout());
+        gestioneImpostazioniBottomPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+
+        // Pulsante "Torna al menu"
+        ButtonCustom btnReturnToMenuFromGestioneImpostazioni = new ButtonCustom("Menu", ButtonStyle.DESTRUCTIVE);
+        btnReturnToMenuFromGestioneImpostazioni.setFont(new Font("Segoe UI", Font.BOLD, 20));
+
+        // Pulsante "Salva impostazioni"
+        ButtonCustom salvaImpostazioniButton = new ButtonCustom("Salva impostazioni", ButtonStyle.WHITE);
+        salvaImpostazioniButton.setFont(new Font("Segoe UI", Font.BOLD, 20));
+
+        // Pannellino interno per posizionare i pulsanti
+        JPanel gestioneImpostazioniButtonsPanel = new JPanel(new BorderLayout());
+        gestioneImpostazioniButtonsPanel.add(btnReturnToMenuFromGestioneImpostazioni, BorderLayout.WEST);
+        gestioneImpostazioniButtonsPanel.add(salvaImpostazioniButton, BorderLayout.EAST);
+        gestioneImpostazioniBottomPanel.add(gestioneImpostazioniButtonsPanel, BorderLayout.CENTER);
+        
+        JPanel gestioneImpostazioniTopPanel = new JPanel(new BorderLayout());        
+        gestioneImpostazioniTopPanel.add(btnReturnToMenuFromGestioneImpostazioni, BorderLayout.WEST);
+        gestioneImpostazioniTopPanel.add(gestioneImpostazioniTitle, BorderLayout.CENTER);
+        
+        // 🔹 PANNELLO PRINCIPALE
+        JPanel gestioneImpostazioniMainPanel = new JPanel(new BorderLayout(20, 20));
+        gestioneImpostazioniMainPanel.add(gestioneImpostazioniTopPanel, BorderLayout.NORTH);
+        gestioneImpostazioniMainPanel.add(gestioneImpostazioniFormPanel, BorderLayout.CENTER);
+        gestioneImpostazioniMainPanel.add(gestioneImpostazioniBottomPanel, BorderLayout.SOUTH);
+        gestioneImpostazioniMainPanel.setBorder(BorderFactory.createEmptyBorder(40, 60, 40, 60));
+		
 		//Action listeners
 		btnConfiguraNuovaPartitaMP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -2338,6 +2498,12 @@ public class GiocoDellOcaGUI extends JFrame {
 			}
 		});
 		
+		btnReturnToMenuFromGestioneImpostazioni.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				returnToMenuActions();
+			}
+		});
+		
 		tableRegoleSelezionabili.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -2823,6 +2989,12 @@ public class GiocoDellOcaGUI extends JFrame {
 	            	 if(personalizzazione instanceof Dado)
 	            		 tableDadiSelezionabiliModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
 				 }
+			}
+		});
+		
+		btnGestisciImpostazioni.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwitchToPanel(layeredPane, gestioneImpostazioniMainPanel);
 			}
 		});
 		
