@@ -30,6 +30,17 @@ public class GiocoDellOca {
         
         this.giocatoreInSessione = new Giocatore("Giocatore 1", 1);
         
+        if(listaRegoleSingole.isEmpty())
+			loadRegoleSingole();
+		
+		if(mapRegoleSet.isEmpty())
+			loadRegoleSet();
+		
+		if(listaPersonalizzazioni.isEmpty())
+			loadPersonalizzazioni();
+		
+		if(listaScenari.isEmpty())
+			loadScenari();   
 	}
 	
 	public void loadRegoleSingole() {
@@ -98,20 +109,7 @@ public class GiocoDellOca {
 	
 	public void configuraNuovaPartita() {
 		
-		var partitaCorrente = new Partita(giocatoreInSessione);
-		
-		if(listaRegoleSingole.isEmpty())
-			loadRegoleSingole();
-		
-		if(mapRegoleSet.isEmpty())
-			loadRegoleSet();
-		
-		if(listaPersonalizzazioni.isEmpty())
-			loadPersonalizzazioni();
-		
-		if(listaScenari.isEmpty())
-			loadScenari();
-		
+		var partitaCorrente = new Partita(giocatoreInSessione);	
 		this.partitaCorrente = partitaCorrente;
 	}
 	

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -43,6 +44,7 @@ import javax.swing.table.TableColumnModel;
 
 import GUIComponents.ButtonCustom;
 import GUIComponents.ButtonCustom.ButtonStyle;
+import GUIComponents.ComboItem;
 import GUIComponents.CustomCellEditorRegoleSingole;
 import GiocoDellOca.Casella;
 import GiocoDellOca.CasellaFine;
@@ -1462,64 +1464,163 @@ public class GiocoDellOcaGUI extends JFrame {
         }
 
         // 🔹 SEZIONE PRINCIPALE: REGOLESET + SCENARIO
-        JLabel regoleSetLabel = new JLabel("RegoleSet:");
+        JLabel regoleSetLabel = new JLabel("Set di regole:");
         JLabel scenarioLabel = new JLabel("Scenario:");
         regoleSetLabel.setFont(labelFont);
         scenarioLabel.setFont(labelFont);
 
-        JComboBox<String> regoleSetDropdown = new JComboBox<>();
-        JComboBox<String> scenarioDropdown = new JComboBox<>();
+        JComboBox<ComboItem> regoleSetDropdown = new JComboBox<>();
+        JComboBox<ComboItem> scenarioDropdown = new JComboBox<>();
         regoleSetDropdown.setFont(labelFont);
         scenarioDropdown.setFont(labelFont);
+        
+        regoleSetDropdown.addItem(new ComboItem("0", "Seleziona"));
+        scenarioDropdown.addItem(new ComboItem("0", "Seleziona"));
+        
+        var listaScenari = GiocoDellOcaGUI.this.giocoDellOca.getListaScenari();
+        var regoleSet = GiocoDellOcaGUI.this.giocoDellOca.getMapRegoleSet();
+        
+        for (var entry : regoleSet.entrySet()) {
+            String codice = entry.getKey(); 
+            Set<Regola> set = entry.getValue();
+
+            String descrizione = set.stream()
+                .map(r -> r.getDescrizione() + " " + r.getProprietaRegola())
+                .limit(2)
+                .collect(Collectors.joining(", "));
+
+            String testoCombo = codice + " : " + descrizione + (set.size() > 2 ? " ..." : "");
+
+            regoleSetDropdown.addItem(new ComboItem(codice, testoCombo));
+        }
+
+        for (Scenario s : listaScenari) {
+            String codice = s.getCodiceScenario();
+            String descrizione = s.getDescrizione();
+            scenarioDropdown.addItem(new ComboItem(codice, descrizione));
+        }
+        
+        regoleSetDropdown.addActionListener(e -> {
+            ComboItem selected = (ComboItem) regoleSetDropdown.getSelectedItem();
+            if (selected != null) {
+                regoleSetDropdown.setToolTipText("<html>" + selected.getDescrizione() + "</html>");
+            }
+        });
 
         // 🔹 SEZIONE DADI E PEDINE
         JLabel[] dadoLabel = new JLabel[4];
         JLabel[] pedinaLabel = new JLabel[4];
         @SuppressWarnings("unchecked")
-		JComboBox<String>[] dadoDropdown = new JComboBox[4];
+		JComboBox<ComboItem>[] dadoDropdown = new JComboBox[4];
         @SuppressWarnings("unchecked")
-		JComboBox<String>[] pedinaDropdown = new JComboBox[4];
+		JComboBox<ComboItem>[] pedinaDropdown = new JComboBox[4];
+        
+        var personalizzazioni = GiocoDellOcaGUI.this.giocoDellOca.getListaPersonalizzazioni();
 
         for (int i = 0; i < 4; i++) {
             dadoLabel[i] = new JLabel("Dado Giocatore " + (i + 1) + ":");
             dadoLabel[i].setFont(labelFont);
             dadoDropdown[i] = new JComboBox<>();
             dadoDropdown[i].setFont(labelFont);
-
+            
+            for (var p : personalizzazioni) {
+            	if(p instanceof Dado) {
+	                String codice = p.getCodicePersonalizzazione();
+	                String descrizione = p.getDescrizione();
+	                dadoDropdown[i].addItem(new ComboItem(codice, descrizione));
+            	}
+            }
+            
+            var dadoDropdownAttuale = dadoDropdown[i];
+            dadoDropdown[i].addActionListener(e -> {
+                ComboItem selected = (ComboItem) dadoDropdownAttuale.getSelectedItem();
+                if (selected != null) {
+                	
+                	var codice = selected.getCodice();
+                	var path = "";
+                	for (var p : personalizzazioni){
+                		if(p.getCodicePersonalizzazione() == codice) {
+                			path = p.getPath();
+                			break;
+                		}
+                	}
+                	
+                	dadoDropdownAttuale.setToolTipText("<html>"
+                            + "<div style='text-align: center;'>"
+                            + selected.getDescrizione() + "<br>"
+                            + "<img src='file:" + path
+                            + "' width='50' height='50' style='display: block; margin: 0 auto;' />"
+                            + "</div>"
+                            + "</html>");
+                }
+            });
+            
             pedinaLabel[i] = new JLabel("Pedina Giocatore " + (i + 1) + ":");
             pedinaLabel[i].setFont(labelFont);
             pedinaDropdown[i] = new JComboBox<>();
             pedinaDropdown[i].setFont(labelFont);
+            
+            for (var p : personalizzazioni) {
+            	if(p instanceof Pedina) {
+	                String codice = p.getCodicePersonalizzazione();
+	                String descrizione = p.getDescrizione();
+	                pedinaDropdown[i].addItem(new ComboItem(codice, descrizione));
+            	}
+            }
+            
+            var pedinaDropdownAttuale = pedinaDropdown[i];
+            pedinaDropdown[i].addActionListener(e -> {
+                ComboItem selected = (ComboItem) pedinaDropdownAttuale.getSelectedItem();
+                if (selected != null) {
+                	
+                	var codice = selected.getCodice();
+                	var path = "";
+                	for (var p : personalizzazioni){
+                		if(p.getCodicePersonalizzazione() == codice) {
+                			path = p.getPath();
+                			break;
+                		}
+                	}
+                	
+                	pedinaDropdownAttuale.setToolTipText("<html>"
+                            + "<div style='text-align: center;'>"
+                            + selected.getDescrizione() + "<br>"
+                            + "<img src='file:" + path
+                            + "' width='50' height='50' style='display: block; margin: 0 auto;' />"
+                            + "</div>"
+                            + "</html>");
+                }
+            });
         }
 
         // 🔹 LAYOUT GROUPLAYOUT
         JPanel gestioneImpostazioniFormPanel = new JPanel();
-        GroupLayout layout = new GroupLayout(gestioneImpostazioniFormPanel);
-        gestioneImpostazioniFormPanel.setLayout(layout);
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
+        GroupLayout layoutGestisciImpostazioni = new GroupLayout(gestioneImpostazioniFormPanel);
+        gestioneImpostazioniFormPanel.setLayout(layoutGestisciImpostazioni);
+        layoutGestisciImpostazioni.setAutoCreateGaps(true);
+        layoutGestisciImpostazioni.setAutoCreateContainerGaps(true);
 
         // 🔹 STRUTTURA ORIZZONTALE
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+        layoutGestisciImpostazioni.setHorizontalGroup(
+            layoutGestisciImpostazioni.createParallelGroup(GroupLayout.Alignment.CENTER)
                 // Riga nomi 1 e 2
-                .addGroup(layout.createSequentialGroup()
+                .addGroup(layoutGestisciImpostazioni.createSequentialGroup()
                     .addComponent(nomeLabel[0]).addComponent(nomeField[0])
                     .addGap(30)
                     .addComponent(nomeLabel[1]).addComponent(nomeField[1]))
-                .addGroup(layout.createSequentialGroup()
+                .addGroup(layoutGestisciImpostazioni.createSequentialGroup()
                     .addComponent(nomeLabel[2]).addComponent(nomeField[2])
                     .addGap(30)
                     .addComponent(nomeLabel[3]).addComponent(nomeField[3]))
                 // Riga regoleset/scenario
-                .addGroup(layout.createSequentialGroup()
+                .addGroup(layoutGestisciImpostazioni.createSequentialGroup()
                     .addComponent(regoleSetLabel)
                     .addComponent(regoleSetDropdown, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
                     .addGap(40)
                     .addComponent(scenarioLabel)
                     .addComponent(scenarioDropdown, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE))
                 // Riga dadi
-                .addGroup(layout.createSequentialGroup()
+                .addGroup(layoutGestisciImpostazioni.createSequentialGroup()
                     .addComponent(dadoLabel[0]).addComponent(dadoDropdown[0])
                     .addGap(20)
                     .addComponent(dadoLabel[1]).addComponent(dadoDropdown[1])
@@ -1528,7 +1629,7 @@ public class GiocoDellOcaGUI extends JFrame {
                     .addGap(20)
                     .addComponent(dadoLabel[3]).addComponent(dadoDropdown[3]))
                 // Riga pedine
-                .addGroup(layout.createSequentialGroup()
+                .addGroup(layoutGestisciImpostazioni.createSequentialGroup()
                     .addComponent(pedinaLabel[0]).addComponent(pedinaDropdown[0])
                     .addGap(20)
                     .addComponent(pedinaLabel[1]).addComponent(pedinaDropdown[1])
@@ -1539,25 +1640,25 @@ public class GiocoDellOcaGUI extends JFrame {
         );
 
         // 🔹 STRUTTURA VERTICALE
-        layout.setVerticalGroup(
-            layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+        layoutGestisciImpostazioni.setVerticalGroup(
+            layoutGestisciImpostazioni.createSequentialGroup()
+                .addGroup(layoutGestisciImpostazioni.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(nomeLabel[0]).addComponent(nomeField[0])
                     .addComponent(nomeLabel[1]).addComponent(nomeField[1]))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addGroup(layoutGestisciImpostazioni.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(nomeLabel[2]).addComponent(nomeField[2])
                     .addComponent(nomeLabel[3]).addComponent(nomeField[3]))
                 .addGap(30)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addGroup(layoutGestisciImpostazioni.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(regoleSetLabel).addComponent(regoleSetDropdown)
                     .addComponent(scenarioLabel).addComponent(scenarioDropdown))
                 .addGap(40)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addGroup(layoutGestisciImpostazioni.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(dadoLabel[0]).addComponent(dadoDropdown[0])
                     .addComponent(dadoLabel[1]).addComponent(dadoDropdown[1])
                     .addComponent(dadoLabel[2]).addComponent(dadoDropdown[2])
                     .addComponent(dadoLabel[3]).addComponent(dadoDropdown[3]))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addGroup(layoutGestisciImpostazioni.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(pedinaLabel[0]).addComponent(pedinaDropdown[0])
                     .addComponent(pedinaLabel[1]).addComponent(pedinaDropdown[1])
                     .addComponent(pedinaLabel[2]).addComponent(pedinaDropdown[2])
@@ -1586,10 +1687,14 @@ public class GiocoDellOcaGUI extends JFrame {
         gestioneImpostazioniTopPanel.add(btnReturnToMenuFromGestioneImpostazioni, BorderLayout.WEST);
         gestioneImpostazioniTopPanel.add(gestioneImpostazioniTitle, BorderLayout.CENTER);
         
+        JScrollPane gestioneImpostazioniFormPanelScroll = new JScrollPane(gestioneImpostazioniFormPanel);
+        gestioneImpostazioniFormPanelScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        gestioneImpostazioniFormPanelScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        
         // 🔹 PANNELLO PRINCIPALE
         JPanel gestioneImpostazioniMainPanel = new JPanel(new BorderLayout(20, 20));
         gestioneImpostazioniMainPanel.add(gestioneImpostazioniTopPanel, BorderLayout.NORTH);
-        gestioneImpostazioniMainPanel.add(gestioneImpostazioniFormPanel, BorderLayout.CENTER);
+        gestioneImpostazioniMainPanel.add(gestioneImpostazioniFormPanelScroll, BorderLayout.CENTER);
         gestioneImpostazioniMainPanel.add(gestioneImpostazioniBottomPanel, BorderLayout.SOUTH);
         gestioneImpostazioniMainPanel.setBorder(BorderFactory.createEmptyBorder(40, 60, 40, 60));
 		
@@ -2995,6 +3100,11 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnGestisciImpostazioni.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SwitchToPanel(layeredPane, gestioneImpostazioniMainPanel);
+			}
+		});
+		
+		salvaImpostazioniButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 			}
 		});
 		
