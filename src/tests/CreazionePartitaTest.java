@@ -33,7 +33,7 @@ class CreazionePartitaTest {
 		var mapRegoleSet = controller.getMapRegoleSet();
 		
 		for (var entry : mapRegoleSet.entrySet()) {
-			if (entry.getKey() == "Set regole 1") {
+			if (entry.getKey() == "Partita classica") {
 				for (var regola : entry.getValue()) {
 					impostazioni.addRegolaToList(regola);
 				}
