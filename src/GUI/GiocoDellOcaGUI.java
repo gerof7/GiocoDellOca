@@ -61,12 +61,8 @@ import GiocoDellOca.TipologiaCasellaSpecialeEnum;
 import GiocoDellOca.TipologiaRegolaEnum;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.LayoutManager;
 import javax.swing.JTextField;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 
 public class GiocoDellOcaGUI extends JFrame {
 
@@ -454,8 +450,12 @@ public class GiocoDellOcaGUI extends JFrame {
 	        
 	        pedinaCorrente.setPosizione(nuovaPosizione);
 		}
-		else
-			pedinaCorrente.Muovi(risultatoDado, caselleMap.size());
+		else {
+			var numeroCaselleRimbalzoIndietro = pedinaCorrente.Muovi(risultatoDado, caselleMap.size());
+			if (numeroCaselleRimbalzoIndietro != 0)
+				JOptionPane.showMessageDialog(null, 
+			            "Hai superato la casella finale! Torni indietro di " + numeroCaselleRimbalzoIndietro + " caselle.");
+		}
 	    
 	    int posizioneCorrente = pedinaCorrente.getPosizione();	    
 	    Casella casellaAttuale = caselleMap.get(posizioneCorrente);
@@ -480,13 +480,19 @@ public class GiocoDellOcaGUI extends JFrame {
 		            case Oca:
 		                int avanzamento = risultatoDado; // Supponendo che risultatoDado sia il totale appena ottenuto
 		                JOptionPane.showMessageDialog(null, "Oca! Avanzi di " + avanzamento + " caselle.");
-		                pedinaCorrente.Muovi(avanzamento, caselleMap.size());
+		                var numeroCaselleRimbalzoIndietro = pedinaCorrente.Muovi(avanzamento, caselleMap.size());
+		                if (numeroCaselleRimbalzoIndietro != 0)
+		    				JOptionPane.showMessageDialog(null, 
+		    			            "Hai superato la casella finale! Torni indietro di " + numeroCaselleRimbalzoIndietro + " caselle.");
 		                break;
 	
 		            case Ponte:
 		                int avanzamentoPonte = posizioneCorrente;
 		                JOptionPane.showMessageDialog(null, "Ponte! Avanzi di " + avanzamentoPonte + " caselle.");
-		                pedinaCorrente.Muovi(avanzamentoPonte, caselleMap.size());
+		                var numeroCaselleRimbalzoIndietroPonte = pedinaCorrente.Muovi(avanzamentoPonte, caselleMap.size());
+		                if (numeroCaselleRimbalzoIndietroPonte != 0)
+		    				JOptionPane.showMessageDialog(null, 
+		    			            "Hai superato la casella finale! Torni indietro di " + numeroCaselleRimbalzoIndietroPonte + " caselle.");
 		                break;
 	
 		            case Locanda:
@@ -577,6 +583,34 @@ public class GiocoDellOcaGUI extends JFrame {
 		lblGiocatoreCorrente.setText("");
 		SwitchToPanel(layeredPane, menuPrincipalePanel);
 	}
+	
+	private void selezionaComboPerCodici(JComboBox<ComboItem>[] comboArray, Map<Integer, String> codiciMap) {
+	    for (int j = 0; j < comboArray.length; j++) {
+	        JComboBox<ComboItem> combo = comboArray[j];
+	        String codiceDaSelezionare = codiciMap.get(j+1); // j = indice della combo
+	        
+	        if (codiceDaSelezionare == null) {
+	            combo.setSelectedIndex(0); // seleziona "Seleziona..." o default
+	            continue;
+	        }
+
+	        for (int i = 0; i < combo.getItemCount(); i++) {
+	            ComboItem item = combo.getItemAt(i);
+	            if (codiceDaSelezionare.equals(item.getCodice())) {
+	                combo.setSelectedIndex(i);
+	                break;
+	            }
+	        }
+	    }
+	}
+	
+	private void setTextFieldsDaMappa(JTextField[] fields, Map<Integer, String> valoriMap) {
+	    for (int i = 0; i < fields.length; i++) {
+	        String valore = valoriMap.get(i + 1); // 👈 offset +1
+	        fields[i].setText(valore != null ? valore : ""); // evita null
+	    }
+	}
+
 
 	/**
 	 * Launch the application.
@@ -1455,12 +1489,12 @@ public class GiocoDellOcaGUI extends JFrame {
         Font labelFont = new Font("Segoe UI", Font.PLAIN, 20);
 
         // 🔹 SEZIONE NOMI GIOCATORI
-        JLabel[] nomeLabel = new JLabel[4];
-        JTextField[] nomeField = new JTextField[4];
+        JLabel[] gestionImpostazioniNomeLabel = new JLabel[4];
+        JTextField[] gestioneImpostazioniNomeField = new JTextField[4];
         for (int i = 0; i < 4; i++) {
-            nomeLabel[i] = new JLabel("Nome Giocatore " + (i + 1) + ":");
-            nomeLabel[i].setFont(labelFont);
-            nomeField[i] = new JTextField(15);
+            gestionImpostazioniNomeLabel[i] = new JLabel("Nome Giocatore " + (i + 1) + ":");
+            gestionImpostazioniNomeLabel[i].setFont(labelFont);
+            gestioneImpostazioniNomeField[i] = new JTextField(15);
         }
 
         // 🔹 SEZIONE PRINCIPALE: REGOLESET + SCENARIO
@@ -1511,16 +1545,17 @@ public class GiocoDellOcaGUI extends JFrame {
         JLabel[] dadoLabel = new JLabel[4];
         JLabel[] pedinaLabel = new JLabel[4];
         @SuppressWarnings("unchecked")
-		JComboBox<ComboItem>[] dadoDropdown = new JComboBox[4];
+        JComboBox<ComboItem>[] dadoDropdown = new JComboBox[4];
         @SuppressWarnings("unchecked")
-		JComboBox<ComboItem>[] pedinaDropdown = new JComboBox[4];
+        JComboBox<ComboItem>[] pedinaDropdown = new JComboBox[4];
         
         var personalizzazioni = GiocoDellOcaGUI.this.giocoDellOca.getListaPersonalizzazioni();
 
         for (int i = 0; i < 4; i++) {
+            dadoDropdown[i] = new JComboBox<>();
+        	dadoDropdown[i].addItem(new ComboItem("0", "Seleziona"));
             dadoLabel[i] = new JLabel("Dado Giocatore " + (i + 1) + ":");
             dadoLabel[i].setFont(labelFont);
-            dadoDropdown[i] = new JComboBox<>();
             dadoDropdown[i].setFont(labelFont);
             
             for (var p : personalizzazioni) {
@@ -1555,9 +1590,10 @@ public class GiocoDellOcaGUI extends JFrame {
                 }
             });
             
+            pedinaDropdown[i] = new JComboBox<>();
+            pedinaDropdown[i].addItem(new ComboItem("0", "Seleziona"));
             pedinaLabel[i] = new JLabel("Pedina Giocatore " + (i + 1) + ":");
             pedinaLabel[i].setFont(labelFont);
-            pedinaDropdown[i] = new JComboBox<>();
             pedinaDropdown[i].setFont(labelFont);
             
             for (var p : personalizzazioni) {
@@ -1592,7 +1628,7 @@ public class GiocoDellOcaGUI extends JFrame {
                 }
             });
         }
-
+      
         // 🔹 LAYOUT GROUPLAYOUT
         JPanel gestioneImpostazioniFormPanel = new JPanel();
         GroupLayout layoutGestisciImpostazioni = new GroupLayout(gestioneImpostazioniFormPanel);
@@ -1605,13 +1641,13 @@ public class GiocoDellOcaGUI extends JFrame {
             layoutGestisciImpostazioni.createParallelGroup(GroupLayout.Alignment.CENTER)
                 // Riga nomi 1 e 2
                 .addGroup(layoutGestisciImpostazioni.createSequentialGroup()
-                    .addComponent(nomeLabel[0]).addComponent(nomeField[0])
+                    .addComponent(gestionImpostazioniNomeLabel[0]).addComponent(gestioneImpostazioniNomeField[0])
                     .addGap(30)
-                    .addComponent(nomeLabel[1]).addComponent(nomeField[1]))
+                    .addComponent(gestionImpostazioniNomeLabel[1]).addComponent(gestioneImpostazioniNomeField[1]))
                 .addGroup(layoutGestisciImpostazioni.createSequentialGroup()
-                    .addComponent(nomeLabel[2]).addComponent(nomeField[2])
+                    .addComponent(gestionImpostazioniNomeLabel[2]).addComponent(gestioneImpostazioniNomeField[2])
                     .addGap(30)
-                    .addComponent(nomeLabel[3]).addComponent(nomeField[3]))
+                    .addComponent(gestionImpostazioniNomeLabel[3]).addComponent(gestioneImpostazioniNomeField[3]))
                 // Riga regoleset/scenario
                 .addGroup(layoutGestisciImpostazioni.createSequentialGroup()
                     .addComponent(regoleSetLabel)
@@ -1643,11 +1679,11 @@ public class GiocoDellOcaGUI extends JFrame {
         layoutGestisciImpostazioni.setVerticalGroup(
             layoutGestisciImpostazioni.createSequentialGroup()
                 .addGroup(layoutGestisciImpostazioni.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(nomeLabel[0]).addComponent(nomeField[0])
-                    .addComponent(nomeLabel[1]).addComponent(nomeField[1]))
+                    .addComponent(gestionImpostazioniNomeLabel[0]).addComponent(gestioneImpostazioniNomeField[0])
+                    .addComponent(gestionImpostazioniNomeLabel[1]).addComponent(gestioneImpostazioniNomeField[1]))
                 .addGroup(layoutGestisciImpostazioni.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(nomeLabel[2]).addComponent(nomeField[2])
-                    .addComponent(nomeLabel[3]).addComponent(nomeField[3]))
+                    .addComponent(gestionImpostazioniNomeLabel[2]).addComponent(gestioneImpostazioniNomeField[2])
+                    .addComponent(gestionImpostazioniNomeLabel[3]).addComponent(gestioneImpostazioniNomeField[3]))
                 .addGap(30)
                 .addGroup(layoutGestisciImpostazioni.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(regoleSetLabel).addComponent(regoleSetDropdown)
@@ -1664,6 +1700,28 @@ public class GiocoDellOcaGUI extends JFrame {
                     .addComponent(pedinaLabel[2]).addComponent(pedinaDropdown[2])
                     .addComponent(pedinaLabel[3]).addComponent(pedinaDropdown[3]))
         );
+        
+        var codiceScenarioDaSelezionare = GiocoDellOcaGUI.this.giocoDellOca.getCodiceScenarioDefault();
+        if (codiceScenarioDaSelezionare != null && codiceScenarioDaSelezionare.isEmpty()) {
+        	for (int i = 0; i < scenarioDropdown.getItemCount(); i++) {
+        	    ComboItem item = scenarioDropdown.getItemAt(i);
+        	    if (item.getCodice().equals(codiceScenarioDaSelezionare)) {
+        	    	scenarioDropdown.setSelectedIndex(i);
+        	        break;
+        	    }
+        	}
+        }
+        
+        var codiceRegoleSetDaSelezionare = GiocoDellOcaGUI.this.giocoDellOca.getCodiceRegoleSetDefault();
+        if (codiceRegoleSetDaSelezionare != null && codiceRegoleSetDaSelezionare.isEmpty()) {
+        	for (int i = 0; i < regoleSetDropdown.getItemCount(); i++) {
+        	    ComboItem item = regoleSetDropdown.getItemAt(i);
+        	    if (item.getCodice().equals(codiceRegoleSetDaSelezionare)) {
+        	    	regoleSetDropdown.setSelectedIndex(i);
+        	        break;
+        	    }
+        	}
+        }
         
      // 🔹 PANNELLO DEI PULSANTI IN BASSO
         JPanel gestioneImpostazioniBottomPanel = new JPanel(new BorderLayout());
@@ -3099,12 +3157,84 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		btnGestisciImpostazioni.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				var codiciDadiGiocatoriDefault = GiocoDellOcaGUI.this.giocoDellOca.getCodiciDadiGiocatoriDefault();
+		        var codiciPedineGiocatoriDefault = GiocoDellOcaGUI.this.giocoDellOca.getCodiciPedineGiocatoriDefault();
+		       
+		        selezionaComboPerCodici(dadoDropdown, codiciDadiGiocatoriDefault);
+		        selezionaComboPerCodici(pedinaDropdown, codiciPedineGiocatoriDefault);
+		        
+		        var nomiGiocatoriDefault = GiocoDellOcaGUI.this.giocoDellOca.getNomiGiocatoriDefault();
+		        setTextFieldsDaMappa(gestioneImpostazioniNomeField, nomiGiocatoriDefault);
+		        
+		        
+		        String codiceScenarioSalvato = GiocoDellOcaGUI.this.giocoDellOca.getCodiceScenarioDefault();
+		        if (codiceScenarioSalvato != null) {
+		            for (int i = 0; i < scenarioDropdown.getItemCount(); i++) {
+		                ComboItem item = scenarioDropdown.getItemAt(i);
+		                if (codiceScenarioSalvato.equals(item.getCodice())) {
+		                    scenarioDropdown.setSelectedIndex(i);
+		                    break;
+		                }
+		            }
+		        }
+		        
+		        String codiceRegoleSetSalvato = GiocoDellOcaGUI.this.giocoDellOca.getCodiceRegoleSetDefault();
+		        if (codiceRegoleSetSalvato != null) {
+		            for (int i = 0; i < regoleSetDropdown.getItemCount(); i++) {
+		                ComboItem item = regoleSetDropdown.getItemAt(i);
+		                if (codiceRegoleSetSalvato.equals(item.getCodice())) {
+		                	regoleSetDropdown.setSelectedIndex(i);
+		                    break;
+		                }
+		            }
+		        }
+		        
+		        
 				SwitchToPanel(layeredPane, gestioneImpostazioniMainPanel);
 			}
 		});
 		
 		salvaImpostazioniButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String nome1 = gestioneImpostazioniNomeField[0].getText().trim();
+				String nome2 = gestioneImpostazioniNomeField[1].getText().trim();
+				String nome3 = gestioneImpostazioniNomeField[2].getText().trim();
+				String nome4 = gestioneImpostazioniNomeField[3].getText().trim();
+				
+				ComboItem regoleSetItem = (ComboItem) regoleSetDropdown.getSelectedItem();
+		        ComboItem scenarioItem = (ComboItem) scenarioDropdown.getSelectedItem();
+		        String codiceRegoleSet = regoleSetItem != null && regoleSetItem.getCodice() != "0" ? regoleSetItem.getCodice() : null;
+		        String codiceScenario = scenarioItem != null && scenarioItem.getCodice() != "0" ? scenarioItem.getCodice() : null;
+		        
+				ComboItem dadoGiocatore1Item = (ComboItem) dadoDropdown[0].getSelectedItem();
+				ComboItem dadoGiocatore2Item = (ComboItem) dadoDropdown[1].getSelectedItem();
+				ComboItem dadoGiocatore3Item = (ComboItem) dadoDropdown[2].getSelectedItem();
+				ComboItem dadoGiocatore4Item = (ComboItem) dadoDropdown[3].getSelectedItem();
+		        String codiceDadoGiocatore1 = dadoGiocatore1Item != null && dadoGiocatore1Item.getCodice() != "0" ? dadoGiocatore1Item.getCodice() : null;
+		        String codiceDadoGiocatore2 = dadoGiocatore2Item != null && dadoGiocatore2Item.getCodice() != "0" ? dadoGiocatore2Item.getCodice() : null;
+		        String codiceDadoGiocatore3 = dadoGiocatore3Item != null && dadoGiocatore3Item.getCodice() != "0" ? dadoGiocatore3Item.getCodice() : null;
+		        String codiceDadoGiocatore4 = dadoGiocatore4Item != null && dadoGiocatore4Item.getCodice() != "0" ? dadoGiocatore4Item.getCodice() : null;
+				
+				ComboItem pedinaGiocatore1Item = (ComboItem) pedinaDropdown[0].getSelectedItem();
+				ComboItem pedinaGiocatore2Item = (ComboItem) pedinaDropdown[1].getSelectedItem();
+				ComboItem pedinaGiocatore3Item = (ComboItem) pedinaDropdown[2].getSelectedItem();
+				ComboItem pedinaGiocatore4Item = (ComboItem) pedinaDropdown[3].getSelectedItem();
+				String codicePedinaGiocatore1 = pedinaGiocatore1Item != null && pedinaGiocatore1Item.getCodice() != "0" ? pedinaGiocatore1Item.getCodice() : null;
+		        String codicePedinaGiocatore2 = pedinaGiocatore2Item != null && pedinaGiocatore2Item.getCodice() != "0" ? pedinaGiocatore2Item.getCodice() : null;
+		        String codicePedinaGiocatore3 = pedinaGiocatore3Item != null && pedinaGiocatore3Item.getCodice() != "0" ? pedinaGiocatore3Item.getCodice() : null;
+		        String codicePedinaGiocatore4 = pedinaGiocatore4Item != null && pedinaGiocatore4Item.getCodice() != "0" ? pedinaGiocatore4Item.getCodice() : null;
+
+		        GiocoDellOcaGUI.this.giocoDellOca.salvaImpostazioni(
+		                nome1, nome2, nome3, nome4,
+		                codiceRegoleSet,
+		                codiceScenario,
+		                codiceDadoGiocatore1, codiceDadoGiocatore2, codiceDadoGiocatore3, codiceDadoGiocatore4,
+		                codicePedinaGiocatore1, codicePedinaGiocatore2, codicePedinaGiocatore3, codicePedinaGiocatore4
+		            );
+		        
+		        JOptionPane.showMessageDialog(null, "Impostazioni salvate correttamente!");
+
+
 			}
 		});
 		

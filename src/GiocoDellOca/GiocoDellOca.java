@@ -7,10 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
-*
-* @author Francesco
-*/
+
 public class GiocoDellOca {
 		
 	private Giocatore giocatoreInSessione;
@@ -21,6 +18,13 @@ public class GiocoDellOca {
 	private List<Personalizzazione> listaPersonalizzazioni;
 	private List<Scenario> listaScenari;
 	
+	private Map<Integer, String> nomiGiocatoriDefault;
+	private String codiceScenarioDefault;
+	private String codiceRegoleSetDefault;
+	private Map<Integer, String> codiciDadiGiocatoriDefault;
+	private Map<Integer, String> codiciPedineGiocatoriDefault;
+	
+	
 	public GiocoDellOca() {
 		
 		this.listaRegoleSingole = new ArrayList<>();
@@ -28,6 +32,10 @@ public class GiocoDellOca {
         this.listaPersonalizzazioni = new ArrayList<>();
         this.listaScenari = new ArrayList<>();
         
+        this.nomiGiocatoriDefault = new LinkedHashMap<>();
+        this.codiciDadiGiocatoriDefault = new LinkedHashMap<>();
+        this.codiciPedineGiocatoriDefault = new LinkedHashMap<>();
+    
         this.giocatoreInSessione = new Giocatore("Giocatore 1", 1);
         
         if(listaRegoleSingole.isEmpty())
@@ -140,6 +148,56 @@ public class GiocoDellOca {
 	
 	public void resetPartita() {
 	    this.partitaCorrente = null;
+	}
+
+	public Map<Integer, String> getNomiGiocatoriDefault() {
+		return nomiGiocatoriDefault;
+	}
+
+	public String getCodiceScenarioDefault() {
+		return codiceScenarioDefault;
+	}
+
+	public String getCodiceRegoleSetDefault() {
+		return codiceRegoleSetDefault;
+	}
+
+	public Map<Integer, String> getCodiciDadiGiocatoriDefault() {
+		return codiciDadiGiocatoriDefault;
+	}
+
+	public Map<Integer, String> getCodiciPedineGiocatoriDefault() {
+		return codiciPedineGiocatoriDefault;
+	}
+	
+	public void salvaImpostazioni(String nomeDefaultG1, String nomeDefaultG2, String nomeDefaultG3, String nomeDefaultG4,
+								  String codiceRegoleSetDefault, String codiceScenarioDefault,
+								  String codiceDadoDefaultG1, String codiceDadoDefaultG2, String codiceDadoDefaultG3, String codiceDadoDefaultG4,
+								  String codicePedinaDefaultG1, String codicePedinaDefaultG2, String codicePedinaDefaultG3, String codicePedinaDefaultG4) 
+	{
+		this.nomiGiocatoriDefault.clear();		
+		this.nomiGiocatoriDefault.put(1, nomeDefaultG1);
+		this.nomiGiocatoriDefault.put(2, nomeDefaultG2);
+		this.nomiGiocatoriDefault.put(3, nomeDefaultG3);
+		this.nomiGiocatoriDefault.put(4, nomeDefaultG4);
+		
+		this.codiceRegoleSetDefault = codiceRegoleSetDefault;
+		
+		this.codiceScenarioDefault = codiceScenarioDefault;
+		
+		this.codiciDadiGiocatoriDefault.clear();
+		this.codiciDadiGiocatoriDefault.clear();		
+		this.codiciDadiGiocatoriDefault.put(1, codiceDadoDefaultG1);
+		this.codiciDadiGiocatoriDefault.put(2, codiceDadoDefaultG2);
+		this.codiciDadiGiocatoriDefault.put(3, codiceDadoDefaultG3);
+		this.codiciDadiGiocatoriDefault.put(4, codiceDadoDefaultG4);
+
+		this.codiciPedineGiocatoriDefault.clear();
+		this.codiciPedineGiocatoriDefault.clear();		
+		this.codiciPedineGiocatoriDefault.put(1, codicePedinaDefaultG1);
+		this.codiciPedineGiocatoriDefault.put(2, codicePedinaDefaultG2);
+		this.codiciPedineGiocatoriDefault.put(3, codicePedinaDefaultG3);
+		this.codiciPedineGiocatoriDefault.put(4, codicePedinaDefaultG4);
 	}
 
 }

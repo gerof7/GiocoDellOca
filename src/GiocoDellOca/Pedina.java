@@ -34,7 +34,9 @@ public class Pedina extends Personalizzazione{
 		this.posizione = posizione;
 	}
 		
-	public void Muovi(int spostamento, int maxPosizione) {
+	public int Muovi(int spostamento, int maxPosizione) {
+		int numeroCaselleRimbalzoIndietro = 0;
+		
 	    posizione += spostamento;
 
 	    // Se supera la casella finale, calcola il rimbalzo
@@ -42,11 +44,13 @@ public class Pedina extends Personalizzazione{
 	        int differenza = posizione - maxPosizione;
 	        posizione = maxPosizione - differenza; // Rimbalza all'indietro
 
-	        JOptionPane.showMessageDialog(null, 
-	            "Hai superato la casella finale! Torni indietro di " + differenza + " caselle.");
+	        numeroCaselleRimbalzoIndietro = differenza;
+	        
 	    } else if (posizione < 1) {
 	        posizione = 1; // Evita di andare sotto la prima casella
 	    }
+	    
+	    return numeroCaselleRimbalzoIndietro;
 	}
 
 	
