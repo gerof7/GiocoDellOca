@@ -35,9 +35,7 @@ public class GiocoDellOca {
         this.nomiGiocatoriDefault = new LinkedHashMap<>();
         this.codiciDadiGiocatoriDefault = new LinkedHashMap<>();
         this.codiciPedineGiocatoriDefault = new LinkedHashMap<>();
-    
-        this.giocatoreInSessione = new Giocatore("Giocatore 1", 1);
-        
+            
         if(listaRegoleSingole.isEmpty())
 			loadRegoleSingole();
 		
@@ -116,6 +114,10 @@ public class GiocoDellOca {
 	}
 	
 	public void configuraNuovaPartita() {
+		var nomeDefaultGiocatoreInSessione = this.nomiGiocatoriDefault.get(1);
+		var nomeGiocatore = nomeDefaultGiocatoreInSessione != null && !nomeDefaultGiocatoreInSessione.isBlank() ? nomeDefaultGiocatoreInSessione : "Giocatore 1";
+		
+        this.giocatoreInSessione = new Giocatore(nomeGiocatore, 1);
 		
 		var partitaCorrente = new Partita(giocatoreInSessione);	
 		this.partitaCorrente = partitaCorrente;

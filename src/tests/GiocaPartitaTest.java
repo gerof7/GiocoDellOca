@@ -3,7 +3,9 @@ package tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +46,14 @@ class GiocaPartitaTest {
 		 var giocatoreHost = new Giocatore("Giocatore 1", 1);
 		 var partita = new Partita(giocatoreHost);
 		 
-		 partita.aggiungiGiocatoriOspiti(4);
+		 Map<Integer, String> nomiGiocatoriDefault = new LinkedHashMap<>();
+		 nomiGiocatoriDefault.put(1, "Nome 1");
+		 nomiGiocatoriDefault.put(2, "Nome 2");
+		 nomiGiocatoriDefault.put(3, "Nome 3");
+		 nomiGiocatoriDefault.put(4, "Nome 4");
+		 
+		 
+		 partita.aggiungiGiocatoriOspiti(4, nomiGiocatoriDefault);
 		 
 		 assertEquals(partita.getAllGiocatori().size(), 4);		
 

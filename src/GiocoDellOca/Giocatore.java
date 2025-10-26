@@ -39,5 +39,9 @@ public class Giocatore {
 	public void setDado(Dado dado) {
 		this.dado = dado;
 	}
+	
+	public void setNome(String nome) {
+		this.nomeGiocatore = nome;
+	}
 		
 }

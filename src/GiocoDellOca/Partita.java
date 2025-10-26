@@ -62,9 +62,12 @@ public class Partita {
 		giocatoreInSessione.setPedina(pedina);
 	}
 	
-	public void aggiungiGiocatoriOspiti(int numeroTotaleGiocatori) {
-	    for (int i = 2; i <= numeroTotaleGiocatori; i++) {
-	        Giocatore giocatoreOspite = new Giocatore("Giocatore " + i, i);
+	public void aggiungiGiocatoriOspiti(int numeroTotaleGiocatori, Map<Integer, String> nomiGiocatoriDefault) {
+	    for (int i = 2; i <= numeroTotaleGiocatori; i++) {    	
+	    	var nomeGiocatoreDefault = nomiGiocatoriDefault.get(i);
+	    	var nomeGiocatore = nomeGiocatoreDefault != null && !nomeGiocatoreDefault.isBlank()  ? nomeGiocatoreDefault : "Giocatore " + i;
+	    	
+	        Giocatore giocatoreOspite = new Giocatore(nomeGiocatore, i);
 	        giocatori.put(i, giocatoreOspite);
 	    }
 	}
