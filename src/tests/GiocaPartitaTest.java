@@ -43,8 +43,8 @@ class GiocaPartitaTest {
 	
 	 @Test
 	 void partitaTest() {
-		 var giocatoreHost = new Giocatore("Giocatore 1", 1);
-		 var partita = new Partita(giocatoreHost);
+		 var nomeGiocatoreHost = "Giocatore 1";
+		 var partita = new Partita(nomeGiocatoreHost);
 		 
 		 Map<Integer, String> nomiGiocatoriDefault = new LinkedHashMap<>();
 		 nomiGiocatoriDefault.put(1, "Nome 1");

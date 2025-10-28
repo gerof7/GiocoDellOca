@@ -116,10 +116,8 @@ public class GiocoDellOca {
 	public void configuraNuovaPartita() {
 		var nomeDefaultGiocatoreInSessione = this.nomiGiocatoriDefault.get(1);
 		var nomeGiocatore = nomeDefaultGiocatoreInSessione != null && !nomeDefaultGiocatoreInSessione.isBlank() ? nomeDefaultGiocatoreInSessione : "Giocatore 1";
-		
-        this.giocatoreInSessione = new Giocatore(nomeGiocatore, 1);
-		
-		var partitaCorrente = new Partita(giocatoreInSessione);	
+			
+		var partitaCorrente = new Partita(nomeGiocatore);	
 		this.partitaCorrente = partitaCorrente;
 	}
 	
@@ -148,9 +146,17 @@ public class GiocoDellOca {
 		return partitaCorrente;
 	}
 	
+	// Dentro GiocoDellOca.java
 	public void resetPartita() {
-	    this.partitaCorrente = null;
+	    if (partitaCorrente == null) return;
+
+	    for (Giocatore g : partitaCorrente.getAllGiocatori().values()) {
+	        if (g.getPedina() != null) {
+	            g.getPedina().setPosizione(1);
+	        }
+	    }
 	}
+
 
 	public Map<Integer, String> getNomiGiocatoriDefault() {
 		return nomiGiocatoriDefault;

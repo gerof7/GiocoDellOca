@@ -2,6 +2,8 @@ package GiocoDellOca;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
 *
@@ -17,10 +19,6 @@ public class Impostazioni {
 		this.elencoRegole = new ArrayList<Regola>();
 		this.elencoPersonalizzazioni = new ArrayList<Personalizzazione>();
 	}	
-	
-	public void addRegolaToList(Regola regola) {
-		elencoRegole.add(regola);
-	}
 	
 	public void setScenario(Scenario selectedScenario) {
 		scenario = selectedScenario;
@@ -40,4 +38,94 @@ public class Impostazioni {
 	public List<Personalizzazione> getElencoPersonalizzazioni() {
 		return elencoPersonalizzazioni;
 	}
+	
+	public void impostaScenarioDaCodice(String codiceScenario, List<Scenario> listaScenari) {
+	    for (var s : listaScenari) {
+	        if (s.getCodiceScenario().equals(codiceScenario)) {
+	            this.scenario = new Scenario(
+	                s.getCodiceScenario(),
+	                s.getDescrizione(),
+	                s.getDescrizioneCasellaOca(),
+	                s.getDescrizioneCasellaPonte(),
+	                s.getDescrizioneCasellaLocanda(),
+	                s.getDescrizioneCasellaPrigione(),
+	                s.getDescrizioneCasellaLabirinto(),
+	                s.getDescrizioneCasellaScheletro()
+	            );
+	            return;
+	        }
+	    }
+
+	    this.scenario = new Scenario(
+	        "SCN_DEFAULT",
+	        "Scenario classico",
+	        "Casella dell'oca classica",
+	        "Casella del ponte classica",
+	        "Casella della locanda classica",
+	        "Casella della prigione classica",
+	        "Casella del labirinto classica",
+	        "Casella dello scheletro classica"
+	    );
+	}
+	
+	public void impostaRegoleSingole(List<Regola> listaRegoleSingole, javax.swing.table.TableModel tableModel) {
+	    this.elencoRegole.clear();
+	    
+	    if (tableModel == null) {
+	        elencoRegole.addAll(listaRegoleSingole);
+	        return;
+	    }
+
+	    for (int row = 0; row < tableModel.getRowCount(); row++) {
+	        String codiceRegola = (String) tableModel.getValueAt(row, 0);
+	        String descrizioneRegola = (String) tableModel.getValueAt(row, 1);
+	        String proprietaRegola = (String) tableModel.getValueAt(row, 2);
+
+	        TipologiaRegolaEnum tipologia = null;
+
+	        for (var r : listaRegoleSingole) {
+	            if (r.getCodiceRegola().equals(codiceRegola)) {
+	                tipologia = r.getTipologiaRegola();
+	                break;
+	            }
+	        }
+
+	        this.elencoRegole.add(new Regola(codiceRegola, descrizioneRegola, proprietaRegola, tipologia));
+	    }
+	}
+	
+	public void impostaRegoleDaSet(Map<String, Set<Regola>> mapRegoleSet, javax.swing.table.TableModel tableModel) {
+	    this.elencoRegole.clear();
+	    
+	    if (tableModel == null) {
+	        if (!mapRegoleSet.isEmpty()) {
+	            var primoSet = mapRegoleSet.values().iterator().next();
+	            elencoRegole.addAll(primoSet);
+	        }
+	        return;
+	    }
+
+	    for (int row = 0; row < tableModel.getRowCount(); row++) {
+	        String codiceRegola = (String) tableModel.getValueAt(row, 0);
+	        String descrizioneRegola = (String) tableModel.getValueAt(row, 1);
+	        String proprietaRegola = (String) tableModel.getValueAt(row, 2);
+
+	        TipologiaRegolaEnum tipologia = null;
+
+	        outerLoop:
+	        for (var entry : mapRegoleSet.entrySet()) {
+	            for (var value : entry.getValue()) {
+	                if (value.getCodiceRegola().equals(codiceRegola)) {
+	                    tipologia = value.getTipologiaRegola();
+	                    break outerLoop;
+	                }
+	            }
+	        }
+
+	        this.elencoRegole.add(new Regola(codiceRegola, descrizioneRegola, proprietaRegola, tipologia));
+	    }
+	}
+
+
+
 }

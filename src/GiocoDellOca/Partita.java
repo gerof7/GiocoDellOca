@@ -13,8 +13,10 @@ public class Partita {
 	private Tabellone tabellone;
 	private Map<Integer, Giocatore> giocatori = new HashMap<>();
 	
-	public Partita(Giocatore giocatore) {      
+	public Partita(String nomeGiocatoreInSessione) {      
         this.impostazioni = new Impostazioni();
+        
+        var giocatore = new Giocatore(nomeGiocatoreInSessione, 1);
         this.giocatori.put(giocatore.getNumero(), giocatore);
     }
 	

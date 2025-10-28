@@ -13,8 +13,7 @@ class CreazionePartitaTest {
 		
 		var impostazioni = controller.getPartitaCorrente().getImpostazioni();
 		
-		//Caso_regole_singole
-		impostazioni.addRegolaToList(controller.getListaRegoleSingole().get(0));
+	    impostazioni.impostaRegoleSingole(controller.getListaRegoleSingole(), null);
 		impostazioni.setScenario(controller.getListaScenari().get(0));
 		impostazioni.addPersonalizzazioneToList(controller.getListaPersonalizzazioni().get(0));
 		
@@ -26,21 +25,14 @@ class CreazionePartitaTest {
 		assertEquals(partita.getImpostazioni().getScenario(), impostazioni.getScenario());
 		assertEquals(partita.getImpostazioni().getElencoPersonalizzazioni(), impostazioni.getElencoPersonalizzazioni());
 		
-		//Caso_setRegole
 		impostazioni.getElencoRegole().clear();
 		impostazioni.getElencoPersonalizzazioni().clear();
 		
 		var mapRegoleSet = controller.getMapRegoleSet();
-		
-		for (var entry : mapRegoleSet.entrySet()) {
-			if (entry.getKey() == "Partita classica") {
-				for (var regola : entry.getValue()) {
-					impostazioni.addRegolaToList(regola);
-				}
-			}else {break;}
-		}
-		
-		//Caso_Pedina
+
+	    impostazioni.impostaRegoleDaSet(mapRegoleSet, null);
+	    var setClassico = mapRegoleSet.get("Partita classica");
+	    
 		impostazioni.addPersonalizzazioneToList(controller.getListaPersonalizzazioni().get(0));
 		
 		assertNotNull(partita);
@@ -48,6 +40,10 @@ class CreazionePartitaTest {
 		
 		assertEquals(partita.getImpostazioni().getScenario(), impostazioni.getScenario());
 		assertEquals(partita.getImpostazioni().getElencoPersonalizzazioni(), impostazioni.getElencoPersonalizzazioni());
+		
+		assertNotNull(setClassico);
+	    assertFalse(setClassico.isEmpty());
+		
 		
 		
 	}
