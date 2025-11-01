@@ -207,5 +207,25 @@ public class GiocoDellOca {
 		this.codiciPedineGiocatoriDefault.put(3, codicePedinaDefaultG3);
 		this.codiciPedineGiocatoriDefault.put(4, codicePedinaDefaultG4);
 	}
+	
+	public void impostaRegoleSingole(javax.swing.table.TableModel tableModel) {
+	    partitaCorrente.impostaRegoleSingole(this.listaRegoleSingole, tableModel);
+	}
+
+	public void impostaRegoleDaSet(javax.swing.table.TableModel tableModel) {
+		partitaCorrente.impostaRegoleDaSet(this.mapRegoleSet, tableModel);
+	}
+	
+	public void impostaScenario(String codiceScenario) {
+        this.partitaCorrente.impostaScenario(codiceScenario, this.listaScenari);
+	}
+	
+	public void impostaPedinaGiocatore(String codicePedina, int numeroGiocatore, boolean isMultiplayer) {
+	        partitaCorrente.impostaPedinaGiocatore(codicePedina, numeroGiocatore, listaPersonalizzazioni, isMultiplayer);	    
+	}
+
+	public void impostaDadoGiocatore(String codiceDado, int numeroGiocatore, boolean isMultiplayer) {
+	        partitaCorrente.impostaDadoGiocatore(codiceDado, numeroGiocatore, listaPersonalizzazioni, isMultiplayer);	    
+	}
 
 }

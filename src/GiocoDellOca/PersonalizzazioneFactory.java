@@ -10,7 +10,6 @@ public class PersonalizzazioneFactory {
                 return (Dado) p;
             }
         }
-        // Dado di default
         return new Dado("Dado_Classico", "Il dado del giocatore è il dado classico", "./src/images/dadoclassico_1.png");
     }
 
@@ -20,7 +19,6 @@ public class PersonalizzazioneFactory {
                 return (Pedina) p;
             }
         }
-        // Pedina di default
         return new Pedina("Pedina_Oca", "La pedina del giocatore è un'oca", "./src/images/ScarfGoose.png");
     }
 }

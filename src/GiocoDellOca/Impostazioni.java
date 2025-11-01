@@ -42,16 +42,7 @@ public class Impostazioni {
 	public void impostaScenarioDaCodice(String codiceScenario, List<Scenario> listaScenari) {
 	    for (var s : listaScenari) {
 	        if (s.getCodiceScenario().equals(codiceScenario)) {
-	            this.scenario = new Scenario(
-	                s.getCodiceScenario(),
-	                s.getDescrizione(),
-	                s.getDescrizioneCasellaOca(),
-	                s.getDescrizioneCasellaPonte(),
-	                s.getDescrizioneCasellaLocanda(),
-	                s.getDescrizioneCasellaPrigione(),
-	                s.getDescrizioneCasellaLabirinto(),
-	                s.getDescrizioneCasellaScheletro()
-	            );
+	            this.scenario = s;
 	            return;
 	        }
 	    }
@@ -125,6 +116,25 @@ public class Impostazioni {
 	        this.elencoRegole.add(new Regola(codiceRegola, descrizioneRegola, proprietaRegola, tipologia));
 	    }
 	}
+	
+	public void impostaPedinaSelezionata(String codicePedina, List<Personalizzazione> personalizzazioni) {
+	    for (var p : personalizzazioni) {
+	        if (p instanceof Pedina && p.getCodicePersonalizzazione().equals(codicePedina)) {
+	            this.elencoPersonalizzazioni.add(p);
+	            return;
+	        }
+	    }
+	}
+
+	public void impostaDadoSelezionato(String codiceDado, List<Personalizzazione> personalizzazioni) {
+	    for (var p : personalizzazioni) {
+	        if (p instanceof Dado && p.getCodicePersonalizzazione().equals(codiceDado)) {
+	            this.elencoPersonalizzazioni.add(p);
+	            return;
+	        }
+	    }
+	}
+
 
 
 

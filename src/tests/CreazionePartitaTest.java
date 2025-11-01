@@ -8,16 +8,16 @@ class CreazionePartitaTest {
 
 	@Test
 	void creaPartita() {
-		var controller = new GiocoDellOca();
-		controller.configuraNuovaPartita();
+		var giocoDellOca = new GiocoDellOca();
+		giocoDellOca.configuraNuovaPartita();
 		
-		var impostazioni = controller.getPartitaCorrente().getImpostazioni();
+		var impostazioni = giocoDellOca.getPartitaCorrente().getImpostazioni();
 		
-	    impostazioni.impostaRegoleSingole(controller.getListaRegoleSingole(), null);
-		impostazioni.setScenario(controller.getListaScenari().get(0));
-		impostazioni.addPersonalizzazioneToList(controller.getListaPersonalizzazioni().get(0));
+	    impostazioni.impostaRegoleSingole(giocoDellOca.getListaRegoleSingole(), null);
+		impostazioni.setScenario(giocoDellOca.getListaScenari().get(0));
+		impostazioni.addPersonalizzazioneToList(giocoDellOca.getListaPersonalizzazioni().get(0));
 		
-		var partita = controller.getPartitaCorrente();
+		var partita = giocoDellOca.getPartitaCorrente();
 		
 		assertNotNull(partita);
 		assertEquals(partita.getImpostazioni().getElencoRegole(), impostazioni.getElencoRegole());
@@ -28,12 +28,12 @@ class CreazionePartitaTest {
 		impostazioni.getElencoRegole().clear();
 		impostazioni.getElencoPersonalizzazioni().clear();
 		
-		var mapRegoleSet = controller.getMapRegoleSet();
+		var mapRegoleSet = giocoDellOca.getMapRegoleSet();
 
 	    impostazioni.impostaRegoleDaSet(mapRegoleSet, null);
 	    var setClassico = mapRegoleSet.get("Partita classica");
 	    
-		impostazioni.addPersonalizzazioneToList(controller.getListaPersonalizzazioni().get(0));
+		impostazioni.addPersonalizzazioneToList(giocoDellOca.getListaPersonalizzazioni().get(0));
 		
 		assertNotNull(partita);
 		assertEquals(partita.getImpostazioni().getElencoRegole(), impostazioni.getElencoRegole());

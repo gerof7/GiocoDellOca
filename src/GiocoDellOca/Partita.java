@@ -1,7 +1,9 @@
 package GiocoDellOca;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
 *
@@ -73,5 +75,93 @@ public class Partita {
 	        giocatori.put(i, giocatoreOspite);
 	    }
 	}
+	
+	public void impostaRegoleSingole(List<Regola> listaRegoleSingole, javax.swing.table.TableModel tableModel) {
+	    impostazioni.impostaRegoleSingole(listaRegoleSingole, tableModel);
+	}
+
+	public void impostaRegoleDaSet(Map<String, Set<Regola>> mapRegoleSet, javax.swing.table.TableModel tableModel) {
+	    impostazioni.impostaRegoleDaSet(mapRegoleSet, tableModel);
+	}
+	
+	public void impostaScenario(String codiceScenario, List<Scenario> listaScenari) {
+	        this.impostazioni.impostaScenarioDaCodice(codiceScenario, listaScenari);	   
+	}
+	
+	private Pedina creaPedinaDefault() {
+	    return new Pedina("Pedina_Oca", "La pedina del giocatore è un'oca", "./src/images/ScarfGoose.png");
+	}
+
+	private Dado creaDadoDefault() {
+	    return new Dado("Dado_Classico", "Il dado del giocatore è il dado classico", "./src/images/dadoclassico_1.png");
+	}
+
+	public void impostaPedinaGiocatore(String codicePedina, int numeroGiocatore, List<Personalizzazione> personalizzazioni, boolean isMultiplayer) {
+	    if (isMultiplayer) {
+	        Giocatore giocatore = getGiocatore(numeroGiocatore);
+	        boolean trovata = false;
+
+	        for (var p : personalizzazioni) {
+	            if (p instanceof Pedina && p.getCodicePersonalizzazione().equals(codicePedina)) {
+	                giocatore.setPedina((Pedina) p);
+	                trovata = true;
+	                break;
+	            }
+	        }
+
+	        if (!trovata || giocatore.getPedina() == null) {
+	            giocatore.setPedina(creaPedinaDefault());
+	        }
+
+	    } else {
+	        boolean trovata = false;
+	        for (var p : personalizzazioni) {
+	            if (p instanceof Pedina && p.getCodicePersonalizzazione().equals(codicePedina)) {
+	                this.impostazioni.addPersonalizzazioneToList(p);
+	                trovata = true;
+	                break;
+	            }
+	        }
+
+	        if (!trovata) {
+	            this.impostazioni.addPersonalizzazioneToList(creaPedinaDefault());
+	        }
+	    }
+	}
+
+	public void impostaDadoGiocatore(String codiceDado, int numeroGiocatore, List<Personalizzazione> personalizzazioni, boolean isMultiplayer) {
+	    if (isMultiplayer) {
+	        Giocatore giocatore = getGiocatore(numeroGiocatore);
+	        boolean trovato = false;
+
+	        for (var p : personalizzazioni) {
+	            if (p instanceof Dado && p.getCodicePersonalizzazione().equals(codiceDado)) {
+	                giocatore.setDado((Dado) p);
+	                trovato = true;
+	                break;
+	            }
+	        }
+
+	        if (!trovato || giocatore.getDado() == null) {
+	            giocatore.setDado(creaDadoDefault());
+	        }
+
+	    } else {
+	        boolean trovato = false;
+	        for (var p : personalizzazioni) {
+	            if (p instanceof Dado && p.getCodicePersonalizzazione().equals(codiceDado)) {
+	                this.impostazioni.addPersonalizzazioneToList(p);
+	                trovato = true;
+	                break;
+	            }
+	        }
+
+	        if (!trovato) {
+	            this.impostazioni.addPersonalizzazioneToList(creaDadoDefault());
+	        }
+	    }
+	}
+
+
 	
 }
