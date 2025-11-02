@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -48,7 +49,6 @@ import GUIComponents.ComboItem;
 import GUIComponents.CustomCellEditorRegoleSingole;
 import GiocoDellOca.Casella;
 import GiocoDellOca.CasellaFine;
-import GiocoDellOca.CasellaNormale;
 import GiocoDellOca.CasellaSpeciale;
 import GiocoDellOca.Dado;
 import GiocoDellOca.Giocatore;
@@ -58,8 +58,9 @@ import GiocoDellOca.Personalizzazione;
 import GiocoDellOca.PersonalizzazioneFactory;
 import GiocoDellOca.Regola;
 import GiocoDellOca.Scenario;
-import GiocoDellOca.TipologiaCasellaSpecialeEnum;
 import GiocoDellOca.TipologiaRegolaEnum;
+import Utilities.MossaResult;
+
 import java.awt.GridLayout;
 import java.awt.Image;
 import javax.swing.JTextField;
@@ -107,7 +108,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	private DefaultTableModel tableDadoSelezionatoModel;
 	private JLayeredPane layeredPane;
 	private JPanel menuPrincipalePanel;
-	private boolean giocoTerminato;
 	private boolean isPartitaMultiplayer;
 	private int numeroGiocatoriMP;
 	private int numeroGiocatoreCorrente;
@@ -208,186 +208,173 @@ public class GiocoDellOcaGUI extends JFrame {
 
 
 	private void animaDadi(List<JLabel> dadiLabels, ActionListener afterAnimation) {
-	    Timer timer = new Timer(100, new ActionListener() {
+	    Timer timer = new Timer(100, null);
+	    int numeroDadi = dadiLabels.size();
+	    int[] risultatiFinali = new int[numeroDadi];
+
+	    timer.addActionListener(new ActionListener() {
 	        int counter = 0;
-	
+
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
-	            for (JLabel dadoLabel : dadiLabels) { 
+	            for (int i = 0; i < numeroDadi; i++) {
 	                int numeroDado = random.nextInt(6) + 1;
-	
-	                int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_');
-	                int dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
-	
-	                String path;
-	                if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex) {
-	                    path = GiocoDellOcaGUI.this.dadoPath.substring(0, lastUnderscoreIndex + 1) + numeroDado + GiocoDellOcaGUI.this.dadoPath.substring(dotIndex);
-	                } else {
-	                    path = "./src/images/dadoclassico_" + numeroDado + ".png";
-	                }
-	
+	                JLabel dadoLabel = dadiLabels.get(i);
+
+	                // Mostra faccia casuale durante l'animazione
+	                String path = getDadoFacePath(numeroDado);
 	                dadoLabel.setIcon(new ImageIcon(path));
+
+	                // Alla fine dell'animazione salvo il risultato effettivo
+	                if (counter == 9) {
+	                    risultatiFinali[i] = numeroDado;
+	                }
 	            }
-	
+
 	            counter++;
-	
+
 	            if (counter >= 10) {
 	                ((Timer) e.getSource()).stop();
+
+	                // Salvi i risultati per il callback
+	                dadiLabels.get(0).putClientProperty("risultatiFinali", risultatiFinali);
+
 	                afterAnimation.actionPerformed(null);
 	            }
 	        }
 	    });
-	
+
 	    timer.start();
 	}
+
+	private String getDadoFacePath(int numeroFaccia) {
+	    int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_');
+	    int dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
+
+	    if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex) {
+	        return GiocoDellOcaGUI.this.dadoPath.substring(0, lastUnderscoreIndex + 1)
+	                + numeroFaccia
+	                + GiocoDellOcaGUI.this.dadoPath.substring(dotIndex);
+	    } else {
+	        return "./src/images/dadoclassico_" + numeroFaccia + ".png";
+	    }
+	}
+
 	 
 	private void lanciaDado() {
 	    lanciaDadoButton.setEnabled(false);
 	
-	    int numeroDadi = GiocoDellOcaGUI.this.numeroDadi;
 	    boolean isMultiplayer = GiocoDellOcaGUI.this.isPartitaMultiplayer;
+	    var gioco = GiocoDellOcaGUI.this.giocoDellOca;
 	
+	    // ---------- MULTIPLAYER ----------
 	    if (isMultiplayer) {
-	        Giocatore giocatoreCorrente = GiocoDellOcaGUI.this.giocoDellOca
-	                .getPartitaCorrente()
+	        Giocatore giocatoreCorrente = gioco.getPartitaCorrente()
 	                .getAllGiocatori()
 	                .get(numeroGiocatoreInTurno);
 	
 	        impostaDadiGiocatore(giocatoreCorrente);
 	
-	        animaDadi(dadiLabels, new ActionListener() {
-	            @Override
-	            public void actionPerformed(ActionEvent e) {
-	                int risultatoTotale = 0;
+	        animaDadi(dadiLabels, e -> {
+	            int[] risultati = (int[]) dadiLabels.get(0).getClientProperty("risultatiFinali");
+	            int risultatoTotale = Arrays.stream(risultati).sum();
 	
-	                for (int i = 0; i < numeroDadi; i++) {
-	                    int risultatoDado = random.nextInt(6) + 1;
-	                    risultatoTotale += risultatoDado;
+	            JOptionPane.showMessageDialog(null,
+	                    giocatoreCorrente.getNome() + " ha lanciato un totale di: " + risultatoTotale);
 	
-	                    int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_');
-	                    int dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
+	            Pedina pedinaCorrente = pedine.get(numeroGiocatoreInTurno - 1);
+	            MossaResult risultato = gioco.eseguiTurnoGiocatore(pedinaCorrente, risultatoTotale);
 	
-	                    if (i < dadiLabels.size()) {
-	                        JLabel dadoCorrente = dadiLabels.get(i);
-	                        if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex) {
-	                            String path = GiocoDellOcaGUI.this.dadoPath.substring(0, lastUnderscoreIndex + 1)
-	                                    + risultatoDado
-	                                    + GiocoDellOcaGUI.this.dadoPath.substring(dotIndex);
-	                            dadoCorrente.setIcon(new ImageIcon(path));
-	                        } else {
-	                            dadoCorrente.setIcon(new ImageIcon("./src/images/dadoclassico_" + risultatoDado + ".png"));
-	                        }
-	                    }
-	                }
+	            for (String msg : risultato.getNotifiche())
+	                JOptionPane.showMessageDialog(null, msg);
 	
-	                Pedina pedinaCorrente = pedine.get(numeroGiocatoreInTurno - 1);
-	
-	                JOptionPane.showMessageDialog(
-	                    null,
-	                    giocatoreCorrente.getNome() + " ha lanciato un totale di: " + risultatoTotale
-	                );
-	
-	                eseguiMossa(pedinaCorrente, risultatoTotale);
-	
-	                if (!GiocoDellOcaGUI.this.giocoTerminato) {
-	                    aggiornaTabellone();
-	
-	                    numeroGiocatoreInTurno = calcolaProssimoGiocatore(numeroGiocatoreInTurno);
-	
-	                    Giocatore prossimoGiocatore = GiocoDellOcaGUI.this.giocoDellOca
-	                            .getPartitaCorrente()
-	                            .getAllGiocatori()
-	                            .get(numeroGiocatoreInTurno);
-	
-	                    lblGiocatoreInTurno.setText("Turno attuale: " + prossimoGiocatore.getNome());
-	
-	                    lanciaDadoButton.setEnabled(true);
-	                }
+	            if (risultato.isGiocoTerminato()) {
+	                terminaGioco();
+	                return;
 	            }
+	
+	            aggiornaTabellone();
+	            numeroGiocatoreInTurno = (numeroGiocatoreInTurno % numeroGiocatoriMP) + 1;
+	            aggiornaGiocatoreAttuale();
+	            lanciaDadoButton.setEnabled(true);
 	        });
+	
 	        return;
 	    }
 	
-	    if (turnoCorrente == 0) {
-	        animaDadi(dadiLabels, new ActionListener() {
-	            @Override
-	            public void actionPerformed(ActionEvent e) {
-	                int risultatoTotale = 0;
+	    // ---------- SINGLEPLAYER ----------
+	    if (turnoCorrente == 0) { // turno umano
+	    	
+	        impostaDadiGiocatore(giocatoreInSessione);
+
+	        animaDadi(dadiLabels, e -> {
+	            int[] risultati = (int[]) dadiLabels.get(0).getClientProperty("risultatiFinali");
+	            int risultatoTotale = Arrays.stream(risultati).sum();
 	
-	                for (int i = 0; i < numeroDadi; i++) {
-	                    int risultatoDado = random.nextInt(6) + 1;
-	                    risultatoTotale += risultatoDado;
+	            JOptionPane.showMessageDialog(null,
+	                    giocatoreInSessione.getNome() + " ha lanciato un totale di: " + risultatoTotale);
 	
-	                    int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_');
-	                    int dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
+	            Pedina pedinaCorrente = pedine.get(turnoCorrente);
+	            MossaResult risultato = gioco.eseguiTurnoGiocatore(pedinaCorrente, risultatoTotale);
 	
-	                    if (i < dadiLabels.size()) {
-	                        JLabel dadoCorrente = dadiLabels.get(i);
-	                        if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex) {
-	                            String path = GiocoDellOcaGUI.this.dadoPath.substring(0, lastUnderscoreIndex + 1)
-	                                    + risultatoDado
-	                                    + GiocoDellOcaGUI.this.dadoPath.substring(dotIndex);
-	                            dadoCorrente.setIcon(new ImageIcon(path));
-	                        } else {
-	                            dadoCorrente.setIcon(new ImageIcon("./src/images/dadoclassico_" + risultatoDado + ".png"));
-	                        }
-	                    }
-	                }
+	            for (String msg : risultato.getNotifiche())
+	                JOptionPane.showMessageDialog(null, msg);
 	
-	                Pedina pedinaCorrente = pedine.get(turnoCorrente);
-	                JOptionPane.showMessageDialog(null,
-	                        giocatoreInSessione.getNome() + " ha lanciato un totale di: " + risultatoTotale);
-	
-	                eseguiMossa(pedinaCorrente, risultatoTotale);
-	
-	                if (!GiocoDellOcaGUI.this.giocoTerminato) {
-	                    aggiornaTabellone();
-	                    turnoCorrente = (turnoCorrente + 1) % pedine.size();
-	                    avviaTurnoBot();
-	                }
+	            if (risultato.isGiocoTerminato()) {
+	                terminaGioco();
+	                return;
 	            }
+	
+	            aggiornaTabellone();
+	            turnoCorrente = (turnoCorrente + 1) % pedine.size();
+	            avviaTurnoBot();
 	        });
 	    } 
-	    else {
-	        int risultatoTotale = 0;
+	    else { // turno bot
+	        // ✅ Nessun giocatore da cui prendere il dado → uso il default classico
+	        dadiPanel.removeAll();
+	        dadiPanel.revalidate();
+	        dadiPanel.repaint();
+	
+	        GiocoDellOcaGUI.this.dadoPath = "./src/images/dadoclassico_1.png";
+	        GiocoDellOcaGUI.this.dadiLabels.clear();
 	
 	        for (int i = 0; i < numeroDadi; i++) {
-	            int risultatoDado = random.nextInt(6) + 1;
-	            risultatoTotale += risultatoDado;
-	
-	            int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_');
-	            int dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
-	
-	            if (i < dadiLabels.size()) {
-	                JLabel dadoCorrente = dadiLabels.get(i);
-	                if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex) {
-	                    String path = GiocoDellOcaGUI.this.dadoPath.substring(0, lastUnderscoreIndex + 1)
-	                            + risultatoDado
-	                            + GiocoDellOcaGUI.this.dadoPath.substring(dotIndex);
-	                    dadoCorrente.setIcon(new ImageIcon(path));
-	                } else {
-	                    dadoCorrente.setIcon(new ImageIcon("./src/images/dadoclassico_" + risultatoDado + ".png"));
-	                }
-	            }
+	            JLabel dadoLabel = new JLabel(new ImageIcon(GiocoDellOcaGUI.this.dadoPath));
+	            GiocoDellOcaGUI.this.dadiLabels.add(dadoLabel);
+	            dadiPanel.add(dadoLabel);
 	        }
 	
-	        JOptionPane.showMessageDialog(null,
-	                "Il bot ha lanciato un totale di: " + risultatoTotale);
+	        // Anima normalmente anche i dadi del bot
+	        animaDadi(dadiLabels, e -> {
+	            int[] risultati = (int[]) dadiLabels.get(0).getClientProperty("risultatiFinali");
+	            int risultatoTotale = Arrays.stream(risultati).sum();
 	
-	        Pedina pedinaCorrente = pedine.get(turnoCorrente);
-	        eseguiMossa(pedinaCorrente, risultatoTotale);
+	            JOptionPane.showMessageDialog(null,
+	                    "Il bot ha lanciato un totale di: " + risultatoTotale);
 	
-	        if (!GiocoDellOcaGUI.this.giocoTerminato) {
+	            Pedina pedinaCorrente = pedine.get(turnoCorrente);
+	            MossaResult risultato = gioco.eseguiTurnoGiocatore(pedinaCorrente, risultatoTotale);
+	
+	            for (String msg : risultato.getNotifiche())
+	                JOptionPane.showMessageDialog(null, msg);
+	
+	            if (risultato.isGiocoTerminato()) {
+	                terminaGioco();
+	                return;
+	            }
+	
 	            aggiornaTabellone();
 	            turnoCorrente = (turnoCorrente + 1) % pedine.size();
 	
-	            if (turnoCorrente == 0) {
+	            if (turnoCorrente == 0)
 	                lanciaDadoButton.setEnabled(true);
-	            }
-	        }
+	            else
+	                avviaTurnoBot();
+	        });
 	    }
 	}
-	
+		
 	private void impostaDadiGiocatore(Giocatore giocatore) {
 		dadiPanel.removeAll(); 
 		dadiPanel.revalidate();  
@@ -409,124 +396,6 @@ public class GiocoDellOcaGUI extends JFrame {
             dadiPanel.add(dadoLabel);
 	    }
 	   
-	}
-	
-	private int calcolaProssimoGiocatore(int giocatoreAttuale) {
-        if (giocatoreAttuale >= GiocoDellOcaGUI.this.numeroGiocatoriMP) {
-            return 1;
-        }
-        return giocatoreAttuale + 1;
-    }
-	 
-	private void eseguiMossa(Pedina pedinaCorrente, int risultatoDado) {
-		
-		if (pedinaCorrente.getStato() == 0) {
-		    Casella casellaAttuale = caselleMap.get(pedinaCorrente.getPosizione());
-
-		    if (casellaAttuale instanceof CasellaSpeciale) {
-		        CasellaSpeciale casellaSpeciale = (CasellaSpeciale) casellaAttuale;
-		        if (casellaSpeciale.getTipologiaCasellaSpeciale() == TipologiaCasellaSpecialeEnum.Prigione) {
-		            JOptionPane.showMessageDialog(null, "La tua pedina è ferma perché sei in prigione. Salti il turno.");
-		            return; 
-		        }
-		    }
-
-		    JOptionPane.showMessageDialog(null, "La tua pedina è ferma per questo turno. Salti il turno.");
-		    pedinaCorrente.setStato(1); 
-		    return; 
-		}
-		
-		int posizioneIniziale = pedinaCorrente.getPosizione();
-		int posizioneFinale = caselleMap.size();
-		int nuovaPosizione = posizioneIniziale + risultatoDado;
-	    boolean superataCasellaFinale = false;
-		
-		if (nuovaPosizione > posizioneFinale) {
-		    int differenza = nuovaPosizione - posizioneFinale;
-		    nuovaPosizione = posizioneFinale - differenza;
-
-		    JOptionPane.showMessageDialog(null, 
-		        "Hai superato la casella finale! Torni indietro di " + differenza + " caselle.");
-	        superataCasellaFinale = true;
-	        
-	        pedinaCorrente.setPosizione(nuovaPosizione);
-		}
-		else {
-			var numeroCaselleRimbalzoIndietro = pedinaCorrente.Muovi(risultatoDado, caselleMap.size());
-			if (numeroCaselleRimbalzoIndietro != 0)
-				JOptionPane.showMessageDialog(null, 
-			            "Hai superato la casella finale! Torni indietro di " + numeroCaselleRimbalzoIndietro + " caselle.");
-		}
-	    
-	    int posizioneCorrente = pedinaCorrente.getPosizione();	    
-	    Casella casellaAttuale = caselleMap.get(posizioneCorrente);
-	    
-	    if(!superataCasellaFinale) {
-		    if (casellaAttuale instanceof CasellaNormale) {
-		    } else if (casellaAttuale instanceof CasellaFine) {
-		    	if (turnoCorrente == 0) { 
-		            JOptionPane.showMessageDialog(null, "Complimenti! Hai raggiunto la fine e vinto il gioco!");
-		        } else { 
-		            JOptionPane.showMessageDialog(null, "Peccato! Il bot ha raggiunto la fine. Hai perso!");
-		        }		        
-		        terminaGioco();
-		        return;
-		    } else if (casellaAttuale instanceof CasellaSpeciale) {
-		        CasellaSpeciale casellaSpeciale = (CasellaSpeciale) casellaAttuale;
-		        TipologiaCasellaSpecialeEnum tipologia = casellaSpeciale.getTipologiaCasellaSpeciale();
-	
-		        switch (tipologia) {
-		            case Oca:
-		                int avanzamento = risultatoDado;
-		                JOptionPane.showMessageDialog(null, "Oca! Avanzi di " + avanzamento + " caselle.");
-		                var numeroCaselleRimbalzoIndietro = pedinaCorrente.Muovi(avanzamento, caselleMap.size());
-		                if (numeroCaselleRimbalzoIndietro != 0)
-		    				JOptionPane.showMessageDialog(null, 
-		    			            "Hai superato la casella finale! Torni indietro di " + numeroCaselleRimbalzoIndietro + " caselle.");
-		                break;
-	
-		            case Ponte:
-		                int avanzamentoPonte = posizioneCorrente;
-		                JOptionPane.showMessageDialog(null, "Ponte! Avanzi di " + avanzamentoPonte + " caselle.");
-		                var numeroCaselleRimbalzoIndietroPonte = pedinaCorrente.Muovi(avanzamentoPonte, caselleMap.size());
-		                if (numeroCaselleRimbalzoIndietroPonte != 0)
-		    				JOptionPane.showMessageDialog(null, 
-		    			            "Hai superato la casella finale! Torni indietro di " + numeroCaselleRimbalzoIndietroPonte + " caselle.");
-		                break;
-	
-		            case Locanda:
-		                JOptionPane.showMessageDialog(null, "Locanda! La tua pedina è ferma per un turno.");
-		                pedinaCorrente.setStato(0);
-		                break;
-	
-		            case Prigione:
-		                JOptionPane.showMessageDialog(null, "Prigione! La tua pedina è ferma per un turno.");
-		                pedinaCorrente.setStato(0);
-	
-		                for (Pedina altraPedina : pedine) {
-		                    if (altraPedina != pedinaCorrente && altraPedina.getPosizione() == pedinaCorrente.getPosizione()) {
-		                        altraPedina.setStato(1);
-		                        JOptionPane.showMessageDialog(null, "Un'altra pedina è stata rilasciata dalla prigione!");
-		                    }
-		                }
-		                break;
-	
-		            case Labirinto:
-		                JOptionPane.showMessageDialog(null, "Labirinto! Torni indietro di 3 caselle.");
-		                pedinaCorrente.Muovi(-3, caselleMap.size());
-		                break;
-	
-		            case Scheletro:
-		                JOptionPane.showMessageDialog(null, "Scheletro! Torni alla casella iniziale.");
-		                pedinaCorrente.setPosizione(1);
-		                break;
-	
-		            default:
-		                JOptionPane.showMessageDialog(null, "Errore: tipo di casella sconosciuto.");
-		                break;
-		        }
-		    }	 
-	    }
 	}
 	
 	private void avviaTurnoBot() {
@@ -557,7 +426,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	    if (lblGiocatoreCorrente != null) lblGiocatoreCorrente.setText("");
 	
 	    returnToMenuActions();
-	    this.giocoTerminato = true;
 	}
 
 	
@@ -1918,7 +1786,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		btnConfiguraNuovaPartitaMP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GiocoDellOcaGUI.this.giocoTerminato = false;
 				GiocoDellOcaGUI.this.isPartitaMultiplayer = true;
 			
 				GiocoDellOcaGUI.this.giocoDellOca.configuraNuovaPartita();
@@ -1996,7 +1863,6 @@ public class GiocoDellOcaGUI extends JFrame {
 		
 		btnConfiguraNuovaPartitaSP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GiocoDellOcaGUI.this.giocoTerminato = false;
 				GiocoDellOcaGUI.this.isPartitaMultiplayer = false;
 				
 				GiocoDellOcaGUI.this.giocoDellOca.configuraNuovaPartita();
@@ -2061,7 +1927,7 @@ public class GiocoDellOcaGUI extends JFrame {
 						if(personalizzazione instanceof Dado)
 						{
 							if(codiceDadoDefaultG1 != null && personalizzazione.getCodicePersonalizzazione().equals(codiceDadoDefaultG1))
-								tableDadiSelezionabiliModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
+								tableDadoSelezionatoModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
 							else
 								tableDadiSelezionabiliModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
 						}

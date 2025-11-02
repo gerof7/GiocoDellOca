@@ -1,7 +1,5 @@
 package GiocoDellOca;
 
-import javax.swing.JOptionPane;
-
 public class Pedina extends Personalizzazione{
 
 	private int stato;

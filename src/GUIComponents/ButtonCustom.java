@@ -9,7 +9,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
 import javax.swing.JButton;
-import javax.swing.border.EmptyBorder;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
@@ -133,7 +132,8 @@ public class ButtonCustom extends JButton {
         }
         private Color background;
         private Color foreground;
-        private Color backgroundHover;
+        @SuppressWarnings("unused")
+		private Color backgroundHover;
         private Color backgroundPress;
     }
 

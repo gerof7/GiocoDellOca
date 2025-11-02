@@ -15,6 +15,7 @@ public class Tabellone {
 		caselleMap = new HashMap<>();
 		
 		var numeroCasellaFine = 63;
+		this.numeroDadi = 2;
 		
 		for (var regola : listaRegole) {
 			if (regola.getTipologiaRegola() == TipologiaRegolaEnum.NumeroCaselle) {

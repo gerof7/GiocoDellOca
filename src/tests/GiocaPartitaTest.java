@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import GiocoDellOca.Giocatore;
 import GiocoDellOca.Partita;
 import GiocoDellOca.Pedina;
 import GiocoDellOca.Regola;

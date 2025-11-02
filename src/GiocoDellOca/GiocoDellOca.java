@@ -7,10 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import Utilities.MossaResult;
+
 
 public class GiocoDellOca {
 		
-	private Giocatore giocatoreInSessione;
 	private Partita partitaCorrente;
 	
 	private List<Regola> listaRegoleSingole;
@@ -146,13 +147,13 @@ public class GiocoDellOca {
 		return partitaCorrente;
 	}
 	
-	// Dentro GiocoDellOca.java
 	public void resetPartita() {
 	    if (partitaCorrente == null) return;
 
 	    for (Giocatore g : partitaCorrente.getAllGiocatori().values()) {
 	        if (g.getPedina() != null) {
 	            g.getPedina().setPosizione(1);
+	            g.getPedina().setStato(1);
 	        }
 	    }
 	}
@@ -227,5 +228,10 @@ public class GiocoDellOca {
 	public void impostaDadoGiocatore(String codiceDado, int numeroGiocatore, boolean isMultiplayer) {
 	        partitaCorrente.impostaDadoGiocatore(codiceDado, numeroGiocatore, listaPersonalizzazioni, isMultiplayer);	    
 	}
+	
+	public MossaResult eseguiTurnoGiocatore(Pedina pedinaCorrente, int risultatoDado) {
+	    return partitaCorrente.applicaMossaConMessaggi(pedinaCorrente, risultatoDado);
+	}
+
 
 }
