@@ -148,14 +148,15 @@ public class GiocoDellOca {
 	}
 	
 	public void resetPartita() {
-	    if (partitaCorrente == null) return;
+	    /*if (partitaCorrente == null) return;
 
 	    for (Giocatore g : partitaCorrente.getAllGiocatori().values()) {
 	        if (g.getPedina() != null) {
 	            g.getPedina().setPosizione(1);
 	            g.getPedina().setStato(1);
 	        }
-	    }
+	    }*/
+		this.partitaCorrente = null;
 	}
 
 
