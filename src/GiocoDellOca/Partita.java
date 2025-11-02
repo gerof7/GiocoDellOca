@@ -8,10 +8,6 @@ import java.util.Set;
 
 import Utilities.MossaResult;
 
-/**
-*
-* @author Francesco
-*/
 public class Partita {
 	
 	private Impostazioni impostazioni;
@@ -169,10 +165,8 @@ public class Partita {
 	    List<String> messaggi = new ArrayList<>();
 	    Map<Integer, Casella> caselleMap = tabellone.getCaselleMap();
 	
-	    // Recupero dello scenario attivo (può essere null se non impostato)
 	    Scenario scenarioCorrente = impostazioni != null ? impostazioni.getScenario() : null;
 	
-	    // --- 1️⃣ Controllo pedina ferma ---
 	    if (pedinaCorrente.getStato() == 0) {
 	        Casella casellaAttuale = caselleMap.get(pedinaCorrente.getPosizione());
 	
@@ -191,7 +185,6 @@ public class Partita {
 	        return MossaResult.ongoing(messaggi);
 	    }
 	
-	    // --- 2️⃣ Movimento normale ---
 	    int posizioneIniziale = pedinaCorrente.getPosizione();
 	    int posizioneFinale = caselleMap.size();
 	    int nuovaPosizione = posizioneIniziale + risultatoDado;
@@ -209,7 +202,6 @@ public class Partita {
 	            messaggi.add("Hai superato la casella finale! Torni indietro di " + rimbalzo + " caselle.");
 	    }
 	
-	    // --- 3️⃣ Verifica casella di arrivo ---
 	    int posizioneCorrente = pedinaCorrente.getPosizione();
 	    Casella casellaAttuale = caselleMap.get(posizioneCorrente);
 	

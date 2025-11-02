@@ -1,8 +1,5 @@
 package GiocoDellOca;
-/**
-*
-* @author Francesco
-*/
+
 public class Scenario {
 	
 	private String codiceScenario;

@@ -37,15 +37,14 @@ public class Pedina extends Personalizzazione{
 		
 	    posizione += spostamento;
 
-	    // Se supera la casella finale, calcola il rimbalzo
 	    if (posizione > maxPosizione) {
 	        int differenza = posizione - maxPosizione;
-	        posizione = maxPosizione - differenza; // Rimbalza all'indietro
+	        posizione = maxPosizione - differenza; 
 
 	        numeroCaselleRimbalzoIndietro = differenza;
 	        
 	    } else if (posizione < 1) {
-	        posizione = 1; // Evita di andare sotto la prima casella
+	        posizione = 1;
 	    }
 	    
 	    return numeroCaselleRimbalzoIndietro;

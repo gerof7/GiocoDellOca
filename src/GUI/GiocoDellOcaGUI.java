@@ -221,11 +221,9 @@ public class GiocoDellOcaGUI extends JFrame {
 	                int numeroDado = random.nextInt(6) + 1;
 	                JLabel dadoLabel = dadiLabels.get(i);
 
-	                // Mostra faccia casuale durante l'animazione
 	                String path = getDadoFacePath(numeroDado);
 	                dadoLabel.setIcon(new ImageIcon(path));
 
-	                // Alla fine dell'animazione salvo il risultato effettivo
 	                if (counter == 9) {
 	                    risultatiFinali[i] = numeroDado;
 	                }
@@ -236,7 +234,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	            if (counter >= 10) {
 	                ((Timer) e.getSource()).stop();
 
-	                // Salvi i risultati per il callback
 	                dadiLabels.get(0).putClientProperty("risultatiFinali", risultatiFinali);
 
 	                afterAnimation.actionPerformed(null);
@@ -267,7 +264,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	    boolean isMultiplayer = GiocoDellOcaGUI.this.isPartitaMultiplayer;
 	    var gioco = GiocoDellOcaGUI.this.giocoDellOca;
 	
-	    // ---------- MULTIPLAYER ----------
 	    if (isMultiplayer) {
 	        Giocatore giocatoreCorrente = gioco.getPartitaCorrente()
 	                .getAllGiocatori()
@@ -302,8 +298,7 @@ public class GiocoDellOcaGUI extends JFrame {
 	        return;
 	    }
 	
-	    // ---------- SINGLEPLAYER ----------
-	    if (turnoCorrente == 0) { // turno umano
+	    if (turnoCorrente == 0) { 
 	    	
 	        impostaDadiGiocatore(giocatoreInSessione);
 
@@ -330,8 +325,7 @@ public class GiocoDellOcaGUI extends JFrame {
 	            avviaTurnoBot();
 	        });
 	    } 
-	    else { // turno bot
-	        // ✅ Nessun giocatore da cui prendere il dado → uso il default classico
+	    else { 
 	        dadiPanel.removeAll();
 	        dadiPanel.revalidate();
 	        dadiPanel.repaint();
@@ -345,7 +339,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	            dadiPanel.add(dadoLabel);
 	        }
 	
-	        // Anima normalmente anche i dadi del bot
 	        animaDadi(dadiLabels, e -> {
 	            int[] risultati = (int[]) dadiLabels.get(0).getClientProperty("risultatiFinali");
 	            int risultatoTotale = Arrays.stream(risultati).sum();
