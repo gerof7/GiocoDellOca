@@ -403,7 +403,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	}
 
 	private void terminaGioco() {
-	    GiocoDellOcaGUI.this.giocoDellOca.resetPartita();
 	    buttonsCaselle.clear();
 	    pedine.clear();
 	    turnoCorrente = 0;
@@ -616,6 +615,7 @@ public class GiocoDellOcaGUI extends JFrame {
     	GiocoDellOcaGUI.this.numeroGiocatoriMP = 0;
     	GiocoDellOcaGUI.this.numeroGiocatoreInTurno = 1;
 		lblGiocatoreCorrente.setText("");
+	    GiocoDellOcaGUI.this.giocoDellOca.resetPartita();
 		SwitchToPanel(layeredPane, menuPrincipalePanel);
 	}
 	
@@ -2371,224 +2371,73 @@ public class GiocoDellOcaGUI extends JFrame {
 		        selezioneNumeroGiocatoriPanel
 		    );
 		});
+		
+		ActionListener setupMultiplayer = e -> {
+	        int numeroGiocatori = Integer.parseInt(((ButtonCustom) e.getSource()).getActionCommand());
+	        GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 2;
+	        GiocoDellOcaGUI.this.numeroGiocatoriMP = numeroGiocatori;
+	        GiocoDellOcaGUI.this.giocoDellOca.aggiungiGiocatoriOspiti(numeroGiocatori);
 
-		btn2Players.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				var nomiGiocatoriDefault = GiocoDellOcaGUI.this.giocoDellOca.getNomiGiocatoriDefault();
-				GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 2;
-				GiocoDellOcaGUI.this.numeroGiocatoriMP = 2;
-				GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().aggiungiGiocatoriOspiti(2, nomiGiocatoriDefault);
-				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
-				lblGiocatoreCorrente.setText("Giocatore 2");
-				lblGiocatoreCorrente.setVisible(true);
-				btnReturnToSelScenFromSelPers.setVisible(false);
-			}
-		});
+	        SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+	        lblGiocatoreCorrente.setText("Giocatore 2");
+	        lblGiocatoreCorrente.setVisible(true);
+	        btnReturnToSelScenFromSelPers.setVisible(false);
+	    };
+
+	    btn2Players.setActionCommand("2");
+	    btn3Players.setActionCommand("3");
+	    btn4Players.setActionCommand("4");
+	    
+		btn2Players.addActionListener(setupMultiplayer);		
+		btn3Players.addActionListener(setupMultiplayer);		
+		btn4Players.addActionListener(setupMultiplayer);
 		
-		btn3Players.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				var nomiGiocatoriDefault = GiocoDellOcaGUI.this.giocoDellOca.getNomiGiocatoriDefault();
-				GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 2;
-				GiocoDellOcaGUI.this.numeroGiocatoriMP = 3;
-				GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().aggiungiGiocatoriOspiti(3,nomiGiocatoriDefault);
-				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
-				lblGiocatoreCorrente.setText("Giocatore 2");
-				lblGiocatoreCorrente.setVisible(true);
-				btnReturnToSelScenFromSelPers.setVisible(false);
-			}
-		});
+		ActionListener configuraProssimoGiocatoreListener = e -> {
+		    var gioco = GiocoDellOcaGUI.this.giocoDellOca;
 		
-		btn4Players.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				var nomiGiocatoriDefault = GiocoDellOcaGUI.this.giocoDellOca.getNomiGiocatoriDefault();
-				GiocoDellOcaGUI.this.numeroGiocatoreCorrente = 2;
-				GiocoDellOcaGUI.this.numeroGiocatoriMP = 4;
-				GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente().aggiungiGiocatoriOspiti(4, nomiGiocatoriDefault);
-				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
-				lblGiocatoreCorrente.setText("Giocatore 2");
-				lblGiocatoreCorrente.setVisible(true);
-				btnReturnToSelScenFromSelPers.setVisible(false);
-			}
-		});
+		    gioco.configuraGiocatoreCorrente(
+		        GiocoDellOcaGUI.this.numeroGiocatoreCorrente,
+		        tablePedinaSelezionataModel,
+		        tableDadoSelezionatoModel,
+		        listPersonalizzazioni
+		    );
 		
-		btnConfiguraProssimoUtenteFromSelDado.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				if (tablePedinaSelezionataModel.getRowCount() > 0) {
-		            var codicePedina = (String) tablePedinaSelezionataModel.getValueAt(0, 0);
-		            var descrizionePedina = (String) tablePedinaSelezionataModel.getValueAt(0, 1);
-		            String pathPedina = "";
+		    GiocoDellOcaGUI.this.numeroGiocatoreCorrente++;
+		    SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+		    lblGiocatoreCorrente.setText("Giocatore " + GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
 		
-		            for (var personalizzazione : listPersonalizzazioni) {
-		                if (personalizzazione instanceof Pedina) {
-		                    if (personalizzazione.getCodicePersonalizzazione().equals(codicePedina)) {
-		                        pathPedina = personalizzazione.getPath();
-		                        break;
-		                    }
-		                }
-		            }
+		    tablePedinaSelezionataModel.setRowCount(0);
+		    tableDadoSelezionatoModel.setRowCount(0);
+		    tablePedineSelezionabiliModel.setRowCount(0);
+		    tableDadiSelezionabiliModel.setRowCount(0);
 		
-		            var pedina = new Pedina(codicePedina, descrizionePedina, pathPedina);
-		            var partitaCorrente = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente();
-		            var giocatore = partitaCorrente.getGiocatore(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-		            giocatore.setPedina(pedina);
+		    var codicePedinaDefault = gioco.getCodiciPedineGiocatoriDefault()
+		            .get(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
+		    var codiceDadoDefault = gioco.getCodiciDadiGiocatoriDefault()
+		            .get(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
+		
+		    for (var personalizzazione : listPersonalizzazioni) {
+		        if (personalizzazione instanceof Pedina p) {
+		            if (codicePedinaDefault != null && p.getCodicePersonalizzazione().equals(codicePedinaDefault))
+		                tablePedinaSelezionataModel.addRow(new Object[]{p.getCodicePersonalizzazione(), p.getDescrizione()});
+		            else
+		                tablePedineSelezionabiliModel.addRow(new Object[]{p.getCodicePersonalizzazione(), p.getDescrizione()});
 		        }
-				else {
-		    		var pedina = new Pedina("Pedina_Oca", "La pedina del giocatore è un'oca", "./src/images/ScarfGoose.png");
-		    		var partitaCorrente = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente();
-		            var giocatore = partitaCorrente.getGiocatore(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-		            giocatore.setPedina(pedina);
-				}
+		    }
 		
-		        if (tableDadoSelezionatoModel.getRowCount() > 0) {
-		            var codiceDado = (String) tableDadoSelezionatoModel.getValueAt(0, 0);
-		            var descrizioneDado = (String) tableDadoSelezionatoModel.getValueAt(0, 1);
-		            String pathDado = "";
-		
-		            for (var personalizzazione : listPersonalizzazioni) {
-		                if (personalizzazione instanceof Dado) {
-		                    if (personalizzazione.getCodicePersonalizzazione().equals(codiceDado)) {
-		                        pathDado = personalizzazione.getPath();
-		                        break;
-		                    }
-		                }
-		            }
-		
-		            var dado = new Dado(codiceDado, descrizioneDado, pathDado);
-		            var partitaCorrente = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente();
-		            var giocatore = partitaCorrente.getGiocatore(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-		            giocatore.setDado(dado);
+		    for (var personalizzazione : listPersonalizzazioni) {
+		        if (personalizzazione instanceof Dado d) {
+		            if (codiceDadoDefault != null && d.getCodicePersonalizzazione().equals(codiceDadoDefault))
+		                tableDadoSelezionatoModel.addRow(new Object[]{d.getCodicePersonalizzazione(), d.getDescrizione()});
+		            else
+		                tableDadiSelezionabiliModel.addRow(new Object[]{d.getCodicePersonalizzazione(), d.getDescrizione()});
 		        }
-		        else
-		        {
-		        	var dado = new Dado("Dado_Classico", "Il dado del giocatore è il dado classico", "./src/images/dadoclassico_1.png");
-		    		var partitaCorrente = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente();
-		            var giocatore = partitaCorrente.getGiocatore(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-		            giocatore.setDado(dado);    			    		
-	    		}
-				
-				GiocoDellOcaGUI.this.numeroGiocatoreCorrente++;
-				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
-				lblGiocatoreCorrente.setText("Giocatore " + GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-				
-	            tablePedinaSelezionataModel.setRowCount(0);
-	            tableDadoSelezionatoModel.setRowCount(0);
-	            tablePedineSelezionabiliModel.setRowCount(0);
-	            tableDadiSelezionabiliModel.setRowCount(0);
-	            
-	            var codicePedinaDefaultGCorrente = GiocoDellOcaGUI.this.giocoDellOca.getCodiciPedineGiocatoriDefault().get(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-                var codiceDadoDefaultGCorrente = GiocoDellOcaGUI.this.giocoDellOca.getCodiciDadiGiocatoriDefault().get(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-	            
-	            for(var personalizzazione : listPersonalizzazioni) {
-					if(personalizzazione instanceof Pedina)
-					{
-	            		 if(codicePedinaDefaultGCorrente != null && personalizzazione.getCodicePersonalizzazione().equals(codicePedinaDefaultGCorrente))
-	            			 tablePedinaSelezionataModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
-	            		 else
-	            			 tablePedineSelezionabiliModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
-	            	 }				
-					}
-	            
-	            for(var personalizzazione : listPersonalizzazioni) {
-					if(personalizzazione instanceof Dado){
-	            		 if(codiceDadoDefaultGCorrente != null && personalizzazione.getCodicePersonalizzazione().equals(codiceDadoDefaultGCorrente))
-	            			 tableDadoSelezionatoModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
-	            		 else
-	            			 tableDadiSelezionabiliModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
-	            	 }
-				}
-			}
-		});
+		    }
+		};
 		
-		btnConfiguraProssimoUtenteFromSelPedina.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				if (tablePedinaSelezionataModel.getRowCount() > 0) {
-		            var codicePedina = (String) tablePedinaSelezionataModel.getValueAt(0, 0);
-		            var descrizionePedina = (String) tablePedinaSelezionataModel.getValueAt(0, 1);
-		            String pathPedina = "";
-		
-		            for (var personalizzazione : listPersonalizzazioni) {
-		                if (personalizzazione instanceof Pedina) {
-		                    if (personalizzazione.getCodicePersonalizzazione().equals(codicePedina)) {
-		                        pathPedina = personalizzazione.getPath();
-		                        break;
-		                    }
-		                }
-		            }
-		
-		            var pedina = new Pedina(codicePedina, descrizionePedina, pathPedina);
-		            var partitaCorrente = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente();
-		            var giocatore = partitaCorrente.getGiocatore(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-		            giocatore.setPedina(pedina);
-		        }
-				else {
-		    		var pedina = new Pedina("Pedina_Oca", "La pedina del giocatore è un'oca", "./src/images/ScarfGoose.png");
-		    		var partitaCorrente = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente();
-		            var giocatore = partitaCorrente.getGiocatore(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-		            giocatore.setPedina(pedina);
-				}
-		
-		        if (tableDadoSelezionatoModel.getRowCount() > 0) {
-		            var codiceDado = (String) tableDadoSelezionatoModel.getValueAt(0, 0);
-		            var descrizioneDado = (String) tableDadoSelezionatoModel.getValueAt(0, 1);
-		            String pathDado = "";
-		
-		            for (var personalizzazione : listPersonalizzazioni) {
-		                if (personalizzazione instanceof Dado) {
-		                    if (personalizzazione.getCodicePersonalizzazione().equals(codiceDado)) {
-		                        pathDado = personalizzazione.getPath();
-		                        break;
-		                    }
-		                }
-		            }
-		
-		            var dado = new Dado(codiceDado, descrizioneDado, pathDado);
-		            var partitaCorrente = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente();
-		            var giocatore = partitaCorrente.getGiocatore(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-		            giocatore.setDado(dado);
-		        }
-		        else
-		        {
-		        	var dado = new Dado("Dado_Classico", "Il dado del giocatore è il dado classico", "./src/images/dadoclassico_1.png");
-		    		var partitaCorrente = GiocoDellOcaGUI.this.giocoDellOca.getPartitaCorrente();
-		            var giocatore = partitaCorrente.getGiocatore(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-		            giocatore.setDado(dado);    			    		
-	    		}
-		        
-		        
-				GiocoDellOcaGUI.this.numeroGiocatoreCorrente++;
-				SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
-				lblGiocatoreCorrente.setText("Giocatore " + GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-				
-				 tablePedinaSelezionataModel.setRowCount(0);
-	             tableDadoSelezionatoModel.setRowCount(0);
-	             tablePedineSelezionabiliModel.setRowCount(0);
-	             tableDadiSelezionabiliModel.setRowCount(0);
-	            
-	             var codicePedinaDefaultGCorrente = GiocoDellOcaGUI.this.giocoDellOca.getCodiciPedineGiocatoriDefault().get(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-	             var codiceDadoDefaultGCorrente = GiocoDellOcaGUI.this.giocoDellOca.getCodiciDadiGiocatoriDefault().get(GiocoDellOcaGUI.this.numeroGiocatoreCorrente);
-	             
-	             for(var personalizzazione : listPersonalizzazioni) {
-	            	 if(personalizzazione instanceof Pedina) {
-	            		 if(codicePedinaDefaultGCorrente != null && personalizzazione.getCodicePersonalizzazione().equals(codicePedinaDefaultGCorrente))
-	            			 tablePedinaSelezionataModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
-	            		 else
-	            			 tablePedineSelezionabiliModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
-	            	 }
-			     }
-	            
-	             for(var personalizzazione : listPersonalizzazioni) {
-	            	 if(personalizzazione instanceof Dado){
-	            		 if(codiceDadoDefaultGCorrente != null && personalizzazione.getCodicePersonalizzazione().equals(codiceDadoDefaultGCorrente))
-	            			 tableDadoSelezionatoModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
-	            		 else
-	            			 tableDadiSelezionabiliModel.addRow(new Object[] {personalizzazione.getCodicePersonalizzazione(), personalizzazione.getDescrizione()});
-	            	 }
-				 }
-			}
-		});
-		
+		btnConfiguraProssimoUtenteFromSelDado.addActionListener(configuraProssimoGiocatoreListener);
+		btnConfiguraProssimoUtenteFromSelPedina.addActionListener(configuraProssimoGiocatoreListener);
+
 		btnGestisciImpostazioni.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				var codiciDadiGiocatoriDefault = GiocoDellOcaGUI.this.giocoDellOca.getCodiciDadiGiocatoriDefault();

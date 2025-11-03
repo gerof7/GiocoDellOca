@@ -226,7 +226,7 @@ public class Partita {
 	                }
 	                case Ponte -> {
 	                    String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaPonte() != null)
-	                            ? scenarioCorrente.getDescrizioneCasellaPonte() + " -> " + risultatoDado
+	                            ? scenarioCorrente.getDescrizioneCasellaPonte() + " -> " + posizioneCorrente
 	                            : "Ponte! Avanzi di " + posizioneCorrente + " caselle.";
 	                    messaggi.add(descr);
 	
@@ -278,6 +278,51 @@ public class Partita {
 	
 	    return MossaResult.ongoing(messaggi);
 	}
+	
+	public void configuraGiocatore(
+	        int numeroGiocatore,
+	        javax.swing.table.TableModel tablePedinaSelezionataModel,
+	        javax.swing.table.TableModel tableDadoSelezionatoModel,
+	        List<Personalizzazione> personalizzazioni
+	) {
+	    Giocatore giocatore = getGiocatore(numeroGiocatore);
+	    if (giocatore == null) return;
+
+	    Pedina pedina;
+	    if (tablePedinaSelezionataModel.getRowCount() > 0) {
+	        String codicePedina = (String) tablePedinaSelezionataModel.getValueAt(0, 0);
+	        String descrizionePedina = (String) tablePedinaSelezionataModel.getValueAt(0, 1);
+
+	        String pathPedina = personalizzazioni.stream()
+	                .filter(p -> p instanceof Pedina && p.getCodicePersonalizzazione().equals(codicePedina))
+	                .map(Personalizzazione::getPath)
+	                .findFirst()
+	                .orElse("./src/images/ScarfGoose.png");
+
+	        pedina = new Pedina(codicePedina, descrizionePedina, pathPedina);
+	    } else {
+	        pedina = new Pedina("Pedina_Oca", "La pedina del giocatore è un'oca", "./src/images/ScarfGoose.png");
+	    }
+	    giocatore.setPedina(pedina);
+
+	    Dado dado;
+	    if (tableDadoSelezionatoModel.getRowCount() > 0) {
+	        String codiceDado = (String) tableDadoSelezionatoModel.getValueAt(0, 0);
+	        String descrizioneDado = (String) tableDadoSelezionatoModel.getValueAt(0, 1);
+
+	        String pathDado = personalizzazioni.stream()
+	                .filter(p -> p instanceof Dado && p.getCodicePersonalizzazione().equals(codiceDado))
+	                .map(Personalizzazione::getPath)
+	                .findFirst()
+	                .orElse("./src/images/dadoclassico_1.png");
+
+	        dado = new Dado(codiceDado, descrizioneDado, pathDado);
+	    } else {
+	        dado = new Dado("Dado_Classico", "Il dado del giocatore è il dado classico", "./src/images/dadoclassico_1.png");
+	    }
+	    giocatore.setDado(dado);
+	}
+
 
 
 	

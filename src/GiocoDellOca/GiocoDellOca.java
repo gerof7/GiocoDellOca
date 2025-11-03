@@ -148,14 +148,15 @@ public class GiocoDellOca {
 	}
 	
 	public void resetPartita() {
-	    /*if (partitaCorrente == null) return;
-
+		if (this.partitaCorrente == null)
+			return;
+			
 	    for (Giocatore g : partitaCorrente.getAllGiocatori().values()) {
 	        if (g.getPedina() != null) {
 	            g.getPedina().setPosizione(1);
 	            g.getPedina().setStato(1);
 	        }
-	    }*/
+	    }
 		this.partitaCorrente = null;
 	}
 
@@ -233,6 +234,25 @@ public class GiocoDellOca {
 	public MossaResult eseguiTurnoGiocatore(Pedina pedinaCorrente, int risultatoDado) {
 	    return partitaCorrente.applicaMossaConMessaggi(pedinaCorrente, risultatoDado);
 	}
+	
+	public void aggiungiGiocatoriOspiti(int numeroGiocatori) {
+	    partitaCorrente.aggiungiGiocatoriOspiti(numeroGiocatori, this.nomiGiocatoriDefault);
+	}
+	
+	public void configuraGiocatoreCorrente(
+	        int numeroGiocatore,
+	        javax.swing.table.TableModel tablePedinaSelezionataModel,
+	        javax.swing.table.TableModel tableDadoSelezionatoModel,
+	        List<Personalizzazione> personalizzazioni) {
+	        partitaCorrente.configuraGiocatore(
+	            numeroGiocatore,
+	            tablePedinaSelezionataModel,
+	            tableDadoSelezionatoModel,
+	            personalizzazioni
+	        );    
+	}
+
+
 
 
 }
