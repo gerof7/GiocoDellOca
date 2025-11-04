@@ -55,7 +55,6 @@ import GiocoDellOca.Giocatore;
 import GiocoDellOca.GiocoDellOca;
 import GiocoDellOca.Pedina;
 import GiocoDellOca.Personalizzazione;
-import GiocoDellOca.PersonalizzazioneFactory;
 import GiocoDellOca.Regola;
 import GiocoDellOca.Scenario;
 import GiocoDellOca.TipologiaRegolaEnum;
@@ -556,18 +555,14 @@ public class GiocoDellOcaGUI extends JFrame {
 	        List<Personalizzazione> listPersonalizzazioni,
 	        JPanel selezioneNumeroGiocatoriPanel) {
 	    
-	    var impostazioni = giocoDellOca.getPartitaCorrente().getImpostazioni();
-
 	    if (tablePedinaSelezionataModel.getRowCount() > 0) {
 	        String codicePedina = (String) tablePedinaSelezionataModel.getValueAt(0, 0);
-	        var pedina = PersonalizzazioneFactory.creaPedinaDaCodice(codicePedina, listPersonalizzazioni);
-	        impostazioni.addPersonalizzazioneToList(pedina);
+	        GiocoDellOcaGUI.this.giocoDellOca.impostaPedinaGiocatore(codicePedina, 1, false);
 	    }
 
 	    if (tableDadoSelezionatoModel.getRowCount() > 0) {
 	        String codiceDado = (String) tableDadoSelezionatoModel.getValueAt(0, 0);
-	        var dado = PersonalizzazioneFactory.creaDadoDaCodice(codiceDado, listPersonalizzazioni);
-	        impostazioni.addPersonalizzazioneToList(dado);
+	        GiocoDellOcaGUI.this.giocoDellOca.impostaDadoGiocatore(codiceDado, 1, false);
 	    }
 
 	    SwitchToPanel(layeredPane, selezioneNumeroGiocatoriPanel);
