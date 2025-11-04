@@ -95,8 +95,8 @@ public class Partita {
 	    return new Dado("Dado_Classico", "Il dado del giocatore è il dado classico", "./src/images/dadoclassico_1.png");
 	}
 
-	public void impostaPedinaGiocatore(String codicePedina, int numeroGiocatore, List<Personalizzazione> personalizzazioni, boolean isMultiplayer) {
-	    if (isMultiplayer) {
+	public void impostaPedinaGiocatore(String codicePedina, int numeroGiocatore, List<Personalizzazione> personalizzazioni, boolean editGiocatore) {
+	    if (editGiocatore) {
 	        Giocatore giocatore = getGiocatore(numeroGiocatore);
 	        boolean trovata = false;
 
@@ -128,8 +128,8 @@ public class Partita {
 	    }
 	}
 
-	public void impostaDadoGiocatore(String codiceDado, int numeroGiocatore, List<Personalizzazione> personalizzazioni, boolean isMultiplayer) {
-	    if (isMultiplayer) {
+	public void impostaDadoGiocatore(String codiceDado, int numeroGiocatore, List<Personalizzazione> personalizzazioni, boolean editGiocatore) {
+	    if (editGiocatore) {
 	        Giocatore giocatore = getGiocatore(numeroGiocatore);
 	        boolean trovato = false;
 

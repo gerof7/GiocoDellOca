@@ -223,12 +223,12 @@ public class GiocoDellOca {
         this.partitaCorrente.impostaScenario(codiceScenario, this.listaScenari);
 	}
 	
-	public void impostaPedinaGiocatore(String codicePedina, int numeroGiocatore, boolean isMultiplayer) {
-	        partitaCorrente.impostaPedinaGiocatore(codicePedina, numeroGiocatore, listaPersonalizzazioni, isMultiplayer);	    
+	public void impostaPedinaGiocatore(String codicePedina, int numeroGiocatore, boolean editGiocatore) {
+	        partitaCorrente.impostaPedinaGiocatore(codicePedina, numeroGiocatore, listaPersonalizzazioni, editGiocatore);	    
 	}
 
-	public void impostaDadoGiocatore(String codiceDado, int numeroGiocatore, boolean isMultiplayer) {
-	        partitaCorrente.impostaDadoGiocatore(codiceDado, numeroGiocatore, listaPersonalizzazioni, isMultiplayer);	    
+	public void impostaDadoGiocatore(String codiceDado, int numeroGiocatore, boolean editGiocatore) {
+	        partitaCorrente.impostaDadoGiocatore(codiceDado, numeroGiocatore, listaPersonalizzazioni, editGiocatore);	    
 	}
 	
 	public MossaResult eseguiTurnoGiocatore(Pedina pedinaCorrente, int risultatoDado) {
