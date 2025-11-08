@@ -8,6 +8,8 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,15 +29,19 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
@@ -62,6 +68,8 @@ import Utilities.MossaResult;
 
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
+
 import javax.swing.JTextField;
 import javax.swing.GroupLayout;
 
@@ -115,6 +123,13 @@ public class GiocoDellOcaGUI extends JFrame {
 	private JLabel lblGiocatoreCorrente;
 	private JPanel dadiPanel;
 	private JPanel tabelloneMainPanel;
+	private JPanel adminPanel;
+	private JPanel gestioneScenariPanel;
+	private JDialog dlgLoginAdmin;
+	private JTextField txtAdminUser;
+	private JPasswordField txtAdminPass;
+	private DefaultTableModel modelScenari;
+
 
 	private void SwitchToPanel (JLayeredPane layeredPane, JPanel panel) {
 		layeredPane.removeAll();
@@ -640,8 +655,240 @@ public class GiocoDellOcaGUI extends JFrame {
 	        fields[i].setText(valore != null ? valore : ""); 
 	    }
 	}
+	
+	private void mostraDialogLoginAdmin() {
+	    if (dlgLoginAdmin == null) {
+	        dlgLoginAdmin = new JDialog(SwingUtilities.getWindowAncestor(layeredPane), "Login Amministratore", JDialog.ModalityType.APPLICATION_MODAL);
+	        dlgLoginAdmin.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+	        JPanel content = new JPanel(new BorderLayout(10, 10));
+	        content.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
+	        JLabel title = new JLabel("Accesso Amministratore", SwingConstants.CENTER);
+	        title.setFont(new Font("Arial", Font.BOLD, 18));
+	        content.add(title, BorderLayout.NORTH);
+
+	        JPanel form = new JPanel(new GridBagLayout());
+	        GridBagConstraints gbc = new GridBagConstraints();
+	        gbc.insets = new Insets(6, 6, 6, 6);
+	        gbc.anchor = GridBagConstraints.WEST;
+	        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+	        txtAdminUser = new JTextField(16);
+	        txtAdminPass = new JPasswordField(16);
+
+	        gbc.gridx = 0; gbc.gridy = 0;
+	        form.add(new JLabel("Username:"), gbc);
+	        gbc.gridx = 1;
+	        form.add(txtAdminUser, gbc);
+
+	        gbc.gridx = 0; gbc.gridy = 1;
+	        form.add(new JLabel("Password:"), gbc);
+	        gbc.gridx = 1;
+	        form.add(txtAdminPass, gbc);
+
+	        content.add(form, BorderLayout.CENTER);
+
+	        JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+	        JButton btnAnnulla = new JButton("Annulla");
+	        JButton btnLogin = new JButton("Accedi");
+
+	        btnAnnulla.addActionListener(e -> dlgLoginAdmin.dispose());
+	        btnLogin.addActionListener(e -> {
+	            String u = txtAdminUser.getText().trim();
+	            String p = new String(txtAdminPass.getPassword());
+
+	            if ("admin".equals(u) && "admin".equals(p)) {
+	                JOptionPane.showMessageDialog(dlgLoginAdmin, "Autenticazione effettuata!");
+	                dlgLoginAdmin.dispose();
+	                SwitchToPanel(layeredPane, adminPanel);
+	            } else {
+	                JOptionPane.showMessageDialog(dlgLoginAdmin, "Credenziali errate.", "Errore", JOptionPane.ERROR_MESSAGE);
+	            }
+	        });
+
+	        actions.add(btnAnnulla);
+	        actions.add(btnLogin);
+	        content.add(actions, BorderLayout.SOUTH);
+
+	        dlgLoginAdmin.setContentPane(content);
+	        dlgLoginAdmin.pack();
+	        dlgLoginAdmin.setLocationRelativeTo(layeredPane);
+	    }
+
+	    txtAdminUser.setText("");
+	    txtAdminPass.setText("");
+	    dlgLoginAdmin.setVisible(true);
+	}
+
+	private JPanel creaAdminPanel() {
+	    JPanel panel = new JPanel(new BorderLayout());
+
+	    JLabel lblTitle = new JLabel("Pannello Amministratore", SwingConstants.CENTER);
+	    lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
+	    lblTitle.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
+	    panel.add(lblTitle, BorderLayout.NORTH);
+
+	    JPanel centerPanel = new JPanel(new GridLayout(3, 1, 16, 16));
+	    centerPanel.setBorder(BorderFactory.createEmptyBorder(30, 200, 30, 200));
+
+	    JButton btnGestioneScenari = new JButton("Gestione Scenari");
+	    JButton btnGestioneRegoleSet = new JButton("Gestione Set di Regole");
+	    JButton btnGestionePersonalizzazioni = new JButton("Gestione Personalizzazioni");
+
+	    centerPanel.add(btnGestioneScenari);
+	    centerPanel.add(btnGestioneRegoleSet);       
+	    centerPanel.add(btnGestionePersonalizzazioni);
+
+	    panel.add(centerPanel, BorderLayout.CENTER);
+
+	    JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+	    JButton btnBack = new JButton("Torna al Menu");
+	    btnBack.addActionListener(e -> SwitchToPanel(layeredPane, menuPrincipalePanel));
+	    southPanel.add(btnBack);
+	    panel.add(southPanel, BorderLayout.SOUTH);
+
+	    btnGestioneScenari.addActionListener(e -> {
+	    	caricaScenariInTabella();
+	        SwitchToPanel(layeredPane, gestioneScenariPanel);
+	    });
+
+	    return panel;
+	}
+
+	@SuppressWarnings("serial")
+	private JPanel creaGestioneScenariPanel() {
+	    JPanel panel = new JPanel(new BorderLayout());
+
+	    JLabel title = new JLabel("Gestione Scenari", SwingConstants.CENTER);
+	    title.setFont(new Font("Arial", Font.BOLD, 24));
+	    title.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
+	    panel.add(title, BorderLayout.NORTH);
+
+	    String[] cols = {
+	        "Codice", "Descrizione",
+	        "Oca", "Ponte", "Locanda",
+	        "Prigione", "Labirinto", "Scheletro"
+	    };
+
+	    DefaultTableModel model = new DefaultTableModel(cols, 0) {
+	        @Override
+	        public boolean isCellEditable(int row, int column) {
+	            return true;
+	        }
+	    };
+
+	    JTable table = new JTable(model);
+	    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	    table.getColumnModel().getColumn(0).setPreferredWidth(140); 
+	    table.getColumnModel().getColumn(1).setPreferredWidth(220); 
+	    for (int c = 2; c < cols.length; c++) {
+	        table.getColumnModel().getColumn(c).setPreferredWidth(220);
+	    }
+	    JScrollPane scroll = new JScrollPane(table);
+	    panel.add(scroll, BorderLayout.CENTER);
+
+	    for (Scenario s : giocoDellOca.getListaScenari()) {
+	        model.addRow(new Object[]{
+	            s.getCodiceScenario(),
+	            s.getDescrizione(),
+	            s.getDescrizioneCasellaOca(),
+	            s.getDescrizioneCasellaPonte(),
+	            s.getDescrizioneCasellaLocanda(),
+	            s.getDescrizioneCasellaPrigione(),
+	            s.getDescrizioneCasellaLabirinto(),
+	            s.getDescrizioneCasellaScheletro()
+	        });
+	    }
+	    
+	    this.modelScenari = model;
+
+	    JPanel south = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+	    JButton btnNuovo = new JButton("Nuovo");
+	    JButton btnElimina = new JButton("Elimina");
+	    JButton btnSalva = new JButton("Salva Modifiche");
+	    JButton btnIndietro = new JButton("Indietro");
+	    south.add(btnNuovo);
+	    south.add(btnElimina);
+	    south.add(btnSalva);
+	    south.add(btnIndietro);
+	    panel.add(south, BorderLayout.SOUTH);
+
+	    btnNuovo.addActionListener(e -> {
+	        model.addRow(new Object[]{"", "", "", "", "", "", "", ""});
+	    });
+
+	    btnElimina.addActionListener(e -> {
+	        int row = table.getSelectedRow();
+	        if (row >= 0) {
+	            model.removeRow(row);
+	        } else {
+	            JOptionPane.showMessageDialog(panel, "Seleziona una riga da eliminare.", "Info", JOptionPane.INFORMATION_MESSAGE);
+	        }
+	    });
+
+	    btnSalva.addActionListener(e -> {
+	        List<Scenario> nuovi = new ArrayList<>();
+
+	        for (int i = 0; i < model.getRowCount(); i++) {
+	            String cod = safeStr(model.getValueAt(i, 0));
+	            String desc = safeStr(model.getValueAt(i, 1));
+
+	            if (cod.isBlank() || desc.isBlank()) {
+	                JOptionPane.showMessageDialog(panel,
+	                        "Codice e Descrizione sono obbligatori (riga " + (i + 1) + ").",
+	                        "Errore", JOptionPane.ERROR_MESSAGE);
+	                return;
+	            }
+
+	            Scenario s = new Scenario(
+	                cod,
+	                desc,
+	                safeStr(model.getValueAt(i, 2)),  
+	                safeStr(model.getValueAt(i, 3)),  
+	                safeStr(model.getValueAt(i, 4)),  
+	                safeStr(model.getValueAt(i, 5)), 
+	                safeStr(model.getValueAt(i, 6)),  
+	                safeStr(model.getValueAt(i, 7))   
+	            );
+	            nuovi.add(s);
+	        }
+
+	        giocoDellOca.replaceAllScenari(nuovi);
+	        caricaScenariInTabella();
+	        JOptionPane.showMessageDialog(panel, "Scenari salvati correttamente!", "OK", JOptionPane.INFORMATION_MESSAGE);
+	    });
+
+	    btnIndietro.addActionListener(e -> {
+	        SwitchToPanel(layeredPane, adminPanel);
+	    });
+
+	    return panel;
+	}
+
+	private void caricaScenariInTabella() {
+	    modelScenari.setRowCount(0);
+
+	    for (Scenario s : giocoDellOca.getListaScenari()) {
+	        modelScenari.addRow(new Object[]{
+	            s.getCodiceScenario(),
+	            s.getDescrizione(),
+	            s.getDescrizioneCasellaOca(),
+	            s.getDescrizioneCasellaPonte(),
+	            s.getDescrizioneCasellaLocanda(),
+	            s.getDescrizioneCasellaPrigione(),
+	            s.getDescrizioneCasellaLabirinto(),
+	            s.getDescrizioneCasellaScheletro()
+	        });
+	    }
+	}
+
+	
+	private static String safeStr(Object v) {
+	    return v == null ? "" : v.toString();
+	}
+
+	
 	/**
 	 * Launch the application.
 	 */
@@ -715,11 +962,22 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnConfiguraNuovaPartitaMP.setBounds(564, 365, 384, 92);
 		menuPrincipalePanel.add(btnConfiguraNuovaPartitaMP);
 		
-		ButtonCustom btnGestisciImpostazioni = new ButtonCustom("Nuova partita multiplayer", ButtonStyle.PRIMARY);
-		btnGestisciImpostazioni.setText("Gestisci impostazioni");
+		ButtonCustom btnGestisciImpostazioni = new ButtonCustom("Gestisci impostazioni", ButtonStyle.PRIMARY);
 		btnGestisciImpostazioni.setFont(new Font("Segoe UI", Font.PLAIN, 28));
 		btnGestisciImpostazioni.setBounds(564, 510, 384, 92);
 		menuPrincipalePanel.add(btnGestisciImpostazioni);
+		
+		ButtonCustom btnPannelloAdmin = new ButtonCustom("Pannello Admin", ButtonStyle.PRIMARY);
+		btnPannelloAdmin.setFont(new Font("Segoe UI", Font.PLAIN, 28));
+		btnPannelloAdmin.setBounds(564, 655, 384, 92);
+		menuPrincipalePanel.add(btnPannelloAdmin);
+		btnPannelloAdmin.addActionListener(e -> mostraDialogLoginAdmin());
+
+		adminPanel = creaAdminPanel();
+		gestioneScenariPanel = creaGestioneScenariPanel();
+
+		layeredPane.add(adminPanel, "adminPanel");
+		layeredPane.add(gestioneScenariPanel, "gestioneScenariPanel");
 		
 		selezioneTipologiaRegolePanel = new JPanel();
 		layeredPane.add(selezioneTipologiaRegolePanel, "name_610398291392000");

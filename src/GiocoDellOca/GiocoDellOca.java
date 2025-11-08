@@ -253,6 +253,10 @@ public class GiocoDellOca {
 	}
 
 
+	public void replaceAllScenari(List<Scenario> nuovi) {
+	    this.listaScenari.clear();
+	    this.listaScenari.addAll(nuovi);
+	}
 
 
 }
