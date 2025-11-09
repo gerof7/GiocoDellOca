@@ -263,6 +263,10 @@ public class GiocoDellOca {
 	    this.mapRegoleSet.putAll(nuoviSet);
 	}
 
+	public void replaceAllPersonalizzazioni(List<Personalizzazione> nuove) {
+	    this.listaPersonalizzazioni.clear();
+	    this.listaPersonalizzazioni.addAll(nuove);
+	}
 
 
 }

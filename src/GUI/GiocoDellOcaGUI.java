@@ -47,6 +47,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -136,6 +137,9 @@ public class GiocoDellOcaGUI extends JFrame {
 	private Map<String, List<Object[]>> modificheTemporaneeSetRegole = new HashMap<>();
 	private String ultimoSetSelezionato = null;
 	private JPanel gestioneRegoleSetPanel;
+	private DefaultTableModel modelPersonalizzazioniPedine;
+	private DefaultTableModel modelPersonalizzazioniDadi;
+	private JPanel gestionePersonalizzazioniPanel;
 
 
 	private void SwitchToPanel (JLayeredPane layeredPane, JPanel panel) {
@@ -265,18 +269,57 @@ public class GiocoDellOcaGUI extends JFrame {
 	    timer.start();
 	}
 
+//	private String getDadoFacePath(int numeroFaccia) {
+//	    int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_');
+//	    int dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
+//
+//	    if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex) {
+//	        return GiocoDellOcaGUI.this.dadoPath.substring(0, lastUnderscoreIndex + 1)
+//	                + numeroFaccia
+//	                + GiocoDellOcaGUI.this.dadoPath.substring(dotIndex);
+//	    } else {
+//	        return "./src/images/dadoclassico_" + numeroFaccia + ".png";
+//	    }
+//	}
+	
 	private String getDadoFacePath(int numeroFaccia) {
-	    int lastUnderscoreIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('_');
-	    int dotIndex = GiocoDellOcaGUI.this.dadoPath.lastIndexOf('.');
+	    String path = GiocoDellOcaGUI.this.dadoPath;
 
-	    if (lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex) {
-	        return GiocoDellOcaGUI.this.dadoPath.substring(0, lastUnderscoreIndex + 1)
-	                + numeroFaccia
-	                + GiocoDellOcaGUI.this.dadoPath.substring(dotIndex);
-	    } else {
+	    // se path è null o vuoto → fallback
+	    if (path == null || path.isBlank()) {
 	        return "./src/images/dadoclassico_" + numeroFaccia + ".png";
 	    }
+
+	    int lastUnderscoreIndex = path.lastIndexOf('_');
+	    int dotIndex = path.lastIndexOf('.');
+
+	    // Se il formato non è quello atteso
+	    boolean formatoOK = lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex;
+
+	    if (!formatoOK) {
+	        // Caso speciale: l’admin ha inserito un path singolo
+	        // → restituiamo sempre la faccia 1
+	        return path;
+	    }
+
+	    // Estrai il numero della faccia attuale dal path
+	    String faceNumber = path.substring(lastUnderscoreIndex + 1, dotIndex);
+
+	    // Se l’admin ha caricato solo un file (senza _numero o con numero fisso)
+	    // e non corrisponde a un valore valido (1–6)
+	    boolean èNumeroValido = faceNumber.matches("[1-6]");
+
+	    if (!èNumeroValido) {
+	        // restituiamo sempre la "faccia 1" (il file originale)
+	        return path;
+	    }
+
+	    // Caso normale → genera la faccia richiesta
+	    return path.substring(0, lastUnderscoreIndex + 1)
+	            + numeroFaccia
+	            + path.substring(dotIndex);
 	}
+
 
 	 
 	private void lanciaDado() {
@@ -764,6 +807,12 @@ public class GiocoDellOcaGUI extends JFrame {
 	        caricaSetRegoleInTabella();
 	        SwitchToPanel(layeredPane, gestioneRegoleSetPanel);
 	    });
+	    
+	    btnGestionePersonalizzazioni.addActionListener(e -> {
+	        caricaPersonalizzazioniInTabella();
+	        SwitchToPanel(layeredPane, gestionePersonalizzazioniPanel);
+	    });
+
 
 
 	    return panel;
@@ -1156,6 +1205,162 @@ public class GiocoDellOcaGUI extends JFrame {
 	    }
 	}
 
+	private void caricaPersonalizzazioniInTabella() {
+	    modelPersonalizzazioniPedine.setRowCount(0);
+	    modelPersonalizzazioniDadi.setRowCount(0);
+
+	    for (Personalizzazione p : giocoDellOca.getListaPersonalizzazioni()) {
+	        if (p instanceof Pedina) {
+	            modelPersonalizzazioniPedine.addRow(
+	                new Object[]{ p.getCodicePersonalizzazione(), p.getDescrizione(), p.getPath() }
+	            );
+	        } else if (p instanceof Dado) {
+	            modelPersonalizzazioniDadi.addRow(
+	                new Object[]{ p.getCodicePersonalizzazione(), p.getDescrizione(), p.getPath() }
+	            );
+	        }
+	    }
+	}
+	
+	@SuppressWarnings("serial")
+	private JPanel creaGestionePersonalizzazioniPanel() {
+
+	    JPanel panel = new JPanel(new BorderLayout());
+
+	    JLabel titolo = new JLabel("Gestione Personalizzazioni", SwingConstants.CENTER);
+	    titolo.setFont(new Font("SansSerif", Font.BOLD, 22));
+	    panel.add(titolo, BorderLayout.NORTH);
+
+	    String[] colonne = {"Codice", "Descrizione", "Path Immagine"};
+
+	    DefaultTableModel modelPedine = new DefaultTableModel(colonne, 0) {
+	        @Override public boolean isCellEditable(int r, int c) { return true; }
+	    };
+
+	    DefaultTableModel modelDadi = new DefaultTableModel(colonne, 0) {
+	        @Override public boolean isCellEditable(int r, int c) { return true; }
+	    };
+
+	    this.modelPersonalizzazioniPedine = modelPedine;
+	    this.modelPersonalizzazioniDadi = modelDadi;
+
+	    JTable tablePedine = new JTable(modelPedine);
+	    tablePedine.setRowHeight(32);
+
+	    JTable tableDadi = new JTable(modelDadi);
+	    tableDadi.setRowHeight(32);
+
+	    TableColumn colP = tablePedine.getColumnModel().getColumn(2);
+	    TableColumn colD = tableDadi.getColumnModel().getColumn(2);
+
+	    colP.setCellRenderer(new DefaultTableCellRenderer() {
+	        @Override
+	        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+	                                                       boolean hasFocus, int row, int column) {
+	            JLabel lbl = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+	            lbl.setText(null);
+	            if (value instanceof String path && !path.isBlank()) {
+	                ImageIcon ic = new ImageIcon(path);
+	                Image scaled = ic.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+	                lbl.setIcon(new ImageIcon(scaled));
+	            } else lbl.setText("Nessuna immagine");
+	            return lbl;
+	        }
+	    });
+
+	    colD.setCellRenderer(colP.getCellRenderer());
+
+	    JPanel center = new JPanel(new GridLayout(2, 1));
+
+	    JScrollPane scrollPedine = new JScrollPane(tablePedine);
+	    scrollPedine.setBorder(BorderFactory.createTitledBorder("Pedine"));
+
+	    JScrollPane scrollDadi = new JScrollPane(tableDadi);
+	    scrollDadi.setBorder(BorderFactory.createTitledBorder("Dadi"));
+
+	    center.add(scrollPedine);
+	    center.add(scrollDadi);
+
+	    panel.add(center, BorderLayout.CENTER);
+
+	    JPanel crud = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+	    JButton btnNuovaPedina = new JButton("Nuova Pedina");
+	    JButton btnEliminaPedina = new JButton("Elimina Pedina");
+	    JButton btnNuovoDado = new JButton("Nuovo Dado");
+	    JButton btnEliminaDado = new JButton("Elimina Dado");
+	    JButton btnSalva = new JButton("Salva");
+	    JButton btnIndietro = new JButton("Indietro");
+
+	    crud.add(btnNuovaPedina);
+	    crud.add(btnEliminaPedina);
+	    crud.add(btnNuovoDado);
+	    crud.add(btnEliminaDado);
+	    crud.add(btnSalva);
+	    crud.add(btnIndietro);
+
+	    panel.add(crud, BorderLayout.SOUTH);
+
+	    btnNuovaPedina.addActionListener(e -> {
+	        modelPedine.addRow(new Object[]{"codice", "descrizione", "path/immagine.png"});
+	    });
+
+	    btnEliminaPedina.addActionListener(e -> {
+	        int r = tablePedine.getSelectedRow();
+	        if (r >= 0) modelPedine.removeRow(r);
+	    });
+
+	    btnNuovoDado.addActionListener(e -> {
+	        modelDadi.addRow(new Object[]{"codice", "descrizione", "path/immagine.png"});
+	    });
+
+	    btnEliminaDado.addActionListener(e -> {
+	        int r = tableDadi.getSelectedRow();
+	        if (r >= 0) modelDadi.removeRow(r);
+	    });
+
+	    btnSalva.addActionListener(e -> {
+
+	        List<Personalizzazione> nuove = new ArrayList<>();
+
+	        for (int i = 0; i < modelPedine.getRowCount(); i++) {
+	            String cod = safeStr(modelPedine.getValueAt(i, 0));
+	            String desc = safeStr(modelPedine.getValueAt(i, 1));
+	            String path = safeStr(modelPedine.getValueAt(i, 2));
+
+	            if (cod.isBlank() || path.isBlank()) {
+	                JOptionPane.showMessageDialog(panel, "Codice e Path immagine devono essere compilati!", "Errore", JOptionPane.ERROR_MESSAGE);
+	                return;
+	            }
+
+	            nuove.add(new Pedina(cod, desc, path));
+	        }
+
+	        for (int i = 0; i < modelDadi.getRowCount(); i++) {
+	            String cod = safeStr(modelDadi.getValueAt(i, 0));
+	            String desc = safeStr(modelDadi.getValueAt(i, 1));
+	            String path = safeStr(modelDadi.getValueAt(i, 2));
+
+	            if (cod.isBlank() || path.isBlank()) {
+	                JOptionPane.showMessageDialog(panel, "Codice e Path immagine devono essere compilati!", "Errore", JOptionPane.ERROR_MESSAGE);
+	                return;
+	            }
+
+	            nuove.add(new Dado(cod, desc, path));
+	        }
+
+	        giocoDellOca.replaceAllPersonalizzazioni(nuove);
+
+	        JOptionPane.showMessageDialog(panel, "Salvato correttamente!");
+	    });
+
+	    btnIndietro.addActionListener(e -> {
+	        SwitchToPanel(layeredPane, adminPanel);
+	    });
+
+	    return panel;
+	}
+
 
 	
 	/**
@@ -1245,10 +1450,13 @@ public class GiocoDellOcaGUI extends JFrame {
 		adminPanel = creaAdminPanel();
 		gestioneScenariPanel = creaGestioneScenariPanel();
 		gestioneRegoleSetPanel = creaGestioneRegoleSetPanel();
+		gestionePersonalizzazioniPanel = creaGestionePersonalizzazioniPanel();
 
 		layeredPane.add(adminPanel, "adminPanel");
 		layeredPane.add(gestioneScenariPanel, "gestioneScenariPanel");
 		layeredPane.add(gestioneRegoleSetPanel, "gestioneRegoleSetPanel");
+		layeredPane.add(gestionePersonalizzazioniPanel, "gestionePersonalizzazioni");
+
 		
 		selezioneTipologiaRegolePanel = new JPanel();
 		layeredPane.add(selezioneTipologiaRegolePanel, "name_610398291392000");
