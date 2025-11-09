@@ -18,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -129,6 +131,11 @@ public class GiocoDellOcaGUI extends JFrame {
 	private JTextField txtAdminUser;
 	private JPasswordField txtAdminPass;
 	private DefaultTableModel modelScenari;
+	private DefaultTableModel modelSetRegole;
+	private DefaultTableModel modelRegoleInSet;
+	private Map<String, List<Object[]>> modificheTemporaneeSetRegole = new HashMap<>();
+	private String ultimoSetSelezionato = null;
+	private JPanel gestioneRegoleSetPanel;
 
 
 	private void SwitchToPanel (JLayeredPane layeredPane, JPanel panel) {
@@ -752,6 +759,12 @@ public class GiocoDellOcaGUI extends JFrame {
 	    	caricaScenariInTabella();
 	        SwitchToPanel(layeredPane, gestioneScenariPanel);
 	    });
+	    
+	    btnGestioneRegoleSet.addActionListener(e -> {
+	        caricaSetRegoleInTabella();
+	        SwitchToPanel(layeredPane, gestioneRegoleSetPanel);
+	    });
+
 
 	    return panel;
 	}
@@ -887,6 +900,262 @@ public class GiocoDellOcaGUI extends JFrame {
 	private static String safeStr(Object v) {
 	    return v == null ? "" : v.toString();
 	}
+	
+	@SuppressWarnings("serial")
+	private JPanel creaGestioneRegoleSetPanel() {
+
+	    JPanel panel = new JPanel(new BorderLayout());
+
+	    JLabel titolo = new JLabel("Gestione Set di Regole", SwingConstants.CENTER);
+	    titolo.setFont(new Font("SansSerif", Font.BOLD, 22));
+	    panel.add(titolo, BorderLayout.NORTH);
+
+	    // -------------------- MODEL SET --------------------
+	    modelSetRegole = new DefaultTableModel(new String[]{"Nome Set"}, 0) {
+	        @Override public boolean isCellEditable(int r, int c) { return true; }
+	    };
+
+	    JTable tableSetRegole = new JTable(modelSetRegole);
+	    JScrollPane scrollSet = new JScrollPane(tableSetRegole);
+	    scrollSet.setBorder(BorderFactory.createTitledBorder("Elenco set"));
+
+	    // -------------------- MODEL REGOLE --------------------
+	    modelRegoleInSet = new DefaultTableModel(
+	        new String[]{"Codice", "Descrizione", "Proprietà", "Tipologia"}, 0
+	    ) {
+	        @Override public boolean isCellEditable(int r, int c) {
+	            return c == 2; // solo “Proprietà”
+	        }
+	    };
+
+	    JTable tableRegoleInSet = new JTable(modelRegoleInSet);
+	    JScrollPane scrollRegole = new JScrollPane(tableRegoleInSet);
+	    scrollRegole.setBorder(BorderFactory.createTitledBorder("Regole del set selezionato"));
+
+	    TableColumn colProprieta = tableRegoleInSet.getColumnModel().getColumn(2);
+
+	    colProprieta.setCellEditor(new DefaultCellEditor(new JComboBox<>()) {
+	        private JComboBox<String> comboBox;
+
+	        @Override
+	        public Component getTableCellEditorComponent(JTable table, Object value,
+	                                                     boolean isSelected, int row, int column) {
+
+	            String tipologia = table.getModel().getValueAt(row, 3).toString();
+
+	            comboBox = new JComboBox<>();
+
+	            if (tipologia.equals("NumeroCaselle")) {
+	                comboBox.addItem("42");
+	                comboBox.addItem("63");
+	                comboBox.addItem("90");
+	            } else if (tipologia.equals("NumeroDadi")) {
+	                comboBox.addItem("1");
+	                comboBox.addItem("2");
+	                comboBox.addItem("3");
+	            }
+
+	            // Seleziona il valore attuale della cella
+	            comboBox.setSelectedItem(value);
+
+	            return comboBox;
+	        }
+
+	        @Override
+	        public Object getCellEditorValue() {
+	            // ✅ Ritorna il valore selezionato PER SCRIVERLO nella tabella
+	            return comboBox.getSelectedItem();
+	        }
+	    });
+
+
+
+	    // -------------------- BOTTONI --------------------
+	    JPanel crudPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+	    JButton btnNuovo = new JButton("Nuovo set");
+	    JButton btnElimina = new JButton("Elimina set");
+	    JButton btnSalva = new JButton("Salva");
+	    JButton btnIndietro = new JButton("Indietro");
+
+	    crudPanel.add(btnNuovo);
+	    crudPanel.add(btnElimina);
+	    crudPanel.add(btnSalva);
+	    crudPanel.add(btnIndietro);
+
+	    // -------------------- CENTER --------------------
+	    JPanel centerPanel = new JPanel(new GridLayout(2, 1));
+	    centerPanel.add(scrollSet);
+	    centerPanel.add(scrollRegole);
+
+	    panel.add(centerPanel, BorderLayout.CENTER);
+	    panel.add(crudPanel, BorderLayout.SOUTH);
+
+	    // =====================================================
+	    // CARICAMENTO SET DAL MODEL: funzione helper
+	    // =====================================================
+	    Runnable caricaSetDaGioco = () -> {
+	        modelSetRegole.setRowCount(0);
+	        for (String setName : giocoDellOca.getMapRegoleSet().keySet()) {
+	            modelSetRegole.addRow(new Object[]{ setName });
+	        }
+	    };
+
+	    caricaSetDaGioco.run();
+
+	    // =====================================================
+	    // SELEZIONE SET
+	    // =====================================================
+	    tableSetRegole.getSelectionModel().addListSelectionListener(e -> {
+
+	        if (e.getValueIsAdjusting()) return;
+
+	        int row = tableSetRegole.getSelectedRow();
+	        if (row < 0) return;
+
+	        String nomeSet = safeStr(modelSetRegole.getValueAt(row, 0));
+	        if (nomeSet.isBlank()) return;
+
+	        // Salva modifiche del vecchio set (se esiste)
+	        salvaSetTemporaneo();
+
+	        ultimoSetSelezionato = nomeSet;
+
+	        // Carica regole del set
+	        modelRegoleInSet.setRowCount(0);
+
+	        if (modificheTemporaneeSetRegole.containsKey(nomeSet)) {
+	            // carica modifiche NON salvate
+	            for (Object[] riga : modificheTemporaneeSetRegole.get(nomeSet)) {
+	                modelRegoleInSet.addRow(riga);
+	            }
+	        } else {
+	            // carica da giocoDellOca
+	            var regoleSet = giocoDellOca.getMapRegoleSet().get(nomeSet);
+
+	            if (regoleSet != null) {
+	                for (var r : regoleSet) {
+	                    modelRegoleInSet.addRow(new Object[]{
+	                        r.getCodiceRegola(),
+	                        r.getDescrizione(),
+	                        r.getProprietaRegola(),
+	                        r.getTipologiaRegola().toString()
+	                    });
+	                }
+	            }
+	        }
+	    });
+
+	    // =====================================================
+	    // NUOVO SET
+	    // =====================================================
+	    btnNuovo.addActionListener(e -> {
+	        String nomeSet = JOptionPane.showInputDialog(panel, "Nome del nuovo set:");
+	        if (nomeSet == null || nomeSet.isBlank()) return;
+
+	        modelSetRegole.addRow(new Object[]{ nomeSet });
+
+	        // Regole di default
+	        List<Object[]> righe = new ArrayList<>();
+	        righe.add(new Object[]{
+	            "regola1_default_" + nomeSet, "Numero caselle", "63", "NumeroCaselle"
+	        });
+	        righe.add(new Object[]{
+	            "regola2_default_" + nomeSet, "Numero dadi", "2", "NumeroDadi"
+	        });
+
+	        modificheTemporaneeSetRegole.put(nomeSet, righe);
+
+	        ultimoSetSelezionato = nomeSet;
+
+	        modelRegoleInSet.setRowCount(0);
+	        for (var r : righe) modelRegoleInSet.addRow(r);
+	    });
+
+	    // =====================================================
+	    // ELIMINA SET
+	    // =====================================================
+	    btnElimina.addActionListener(e -> {
+	        int row = tableSetRegole.getSelectedRow();
+	        if (row < 0) return;
+
+	        String nomeSet = safeStr(modelSetRegole.getValueAt(row, 0));
+
+	        modelSetRegole.removeRow(row);
+	        modificheTemporaneeSetRegole.remove(nomeSet);
+
+	        modelRegoleInSet.setRowCount(0);
+	        ultimoSetSelezionato = null;
+	    });
+
+	    // =====================================================
+	    // SALVA SET
+	    // =====================================================
+	    btnSalva.addActionListener(e -> {
+
+	        Map<String, Set<Regola>> nuovi = new LinkedHashMap<>();
+
+	        for (int i = 0; i < modelSetRegole.getRowCount(); i++) {
+	            String key = safeStr(modelSetRegole.getValueAt(i, 0));
+	            if (key.isBlank()) continue;
+
+	            List<Object[]> righe = modificheTemporaneeSetRegole.get(key);
+	            if (righe == null) continue;
+
+	            Set<Regola> setRegole = new LinkedHashSet<>();
+	            for (Object[] r : righe) {
+	                String cod = safeStr(r[0]);
+	                String desc = safeStr(r[1]);
+	                String prop = safeStr(r[2]);
+	                String tipo = safeStr(r[3]);
+
+	                setRegole.add(new Regola(cod, desc, prop, TipologiaRegolaEnum.valueOf(tipo)));
+	            }
+
+	            nuovi.put(key, setRegole);
+	        }
+
+	        giocoDellOca.replaceAllSetRegole(nuovi);
+
+	        JOptionPane.showMessageDialog(panel, "Salvataggio completato!");
+	    });
+
+	    // =====================================================
+	    // INDIETRO
+	    // =====================================================
+	    btnIndietro.addActionListener(e -> {
+	    	modificheTemporaneeSetRegole.clear();
+	        modelRegoleInSet.setRowCount(0);
+	        ultimoSetSelezionato = null;
+	        SwitchToPanel(layeredPane, adminPanel);
+	    });
+
+	    return panel;
+	}
+
+
+	private void salvaSetTemporaneo() {
+	    if (ultimoSetSelezionato == null) return;
+
+	    List<Object[]> lista = new ArrayList<>();
+
+	    for (int r = 0; r < modelRegoleInSet.getRowCount(); r++) {
+	        Object[] rowData = new Object[4];
+	        for (int c = 0; c < 4; c++) {
+	            rowData[c] = modelRegoleInSet.getValueAt(r, c);
+	        }
+	        lista.add(rowData);
+	    }
+
+	    modificheTemporaneeSetRegole.put(ultimoSetSelezionato, lista);
+	}
+	
+	private void caricaSetRegoleInTabella() {
+	    modelSetRegole.setRowCount(0);
+	    for (String nomeSet : giocoDellOca.getMapRegoleSet().keySet()) {
+	        modelSetRegole.addRow(new Object[]{ nomeSet });
+	    }
+	}
+
 
 	
 	/**
@@ -975,9 +1244,11 @@ public class GiocoDellOcaGUI extends JFrame {
 
 		adminPanel = creaAdminPanel();
 		gestioneScenariPanel = creaGestioneScenariPanel();
+		gestioneRegoleSetPanel = creaGestioneRegoleSetPanel();
 
 		layeredPane.add(adminPanel, "adminPanel");
 		layeredPane.add(gestioneScenariPanel, "gestioneScenariPanel");
+		layeredPane.add(gestioneRegoleSetPanel, "gestioneRegoleSetPanel");
 		
 		selezioneTipologiaRegolePanel = new JPanel();
 		layeredPane.add(selezioneTipologiaRegolePanel, "name_610398291392000");

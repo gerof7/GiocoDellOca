@@ -257,6 +257,12 @@ public class GiocoDellOca {
 	    this.listaScenari.clear();
 	    this.listaScenari.addAll(nuovi);
 	}
+	
+	public void replaceAllSetRegole(Map<String, Set<Regola>> nuoviSet) {
+	    this.mapRegoleSet.clear();
+	    this.mapRegoleSet.putAll(nuoviSet);
+	}
+
 
 
 }
