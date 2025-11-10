@@ -140,6 +140,12 @@ public class GiocoDellOcaGUI extends JFrame {
 	private DefaultTableModel modelPersonalizzazioniPedine;
 	private DefaultTableModel modelPersonalizzazioniDadi;
 	private JPanel gestionePersonalizzazioniPanel;
+	private JComboBox<ComboItem> regoleSetDropdown;
+	private JComboBox<ComboItem> scenarioDropdown;
+	@SuppressWarnings("unchecked")
+	private JComboBox<ComboItem>[] dadoDropdown = new JComboBox[4];
+	@SuppressWarnings("unchecked")
+	private JComboBox<ComboItem>[] pedinaDropdown = new JComboBox[4];
 
 
 	private void SwitchToPanel (JLayeredPane layeredPane, JPanel panel) {
@@ -677,7 +683,7 @@ public class GiocoDellOcaGUI extends JFrame {
 	        
 	        if (codiceDaSelezionare == null) {
 	            combo.setSelectedIndex(0);
-	            return;
+	            continue;
 	        }
 
 	        for (int i = 0; i < combo.getItemCount(); i++) {
@@ -1323,6 +1329,67 @@ public class GiocoDellOcaGUI extends JFrame {
 	    return panel;
 	}
 
+	private void refreshImpostazioniDropdown() {
+
+	    regoleSetDropdown.removeAllItems();
+	    regoleSetDropdown.addItem(new ComboItem("0", "Seleziona"));
+
+	    var regoleSet = giocoDellOca.getMapRegoleSet();
+
+	    for (var entry : regoleSet.entrySet()) {
+	        String codice = entry.getKey();
+	        Set<Regola> set = entry.getValue();
+
+	        String descrizione = set.stream()
+	            .map(r -> r.getDescrizione() + " " + r.getProprietaRegola())
+	            .limit(2)
+	            .collect(Collectors.joining(", "));
+
+	        regoleSetDropdown.addItem(new ComboItem(codice, codice + " : " + descrizione));
+	    }
+
+	    scenarioDropdown.removeAllItems();
+	    scenarioDropdown.addItem(new ComboItem("0", "Seleziona"));
+
+	    for (Scenario s : giocoDellOca.getListaScenari()) {
+	        scenarioDropdown.addItem(new ComboItem(s.getCodiceScenario(), s.getDescrizione()));
+	    }
+
+	    var personalizzazioni = giocoDellOca.getListaPersonalizzazioni();
+
+	    for (int i = 0; i < 4; i++) {
+	        dadoDropdown[i].removeAllItems();
+	        dadoDropdown[i].addItem(new ComboItem("0", "Seleziona"));
+
+	        for (var p : personalizzazioni) {
+	            if (p instanceof Dado) {
+	                dadoDropdown[i].addItem(new ComboItem(p.getCodicePersonalizzazione(), p.getDescrizione()));
+	            }
+	        }
+	    }
+
+	    for (int i = 0; i < 4; i++) {
+	        pedinaDropdown[i].removeAllItems();
+	        pedinaDropdown[i].addItem(new ComboItem("0", "Seleziona"));
+
+	        for (var p : personalizzazioni) {
+	            if (p instanceof Pedina) {
+	                pedinaDropdown[i].addItem(new ComboItem(p.getCodicePersonalizzazione(), p.getDescrizione()));
+	            }
+	        }
+	    }
+
+	}
+
+	private void selectComboByCodice(JComboBox<ComboItem> combo, String codice) {
+	    for (int i = 0; i < combo.getItemCount(); i++) {
+	        ComboItem item = combo.getItemAt(i);
+	        if (item.getCodice().equals(codice)) {
+	            combo.setSelectedIndex(i);
+	            return;
+	        }
+	    }
+	}
 
 	
 	/**
@@ -2224,8 +2291,8 @@ public class GiocoDellOcaGUI extends JFrame {
         regoleSetLabel.setFont(labelFont);
         scenarioLabel.setFont(labelFont);
 
-        JComboBox<ComboItem> regoleSetDropdown = new JComboBox<>();
-        JComboBox<ComboItem> scenarioDropdown = new JComboBox<>();
+        regoleSetDropdown = new JComboBox<>();
+        scenarioDropdown = new JComboBox<>();
         regoleSetDropdown.setFont(labelFont);
         scenarioDropdown.setFont(labelFont);
         
@@ -2257,24 +2324,20 @@ public class GiocoDellOcaGUI extends JFrame {
         
         regoleSetDropdown.addActionListener(e -> {
             ComboItem selected = (ComboItem) regoleSetDropdown.getSelectedItem();
-            if (selected != null  && selected.getCodice() != "0") {
+            if (selected != null  && !selected.getCodice().equals("0")) {
                 regoleSetDropdown.setToolTipText("<html>" + selected.getDescrizione() + "</html>");
             }
         });
         
         scenarioDropdown.addActionListener(e -> {
             ComboItem selected = (ComboItem) scenarioDropdown.getSelectedItem();
-            if (selected != null  && selected.getCodice() != "0") {
+            if (selected != null  && !selected.getCodice().equals("0")) {
             	scenarioDropdown.setToolTipText("<html>" + selected.getDescrizione() + "</html>");
             }
         });
 
         JLabel[] dadoLabel = new JLabel[4];
         JLabel[] pedinaLabel = new JLabel[4];
-        @SuppressWarnings("unchecked")
-        JComboBox<ComboItem>[] dadoDropdown = new JComboBox[4];
-        @SuppressWarnings("unchecked")
-        JComboBox<ComboItem>[] pedinaDropdown = new JComboBox[4];
         
         var personalizzazioni = GiocoDellOcaGUI.this.giocoDellOca.getListaPersonalizzazioni();
 
@@ -2296,7 +2359,7 @@ public class GiocoDellOcaGUI extends JFrame {
             var dadoDropdownAttuale = dadoDropdown[i];
             dadoDropdown[i].addActionListener(e -> {
                 ComboItem selected = (ComboItem) dadoDropdownAttuale.getSelectedItem();
-                if (selected != null && selected.getCodice() != "0") {
+                if (selected != null && !selected.getCodice().equals("0")) {
                 	
                 	var codice = selected.getCodice();
                 	var path = "";
@@ -2334,7 +2397,7 @@ public class GiocoDellOcaGUI extends JFrame {
             var pedinaDropdownAttuale = pedinaDropdown[i];
             pedinaDropdown[i].addActionListener(e -> {
                 ComboItem selected = (ComboItem) pedinaDropdownAttuale.getSelectedItem();
-                if (selected != null  && selected.getCodice() != "0") {
+                if (selected != null  && !selected.getCodice().equals("0")) {
                 	
                 	var codice = selected.getCodice();
                 	var path = "";
@@ -3133,42 +3196,31 @@ public class GiocoDellOcaGUI extends JFrame {
 		btnConfiguraProssimoUtenteFromSelPedina.addActionListener(configuraProssimoGiocatoreListener);
 
 		btnGestisciImpostazioni.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				var codiciDadiGiocatoriDefault = GiocoDellOcaGUI.this.giocoDellOca.getCodiciDadiGiocatoriDefault();
-		        var codiciPedineGiocatoriDefault = GiocoDellOcaGUI.this.giocoDellOca.getCodiciPedineGiocatoriDefault();
-		       
+		    public void actionPerformed(ActionEvent e) {
+		
+		        refreshImpostazioniDropdown(); 
+		
+		        var codiciDadiGiocatoriDefault = giocoDellOca.getCodiciDadiGiocatoriDefault();
+		        var codiciPedineGiocatoriDefault = giocoDellOca.getCodiciPedineGiocatoriDefault();
+		        var nomiGiocatoriDefault = giocoDellOca.getNomiGiocatoriDefault();
+		
 		        selezionaComboPerCodici(dadoDropdown, codiciDadiGiocatoriDefault);
 		        selezionaComboPerCodici(pedinaDropdown, codiciPedineGiocatoriDefault);
-		        
-		        var nomiGiocatoriDefault = GiocoDellOcaGUI.this.giocoDellOca.getNomiGiocatoriDefault();
+		
 		        setTextFieldsDaMappa(gestioneImpostazioniNomeField, nomiGiocatoriDefault);
-		        
-		        
-		        String codiceScenarioSalvato = GiocoDellOcaGUI.this.giocoDellOca.getCodiceScenarioDefault();
+		
+		        String codiceScenarioSalvato = giocoDellOca.getCodiceScenarioDefault();
 		        if (codiceScenarioSalvato != null) {
-		            for (int i = 0; i < scenarioDropdown.getItemCount(); i++) {
-		                ComboItem item = scenarioDropdown.getItemAt(i);
-		                if (codiceScenarioSalvato.equals(item.getCodice())) {
-		                    scenarioDropdown.setSelectedIndex(i);
-		                    break;
-		                }
-		            }
+		            selectComboByCodice(scenarioDropdown, codiceScenarioSalvato);
 		        }
-		        
-		        String codiceRegoleSetSalvato = GiocoDellOcaGUI.this.giocoDellOca.getCodiceRegoleSetDefault();
+		
+		        String codiceRegoleSetSalvato = giocoDellOca.getCodiceRegoleSetDefault();
 		        if (codiceRegoleSetSalvato != null) {
-		            for (int i = 0; i < regoleSetDropdown.getItemCount(); i++) {
-		                ComboItem item = regoleSetDropdown.getItemAt(i);
-		                if (codiceRegoleSetSalvato.equals(item.getCodice())) {
-		                	regoleSetDropdown.setSelectedIndex(i);
-		                    break;
-		                }
-		            }
+		            selectComboByCodice(regoleSetDropdown, codiceRegoleSetSalvato);
 		        }
-		        
-		        
-				SwitchToPanel(layeredPane, gestioneImpostazioniMainPanel);
-			}
+		
+		        SwitchToPanel(layeredPane, gestioneImpostazioniMainPanel);
+		    }
 		});
 		
 		salvaImpostazioniButton.addActionListener(new ActionListener() {
@@ -3180,26 +3232,26 @@ public class GiocoDellOcaGUI extends JFrame {
 				
 				ComboItem regoleSetItem = (ComboItem) regoleSetDropdown.getSelectedItem();
 		        ComboItem scenarioItem = (ComboItem) scenarioDropdown.getSelectedItem();
-		        String codiceRegoleSet = regoleSetItem != null && regoleSetItem.getCodice() != "0" ? regoleSetItem.getCodice() : null;
-		        String codiceScenario = scenarioItem != null && scenarioItem.getCodice() != "0" ? scenarioItem.getCodice() : null;
+		        String codiceRegoleSet = regoleSetItem != null && !regoleSetItem.getCodice().equals("0") ? regoleSetItem.getCodice() : null;
+		        String codiceScenario = scenarioItem != null && !scenarioItem.getCodice().equals("0") ? scenarioItem.getCodice() : null;
 		        
 				ComboItem dadoGiocatore1Item = (ComboItem) dadoDropdown[0].getSelectedItem();
 				ComboItem dadoGiocatore2Item = (ComboItem) dadoDropdown[1].getSelectedItem();
 				ComboItem dadoGiocatore3Item = (ComboItem) dadoDropdown[2].getSelectedItem();
 				ComboItem dadoGiocatore4Item = (ComboItem) dadoDropdown[3].getSelectedItem();
-		        String codiceDadoGiocatore1 = dadoGiocatore1Item != null && dadoGiocatore1Item.getCodice() != "0" ? dadoGiocatore1Item.getCodice() : null;
-		        String codiceDadoGiocatore2 = dadoGiocatore2Item != null && dadoGiocatore2Item.getCodice() != "0" ? dadoGiocatore2Item.getCodice() : null;
-		        String codiceDadoGiocatore3 = dadoGiocatore3Item != null && dadoGiocatore3Item.getCodice() != "0" ? dadoGiocatore3Item.getCodice() : null;
-		        String codiceDadoGiocatore4 = dadoGiocatore4Item != null && dadoGiocatore4Item.getCodice() != "0" ? dadoGiocatore4Item.getCodice() : null;
+		        String codiceDadoGiocatore1 = dadoGiocatore1Item != null && !dadoGiocatore1Item.getCodice().equals("0") ? dadoGiocatore1Item.getCodice() : null;
+		        String codiceDadoGiocatore2 = dadoGiocatore2Item != null && !dadoGiocatore2Item.getCodice().equals("0") ? dadoGiocatore2Item.getCodice() : null;
+		        String codiceDadoGiocatore3 = dadoGiocatore3Item != null && !dadoGiocatore3Item.getCodice().equals("0") ? dadoGiocatore3Item.getCodice() : null;
+		        String codiceDadoGiocatore4 = dadoGiocatore4Item != null && !dadoGiocatore4Item.getCodice().equals("0")? dadoGiocatore4Item.getCodice() : null;
 				
 				ComboItem pedinaGiocatore1Item = (ComboItem) pedinaDropdown[0].getSelectedItem();
 				ComboItem pedinaGiocatore2Item = (ComboItem) pedinaDropdown[1].getSelectedItem();
 				ComboItem pedinaGiocatore3Item = (ComboItem) pedinaDropdown[2].getSelectedItem();
 				ComboItem pedinaGiocatore4Item = (ComboItem) pedinaDropdown[3].getSelectedItem();
-				String codicePedinaGiocatore1 = pedinaGiocatore1Item != null && pedinaGiocatore1Item.getCodice() != "0" ? pedinaGiocatore1Item.getCodice() : null;
-		        String codicePedinaGiocatore2 = pedinaGiocatore2Item != null && pedinaGiocatore2Item.getCodice() != "0" ? pedinaGiocatore2Item.getCodice() : null;
-		        String codicePedinaGiocatore3 = pedinaGiocatore3Item != null && pedinaGiocatore3Item.getCodice() != "0" ? pedinaGiocatore3Item.getCodice() : null;
-		        String codicePedinaGiocatore4 = pedinaGiocatore4Item != null && pedinaGiocatore4Item.getCodice() != "0" ? pedinaGiocatore4Item.getCodice() : null;
+				String codicePedinaGiocatore1 = pedinaGiocatore1Item != null && !pedinaGiocatore1Item.getCodice().equals("0") ? pedinaGiocatore1Item.getCodice() : null;
+		        String codicePedinaGiocatore2 = pedinaGiocatore2Item != null && !pedinaGiocatore2Item.getCodice().equals("0") ? pedinaGiocatore2Item.getCodice() : null;
+		        String codicePedinaGiocatore3 = pedinaGiocatore3Item != null && !pedinaGiocatore3Item.getCodice().equals("0") ? pedinaGiocatore3Item.getCodice() : null;
+		        String codicePedinaGiocatore4 = pedinaGiocatore4Item != null && !pedinaGiocatore4Item.getCodice().equals("0") ? pedinaGiocatore4Item.getCodice() : null;
 
 		        GiocoDellOcaGUI.this.giocoDellOca.salvaImpostazioni(
 		                nome1, nome2, nome3, nome4,
