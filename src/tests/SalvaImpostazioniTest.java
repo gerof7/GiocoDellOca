@@ -36,6 +36,21 @@ class SalvaImpostazioniTest {
 	    assertEquals("P1", giocoDellOca.getCodiciPedineGiocatoriDefault().get(1));
 
 	}
+	//imposta Regole singole
+	
+	//imposta Regole da set
+	
+	//imposta scenario
+	
+	//imposta pedina
+	
+	//imposta dado
+	
+	//esegui turno
+	
+	//aggiungi giocatori ospiti
+	
+	//configura giocatore corrente
 	
 
 }
