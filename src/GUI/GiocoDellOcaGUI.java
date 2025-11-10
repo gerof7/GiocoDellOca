@@ -285,7 +285,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	private String getDadoFacePath(int numeroFaccia) {
 	    String path = GiocoDellOcaGUI.this.dadoPath;
 
-	    // se path è null o vuoto → fallback
 	    if (path == null || path.isBlank()) {
 	        return "./src/images/dadoclassico_" + numeroFaccia + ".png";
 	    }
@@ -293,28 +292,20 @@ public class GiocoDellOcaGUI extends JFrame {
 	    int lastUnderscoreIndex = path.lastIndexOf('_');
 	    int dotIndex = path.lastIndexOf('.');
 
-	    // Se il formato non è quello atteso
 	    boolean formatoOK = lastUnderscoreIndex != -1 && dotIndex != -1 && lastUnderscoreIndex < dotIndex;
 
 	    if (!formatoOK) {
-	        // Caso speciale: l’admin ha inserito un path singolo
-	        // → restituiamo sempre la faccia 1
 	        return path;
 	    }
 
-	    // Estrai il numero della faccia attuale dal path
 	    String faceNumber = path.substring(lastUnderscoreIndex + 1, dotIndex);
 
-	    // Se l’admin ha caricato solo un file (senza _numero o con numero fisso)
-	    // e non corrisponde a un valore valido (1–6)
-	    boolean èNumeroValido = faceNumber.matches("[1-6]");
+	    boolean isNumeroValido = faceNumber.matches("[1-6]");
 
-	    if (!èNumeroValido) {
-	        // restituiamo sempre la "faccia 1" (il file originale)
+	    if (!isNumeroValido) {
 	        return path;
 	    }
 
-	    // Caso normale → genera la faccia richiesta
 	    return path.substring(0, lastUnderscoreIndex + 1)
 	            + numeroFaccia
 	            + path.substring(dotIndex);
@@ -959,21 +950,19 @@ public class GiocoDellOcaGUI extends JFrame {
 	    titolo.setFont(new Font("SansSerif", Font.BOLD, 22));
 	    panel.add(titolo, BorderLayout.NORTH);
 
-	    // -------------------- MODEL SET --------------------
 	    modelSetRegole = new DefaultTableModel(new String[]{"Nome Set"}, 0) {
-	        @Override public boolean isCellEditable(int r, int c) { return true; }
+	        @Override public boolean isCellEditable(int r, int c) { return false; }
 	    };
 
 	    JTable tableSetRegole = new JTable(modelSetRegole);
 	    JScrollPane scrollSet = new JScrollPane(tableSetRegole);
 	    scrollSet.setBorder(BorderFactory.createTitledBorder("Elenco set"));
 
-	    // -------------------- MODEL REGOLE --------------------
 	    modelRegoleInSet = new DefaultTableModel(
 	        new String[]{"Codice", "Descrizione", "Proprietà", "Tipologia"}, 0
 	    ) {
 	        @Override public boolean isCellEditable(int r, int c) {
-	            return c == 2; // solo “Proprietà”
+	            return c == 2; 
 	        }
 	    };
 
@@ -1004,7 +993,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	                comboBox.addItem("3");
 	            }
 
-	            // Seleziona il valore attuale della cella
 	            comboBox.setSelectedItem(value);
 
 	            return comboBox;
@@ -1012,14 +1000,12 @@ public class GiocoDellOcaGUI extends JFrame {
 
 	        @Override
 	        public Object getCellEditorValue() {
-	            // ✅ Ritorna il valore selezionato PER SCRIVERLO nella tabella
 	            return comboBox.getSelectedItem();
 	        }
 	    });
 
 
 
-	    // -------------------- BOTTONI --------------------
 	    JPanel crudPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 	    JButton btnNuovo = new JButton("Nuovo set");
 	    JButton btnElimina = new JButton("Elimina set");
@@ -1031,7 +1017,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	    crudPanel.add(btnSalva);
 	    crudPanel.add(btnIndietro);
 
-	    // -------------------- CENTER --------------------
 	    JPanel centerPanel = new JPanel(new GridLayout(2, 1));
 	    centerPanel.add(scrollSet);
 	    centerPanel.add(scrollRegole);
@@ -1039,9 +1024,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	    panel.add(centerPanel, BorderLayout.CENTER);
 	    panel.add(crudPanel, BorderLayout.SOUTH);
 
-	    // =====================================================
-	    // CARICAMENTO SET DAL MODEL: funzione helper
-	    // =====================================================
 	    Runnable caricaSetDaGioco = () -> {
 	        modelSetRegole.setRowCount(0);
 	        for (String setName : giocoDellOca.getMapRegoleSet().keySet()) {
@@ -1051,9 +1033,6 @@ public class GiocoDellOcaGUI extends JFrame {
 
 	    caricaSetDaGioco.run();
 
-	    // =====================================================
-	    // SELEZIONE SET
-	    // =====================================================
 	    tableSetRegole.getSelectionModel().addListSelectionListener(e -> {
 
 	        if (e.getValueIsAdjusting()) return;
@@ -1064,21 +1043,17 @@ public class GiocoDellOcaGUI extends JFrame {
 	        String nomeSet = safeStr(modelSetRegole.getValueAt(row, 0));
 	        if (nomeSet.isBlank()) return;
 
-	        // Salva modifiche del vecchio set (se esiste)
 	        salvaSetTemporaneo();
 
 	        ultimoSetSelezionato = nomeSet;
 
-	        // Carica regole del set
 	        modelRegoleInSet.setRowCount(0);
 
 	        if (modificheTemporaneeSetRegole.containsKey(nomeSet)) {
-	            // carica modifiche NON salvate
 	            for (Object[] riga : modificheTemporaneeSetRegole.get(nomeSet)) {
 	                modelRegoleInSet.addRow(riga);
 	            }
 	        } else {
-	            // carica da giocoDellOca
 	            var regoleSet = giocoDellOca.getMapRegoleSet().get(nomeSet);
 
 	            if (regoleSet != null) {
@@ -1094,16 +1069,12 @@ public class GiocoDellOcaGUI extends JFrame {
 	        }
 	    });
 
-	    // =====================================================
-	    // NUOVO SET
-	    // =====================================================
 	    btnNuovo.addActionListener(e -> {
 	        String nomeSet = JOptionPane.showInputDialog(panel, "Nome del nuovo set:");
 	        if (nomeSet == null || nomeSet.isBlank()) return;
 
 	        modelSetRegole.addRow(new Object[]{ nomeSet });
 
-	        // Regole di default
 	        List<Object[]> righe = new ArrayList<>();
 	        righe.add(new Object[]{
 	            "regola1_default_" + nomeSet, "Numero caselle", "63", "NumeroCaselle"
@@ -1120,9 +1091,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	        for (var r : righe) modelRegoleInSet.addRow(r);
 	    });
 
-	    // =====================================================
-	    // ELIMINA SET
-	    // =====================================================
 	    btnElimina.addActionListener(e -> {
 	        int row = tableSetRegole.getSelectedRow();
 	        if (row < 0) return;
@@ -1136,9 +1104,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	        ultimoSetSelezionato = null;
 	    });
 
-	    // =====================================================
-	    // SALVA SET
-	    // =====================================================
 	    btnSalva.addActionListener(e -> {
 
 	        Map<String, Set<Regola>> nuovi = new LinkedHashMap<>();
@@ -1168,9 +1133,6 @@ public class GiocoDellOcaGUI extends JFrame {
 	        JOptionPane.showMessageDialog(panel, "Salvataggio completato!");
 	    });
 
-	    // =====================================================
-	    // INDIETRO
-	    // =====================================================
 	    btnIndietro.addActionListener(e -> {
 	    	modificheTemporaneeSetRegole.clear();
 	        modelRegoleInSet.setRowCount(0);
