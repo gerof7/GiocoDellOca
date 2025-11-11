@@ -745,7 +745,7 @@ public class GiocoDellOcaGUI extends JFrame {
 	            String u = txtAdminUser.getText().trim();
 	            String p = new String(txtAdminPass.getPassword());
 
-	            if ("admin".equals(u) && "admin".equals(p)) {
+	            if (giocoDellOca.autenticazioneAdmin(u, p)) {
 	                JOptionPane.showMessageDialog(dlgLoginAdmin, "Autenticazione effettuata!");
 	                dlgLoginAdmin.dispose();
 	                SwitchToPanel(layeredPane, adminPanel);

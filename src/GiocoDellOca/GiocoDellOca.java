@@ -252,6 +252,10 @@ public class GiocoDellOca {
 	        );    
 	}
 
+	public boolean autenticazioneAdmin(String username, String password) {
+	    return "admin".equals(username) && "admin".equals(password);
+	}
+
 
 	public void replaceAllScenari(List<Scenario> nuovi) {
 	    this.listaScenari.clear();
