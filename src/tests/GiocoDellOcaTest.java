@@ -20,7 +20,7 @@ import GiocoDellOca.Regola;
 import GiocoDellOca.Scenario;
 import GiocoDellOca.TipologiaRegolaEnum;
 
-class SalvaImpostazioniTest {
+class GiocoDellOcaTest {
 
 	@Test
 	void impostazioniTest() {
