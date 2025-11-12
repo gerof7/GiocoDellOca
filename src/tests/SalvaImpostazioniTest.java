@@ -158,8 +158,35 @@ class SalvaImpostazioniTest {
 		
 	}
 	//aggiungi giocatori ospiti
-	
+	@Test
+	void aggiungiGiocatoriOspitiTest() {
+		var giocoDellOca = new GiocoDellOca();
+		giocoDellOca.configuraNuovaPartita();
+		giocoDellOca.aggiungiGiocatoriOspiti(2);	
+		var giocatori = giocoDellOca.getPartitaCorrente().getAllGiocatori();
+		
+		assertEquals(giocatori.size(), 2);
+	}
 	//configura giocatore corrente
-	
+	@Test
+	void configuraGiocatoreCorrenteTest() {
+		String[] colonne = {"Codice", "Descrizione", "Proprieta", "Tipologia"};
+		javax.swing.table.TableModel tablePedinaSelezionataModel = new DefaultTableModel(colonne, 0);
+		javax.swing.table.TableModel tableDadoSelezionatoModel = new DefaultTableModel(colonne, 0);
+		
+		var giocoDellOca = new GiocoDellOca();
+		giocoDellOca.configuraNuovaPartita();
+		var personalizzazioni = giocoDellOca.getPartitaCorrente().getImpostazioni().getElencoPersonalizzazioni();
+		giocoDellOca.configuraGiocatoreCorrente(1, tablePedinaSelezionataModel, tableDadoSelezionatoModel, personalizzazioni);
+		
+		//Tabelle vuote
+		var giocatore = giocoDellOca.getPartitaCorrente().getAllGiocatori().get(1);
+		var giocatoreCorrente = giocoDellOca.getPartitaCorrente().getGiocatoreInSessione();
+		var codicePedina = giocoDellOca.getPartitaCorrente().getGiocatore(giocatoreCorrente.getNumero()).getPedina().getCodicePersonalizzazione();
+		var codiceDado = giocoDellOca.getPartitaCorrente().getGiocatore(giocatoreCorrente.getNumero()).getDado().getCodicePersonalizzazione();
+		assertEquals(codicePedina, "Pedina_Oca");
+		assertEquals(codiceDado, "Dado_Classico");
+		assertEquals(giocatoreCorrente, giocatore);
+	}
 
 }
