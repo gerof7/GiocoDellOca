@@ -2,13 +2,23 @@ package tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import javax.swing.table.DefaultTableModel;
 import org.junit.jupiter.api.Test;
 
+import GiocoDellOca.Dado;
 import GiocoDellOca.GiocoDellOca;
 import GiocoDellOca.Pedina;
+import GiocoDellOca.Personalizzazione;
 import GiocoDellOca.Regola;
+import GiocoDellOca.Scenario;
+import GiocoDellOca.TipologiaRegolaEnum;
 
 class SalvaImpostazioniTest {
 
@@ -188,5 +198,81 @@ class SalvaImpostazioniTest {
 		assertEquals(codiceDado, "Dado_Classico");
 		assertEquals(giocatoreCorrente, giocatore);
 	}
+	
+	//autenticazione admin
+	@Test
+	void autenticazioneAdminTest() {
+		var giocoDellOca = new GiocoDellOca();
+		//Caso corretto
+		var resultAuth = giocoDellOca.autenticazioneAdmin("admin", "admin");
+		assertEquals(resultAuth, true);
+		//Caso errato
+		resultAuth = giocoDellOca.autenticazioneAdmin("admin", "pluto");
+		assertEquals(resultAuth, false);
+		
+	}
+	//replace scenari
+	@Test
+	void replaceAllScenariTest() {
+		var giocoDellOca = new GiocoDellOca();
+		giocoDellOca.configuraNuovaPartita();
+		//Visualizzazione scenario di default
+		var oldScenari = giocoDellOca.getListaScenari().size();
+		//Replace dello scenario
+		List<Scenario> nuoviScenari = new ArrayList<>();
 
+		var scenarioTest = new Scenario("test", "Scenario per test replace Scenario",
+				"La torta della nonna ha un profumo delizioso! (Avanzi del totale che hai appena ottenuto dal lancio dei dadi)",
+				"Le indicazioni della mamma ti guidano lungo il sentiero del bosco! (Avanzi di un numero pari alla casella in cui ti trovi)",
+				"Il lupo ti ferma per parlare! (Perdi 1 turno)",
+				"Il lupo si è pappato Cappuccetto Rosso e la nonna! (Resti imprigionato finchè un altro giocatore non arriva su questa casella)",
+				"State indietro! Il cacciatore è arrivato! (Torni indietro di 3 caselle) ",
+				"Cappuccetto Rosso si è persa nel bosco! (Torni alla casella iniziale)");
+		nuoviScenari.add(scenarioTest);
+		giocoDellOca.replaceAllScenari(nuoviScenari);
+		assertEquals(nuoviScenari.size(), giocoDellOca.getListaScenari().size());
+		assertNotEquals(oldScenari, giocoDellOca.getListaScenari().size());
+		
+	}
+	//replace regole
+	@Test
+	void replaceAllRegoleTest() {
+		var giocoDellOca = new GiocoDellOca();
+		giocoDellOca.configuraNuovaPartita();
+		//Visualizzazione set regole di default
+		var oldSetRegole = giocoDellOca.getMapRegoleSet();
+		
+		//Creazione del nuovo set regole
+		var regolaTest = new Regola("regolaTest", "Seleziona il numero delle caselle di cui sarà composto il tabellone di gioco", "", TipologiaRegolaEnum.NumeroCaselle);
+		Set<Regola> regolaSetTest = new LinkedHashSet<>();
+		Map<String, Set<Regola>> nuovoMapRegoleSet = new HashMap<>();
+		regolaSetTest.add(regolaTest);
+		nuovoMapRegoleSet.put("Map Regole Test", regolaSetTest);
+		
+		//Replace e confronto risultati
+		giocoDellOca.replaceAllSetRegole(nuovoMapRegoleSet);
+		assertEquals(nuovoMapRegoleSet.size(), giocoDellOca.getMapRegoleSet().size());
+		assertNotEquals(oldSetRegole, giocoDellOca.getListaScenari().size());
+	}
+	//replace personalizzazioni
+	@Test
+	void replaceAllPersonalizzazioniTest() {
+		var giocoDellOca = new GiocoDellOca();
+		giocoDellOca.configuraNuovaPartita();
+		//Visualizzazione personalizzazioni di default
+		var oldPersonalizzazioni = giocoDellOca.getListaPersonalizzazioni();
+		
+		//Creazione della nuova personalizzazione
+		List<Personalizzazione> nuovePersonalizzazioni = new ArrayList<>();
+
+		var personalizzazioneTest1 = new Dado("Dado_RossoTest", "Il dado del giocatore è un dado nero e rosso", "./src/images/dadorosso_1.png");
+		var personalizzazioneTest2 = new Pedina("Pedina_OcaTest", "La pedina del giocatore è l'oca classica", "./src/images/ScarfGoose.png");
+		nuovePersonalizzazioni.add(personalizzazioneTest1);
+		nuovePersonalizzazioni.add(personalizzazioneTest2);
+		giocoDellOca.replaceAllPersonalizzazioni(nuovePersonalizzazioni);
+		//Replace e confronto risultati
+		giocoDellOca.replaceAllPersonalizzazioni(nuovePersonalizzazioni);
+		assertEquals(nuovePersonalizzazioni.size(), giocoDellOca.getListaPersonalizzazioni().size());
+		assertNotEquals(oldPersonalizzazioni, giocoDellOca.getListaPersonalizzazioni().size());
+	}
 }
