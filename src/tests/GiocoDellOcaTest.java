@@ -154,19 +154,84 @@ class GiocoDellOcaTest {
 	
 	@Test
 	void eseguiTurnoTest() {
+	
+	    var gioco = new GiocoDellOca();
+	    gioco.configuraNuovaPartita();
+	
+	    var codiceScenario = gioco.getListaScenari().get(0).getCodiceScenario();
+	    gioco.impostaScenario(codiceScenario);
+	
+	    gioco.avviaPartita();
+	
+	    var partita = gioco.getPartitaCorrente();
+	    var pedina = partita.getAllGiocatori().get(1).getPedina();
+	
+	    //Test su tabellone da 63 caselle
+	
+	    //Oca
+	    pedina.setPosizione(1);       
+	    gioco.eseguiTurnoGiocatore(pedina, 4);
+	
+	    assertEquals(9, pedina.getPosizione()); 
+	    assertEquals(1, pedina.getStato());
+	
+	
+	    //Ponte
+	    pedina.setPosizione(1);      
+	    gioco.eseguiTurnoGiocatore(pedina, 5);
+	
+	    int expectedPonte = 6 + 6;    
+	    assertEquals(expectedPonte, pedina.getPosizione());
+	    assertEquals(1, pedina.getStato());
+	
+	
+	    //Locanda
+	    pedina.setPosizione(17);      
+	    pedina.setStato(1);          
+	    gioco.eseguiTurnoGiocatore(pedina, 2);
+	
+	    assertEquals(19, pedina.getPosizione());
+	    assertEquals(0, pedina.getStato());     
+	
+	    pedina.setStato(1); 
 		
-		var giocoDellOca = new GiocoDellOca();
-		giocoDellOca.configuraNuovaPartita();
+	    //Prigione
+	    pedina.setPosizione(30);    
+	    pedina.setStato(1);
+	    gioco.eseguiTurnoGiocatore(pedina, 1);
+	
+	    assertEquals(31, pedina.getPosizione());
+	    assertEquals(0, pedina.getStato());     
+	
+	    pedina.setStato(1);
 		
-		var codiceScenarioTest = giocoDellOca.getListaScenari().get(0).getCodiceScenario();
-		giocoDellOca.impostaScenario(codiceScenarioTest);
-		
-		giocoDellOca.avviaPartita();
-		var giocatore = giocoDellOca.getPartitaCorrente().getAllGiocatori().get(1);
-		var mossa = giocoDellOca.eseguiTurnoGiocatore(giocatore.getPedina(), 2);
-		assertFalse(mossa.toString().isEmpty());
-		
+	    //Labirinto
+	    pedina.setPosizione(41);     
+	    pedina.setStato(1);
+	    gioco.eseguiTurnoGiocatore(pedina, 1);
+	
+	    assertEquals(39, pedina.getPosizione()); 
+	    assertEquals(1, pedina.getStato());
+	
+	    
+	    //Scheletro
+	    pedina.setPosizione(57);     
+	    pedina.setStato(1);
+	    gioco.eseguiTurnoGiocatore(pedina, 1);
+	
+	    assertEquals(1, pedina.getPosizione()); 
+	    assertEquals(1, pedina.getStato());
+	
+	
+	    //Casella normale
+	    pedina.setPosizione(10);
+	    pedina.setStato(1);
+	    gioco.eseguiTurnoGiocatore(pedina, 3);
+	
+	    assertEquals(13, pedina.getPosizione());
+	    assertEquals(1, pedina.getStato());
 	}
+
 	//aggiungi giocatori ospiti
 	@Test
 	void aggiungiGiocatoriOspitiTest() {

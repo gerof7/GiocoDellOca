@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import GiocoDellOca.CaselleStrategy.CasellaStrategyInterface;
+import GiocoDellOca.CaselleStrategy.CasellaStrategySingleton;
 import Utilities.MossaResult;
 
 public class Partita {
@@ -161,123 +163,211 @@ public class Partita {
 	    }
 	}
 
+//	public MossaResult applicaMossaConMessaggi(Pedina pedinaCorrente, int risultatoDado) {
+//	    List<String> messaggi = new ArrayList<>();
+//	    Map<Integer, Casella> caselleMap = tabellone.getCaselleMap();
+//	
+//	    Scenario scenarioCorrente = impostazioni != null ? impostazioni.getScenario() : null;
+//	
+//	    if (pedinaCorrente.getStato() == 0) {
+//	        Casella casellaAttuale = caselleMap.get(pedinaCorrente.getPosizione());
+//	
+//	        if (casellaAttuale instanceof CasellaSpeciale casellaSpeciale &&
+//	            casellaSpeciale.getTipologiaCasellaSpeciale() == TipologiaCasellaSpecialeEnum.Prigione) {
+//	
+//	            String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaPrigione() != null)
+//	                    ? scenarioCorrente.getDescrizioneCasellaPrigione()
+//	                    : "La tua pedina è ferma perché sei in prigione. Salti il turno.";
+//	            messaggi.add(descr);
+//	            return MossaResult.ongoing(messaggi);
+//	        }
+//	
+//	        messaggi.add("La tua pedina è ferma per questo turno. Salti il turno.");
+//	        pedinaCorrente.setStato(1);
+//	        return MossaResult.ongoing(messaggi);
+//	    }
+//	
+//	    int posizioneIniziale = pedinaCorrente.getPosizione();
+//	    int posizioneFinale = caselleMap.size();
+//	    int nuovaPosizione = posizioneIniziale + risultatoDado;
+//	    boolean superataCasellaFinale = false;
+//	
+//	    if (nuovaPosizione > posizioneFinale) {
+//	        int differenza = nuovaPosizione - posizioneFinale;
+//	        nuovaPosizione = posizioneFinale - differenza;
+//	        messaggi.add("Hai superato la casella finale! Torni indietro di " + differenza + " caselle.");
+//	        pedinaCorrente.setPosizione(nuovaPosizione);
+//	        superataCasellaFinale = true;
+//	    } else {
+//	        int rimbalzo = pedinaCorrente.Muovi(risultatoDado, caselleMap.size());
+//	        if (rimbalzo != 0)
+//	            messaggi.add("Hai superato la casella finale! Torni indietro di " + rimbalzo + " caselle.");
+//	    }
+//	
+//	    int posizioneCorrente = pedinaCorrente.getPosizione();
+//	    Casella casellaAttuale = caselleMap.get(posizioneCorrente);
+//	
+//	    if (!superataCasellaFinale) {
+//	        if (casellaAttuale instanceof CasellaFine) {
+//	            messaggi.add("Complimenti! Hai raggiunto la fine e vinto il gioco!");
+//	            return MossaResult.finished(messaggi, "Complimenti! Hai raggiunto la fine e vinto il gioco!");
+//	        } 
+//	        else if (casellaAttuale instanceof CasellaSpeciale casellaSpeciale) {
+//	            TipologiaCasellaSpecialeEnum tipo = casellaSpeciale.getTipologiaCasellaSpeciale();
+//	
+//	            switch (tipo) {
+//	                case Oca -> {
+//	                    String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaOca() != null)
+//	                            ? scenarioCorrente.getDescrizioneCasellaOca() + " -> " + risultatoDado
+//	                            : "Oca! Avanzi di " + risultatoDado + " caselle.";
+//	                    messaggi.add(descr);
+//	
+//	                    int rimbalzo = pedinaCorrente.Muovi(risultatoDado, caselleMap.size());
+//	                    if (rimbalzo != 0)
+//	                        messaggi.add("Hai superato la casella finale! Torni indietro di " + rimbalzo + " caselle.");
+//	                }
+//	                case Ponte -> {
+//	                    String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaPonte() != null)
+//	                            ? scenarioCorrente.getDescrizioneCasellaPonte() + " -> " + posizioneCorrente
+//	                            : "Ponte! Avanzi di " + posizioneCorrente + " caselle.";
+//	                    messaggi.add(descr);
+//	
+//	                    int rimbalzo = pedinaCorrente.Muovi(posizioneCorrente, caselleMap.size());
+//	                    if (rimbalzo != 0)
+//	                        messaggi.add("Hai superato la casella finale! Torni indietro di " + rimbalzo + " caselle.");
+//	                }
+//	                case Locanda -> {
+//	                    String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaLocanda() != null)
+//	                            ? scenarioCorrente.getDescrizioneCasellaLocanda()
+//	                            : "Locanda! La tua pedina è ferma per un turno.";
+//	                    messaggi.add(descr);
+//	                    pedinaCorrente.setStato(0);
+//	                }
+//	                case Prigione -> {
+//	                    String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaPrigione() != null)
+//	                            ? scenarioCorrente.getDescrizioneCasellaPrigione()
+//	                            : "Prigione! Resti imprigionato finchè un altro giocatore non arriva su questa casella.";
+//	                    messaggi.add(descr);
+//	                    pedinaCorrente.setStato(0);
+//	
+//	                    for (Giocatore altra : giocatori.values()) {
+//	                        Pedina altraPedina = altra.getPedina();
+//	                        if (altraPedina != pedinaCorrente &&
+//	                            altraPedina.getPosizione() == pedinaCorrente.getPosizione()) {
+//	                            altraPedina.setStato(1);
+//	                            messaggi.add("Un'altra pedina è stata rilasciata dalla prigione!");
+//	                        }
+//	                    }
+//	                }
+//	                case Labirinto -> {
+//	                    String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaLabirinto() != null)
+//	                            ? scenarioCorrente.getDescrizioneCasellaLabirinto()
+//	                            : "Labirinto! Torni indietro di 3 caselle.";
+//	                    messaggi.add(descr);
+//	                    pedinaCorrente.Muovi(-3, caselleMap.size());
+//	                }
+//	                case Scheletro -> {
+//	                    String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaScheletro() != null)
+//	                            ? scenarioCorrente.getDescrizioneCasellaScheletro()
+//	                            : "Scheletro! Torni alla casella iniziale.";
+//	                    messaggi.add(descr);
+//	                    pedinaCorrente.setPosizione(1);
+//	                }
+//	                default -> messaggi.add("Errore: tipo di casella sconosciuto.");
+//	            }
+//	        }
+//	    }
+//	
+//	    return MossaResult.ongoing(messaggi);
+//	}
+//	
+	
 	public MossaResult applicaMossaConMessaggi(Pedina pedinaCorrente, int risultatoDado) {
-	    List<String> messaggi = new ArrayList<>();
-	    Map<Integer, Casella> caselleMap = tabellone.getCaselleMap();
-	
-	    Scenario scenarioCorrente = impostazioni != null ? impostazioni.getScenario() : null;
-	
-	    if (pedinaCorrente.getStato() == 0) {
-	        Casella casellaAttuale = caselleMap.get(pedinaCorrente.getPosizione());
-	
-	        if (casellaAttuale instanceof CasellaSpeciale casellaSpeciale &&
-	            casellaSpeciale.getTipologiaCasellaSpeciale() == TipologiaCasellaSpecialeEnum.Prigione) {
-	
-	            String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaPrigione() != null)
-	                    ? scenarioCorrente.getDescrizioneCasellaPrigione()
-	                    : "La tua pedina è ferma perché sei in prigione. Salti il turno.";
-	            messaggi.add(descr);
-	            return MossaResult.ongoing(messaggi);
-	        }
-	
-	        messaggi.add("La tua pedina è ferma per questo turno. Salti il turno.");
-	        pedinaCorrente.setStato(1);
-	        return MossaResult.ongoing(messaggi);
-	    }
-	
-	    int posizioneIniziale = pedinaCorrente.getPosizione();
-	    int posizioneFinale = caselleMap.size();
-	    int nuovaPosizione = posizioneIniziale + risultatoDado;
-	    boolean superataCasellaFinale = false;
-	
-	    if (nuovaPosizione > posizioneFinale) {
-	        int differenza = nuovaPosizione - posizioneFinale;
-	        nuovaPosizione = posizioneFinale - differenza;
-	        messaggi.add("Hai superato la casella finale! Torni indietro di " + differenza + " caselle.");
-	        pedinaCorrente.setPosizione(nuovaPosizione);
-	        superataCasellaFinale = true;
-	    } else {
-	        int rimbalzo = pedinaCorrente.Muovi(risultatoDado, caselleMap.size());
-	        if (rimbalzo != 0)
-	            messaggi.add("Hai superato la casella finale! Torni indietro di " + rimbalzo + " caselle.");
-	    }
-	
-	    int posizioneCorrente = pedinaCorrente.getPosizione();
-	    Casella casellaAttuale = caselleMap.get(posizioneCorrente);
-	
-	    if (!superataCasellaFinale) {
-	        if (casellaAttuale instanceof CasellaFine) {
-	            messaggi.add("Complimenti! Hai raggiunto la fine e vinto il gioco!");
-	            return MossaResult.finished(messaggi, "Complimenti! Hai raggiunto la fine e vinto il gioco!");
-	        } 
-	        else if (casellaAttuale instanceof CasellaSpeciale casellaSpeciale) {
-	            TipologiaCasellaSpecialeEnum tipo = casellaSpeciale.getTipologiaCasellaSpeciale();
-	
-	            switch (tipo) {
-	                case Oca -> {
-	                    String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaOca() != null)
-	                            ? scenarioCorrente.getDescrizioneCasellaOca() + " -> " + risultatoDado
-	                            : "Oca! Avanzi di " + risultatoDado + " caselle.";
-	                    messaggi.add(descr);
-	
-	                    int rimbalzo = pedinaCorrente.Muovi(risultatoDado, caselleMap.size());
-	                    if (rimbalzo != 0)
-	                        messaggi.add("Hai superato la casella finale! Torni indietro di " + rimbalzo + " caselle.");
-	                }
-	                case Ponte -> {
-	                    String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaPonte() != null)
-	                            ? scenarioCorrente.getDescrizioneCasellaPonte() + " -> " + posizioneCorrente
-	                            : "Ponte! Avanzi di " + posizioneCorrente + " caselle.";
-	                    messaggi.add(descr);
-	
-	                    int rimbalzo = pedinaCorrente.Muovi(posizioneCorrente, caselleMap.size());
-	                    if (rimbalzo != 0)
-	                        messaggi.add("Hai superato la casella finale! Torni indietro di " + rimbalzo + " caselle.");
-	                }
-	                case Locanda -> {
-	                    String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaLocanda() != null)
-	                            ? scenarioCorrente.getDescrizioneCasellaLocanda()
-	                            : "Locanda! La tua pedina è ferma per un turno.";
-	                    messaggi.add(descr);
-	                    pedinaCorrente.setStato(0);
-	                }
-	                case Prigione -> {
-	                    String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaPrigione() != null)
-	                            ? scenarioCorrente.getDescrizioneCasellaPrigione()
-	                            : "Prigione! Resti imprigionato finchè un altro giocatore non arriva su questa casella.";
-	                    messaggi.add(descr);
-	                    pedinaCorrente.setStato(0);
-	
-	                    for (Giocatore altra : giocatori.values()) {
-	                        Pedina altraPedina = altra.getPedina();
-	                        if (altraPedina != pedinaCorrente &&
-	                            altraPedina.getPosizione() == pedinaCorrente.getPosizione()) {
-	                            altraPedina.setStato(1);
-	                            messaggi.add("Un'altra pedina è stata rilasciata dalla prigione!");
-	                        }
-	                    }
-	                }
-	                case Labirinto -> {
-	                    String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaLabirinto() != null)
-	                            ? scenarioCorrente.getDescrizioneCasellaLabirinto()
-	                            : "Labirinto! Torni indietro di 3 caselle.";
-	                    messaggi.add(descr);
-	                    pedinaCorrente.Muovi(-3, caselleMap.size());
-	                }
-	                case Scheletro -> {
-	                    String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaScheletro() != null)
-	                            ? scenarioCorrente.getDescrizioneCasellaScheletro()
-	                            : "Scheletro! Torni alla casella iniziale.";
-	                    messaggi.add(descr);
-	                    pedinaCorrente.setPosizione(1);
-	                }
-	                default -> messaggi.add("Errore: tipo di casella sconosciuto.");
-	            }
-	        }
-	    }
-	
-	    return MossaResult.ongoing(messaggi);
-	}
+        List<String> messaggi = new ArrayList<>();
+        Map<Integer, Casella> caselleMap = tabellone.getCaselleMap();
+        Scenario scenarioCorrente = (impostazioni != null) ? impostazioni.getScenario() : null;
+
+        if (pedinaCorrente.getStato() == 0) {
+            Casella casellaAttuale0 = caselleMap.get(pedinaCorrente.getPosizione());
+
+            if (casellaAttuale0 instanceof CasellaSpeciale cs
+                    && cs.getTipologiaCasellaSpeciale() == TipologiaCasellaSpecialeEnum.Prigione) {
+
+                String descr = (scenarioCorrente != null && scenarioCorrente.getDescrizioneCasellaPrigione() != null)
+                        ? scenarioCorrente.getDescrizioneCasellaPrigione()
+                        : "La tua pedina è ferma perché sei in prigione. Salti il turno.";
+                messaggi.add(descr);
+                return MossaResult.ongoing(messaggi);
+            }
+
+            messaggi.add("La tua pedina è ferma per questo turno. Salti il turno.");
+            pedinaCorrente.setStato(1);
+            return MossaResult.ongoing(messaggi);
+        }
+
+        int posizioneIniziale = pedinaCorrente.getPosizione();
+        int posizioneFinale = caselleMap.size();
+        int nuovaPosizione = posizioneIniziale + risultatoDado;
+        boolean superataCasellaFinale = false;
+
+        if (nuovaPosizione > posizioneFinale) {
+            int differenza = nuovaPosizione - posizioneFinale;
+            nuovaPosizione = posizioneFinale - differenza;
+            messaggi.add("Hai superato la casella finale! Torni indietro di " + differenza + " caselle.");
+            pedinaCorrente.setPosizione(nuovaPosizione);
+            superataCasellaFinale = true;
+        } else {
+            int rimbalzo = pedinaCorrente.Muovi(risultatoDado, caselleMap.size());
+            if (rimbalzo != 0)
+                messaggi.add("Hai superato la casella finale! Torni indietro di " + rimbalzo + " caselle.");
+        }
+
+        int posizioneCorrente = pedinaCorrente.getPosizione();
+        Casella casellaAttuale = caselleMap.get(posizioneCorrente);
+
+        if (!superataCasellaFinale) {
+        	if (casellaAttuale instanceof CasellaFine) {
+
+        	    String nomeVincitore = "Bot";
+        	    for (Giocatore g : giocatori.values()) {
+        	        if (g.getPedina() == pedinaCorrente) {
+        	            nomeVincitore = g.getNome();
+        	            break;
+        	        }
+        	    }
+
+        	    String msgVittoria = nomeVincitore + " ha raggiunto la fine e vinto il gioco!";
+
+        	    messaggi.add(msgVittoria);
+
+        	    return MossaResult.finished(messaggi, msgVittoria);
+        	}
+
+
+            if (casellaAttuale instanceof CasellaSpeciale cs) {
+                TipologiaCasellaSpecialeEnum tipo = cs.getTipologiaCasellaSpeciale();
+
+                CasellaStrategyInterface strategy =
+                        CasellaStrategySingleton.getInstance().getStrategy(tipo);
+
+                if (strategy != null) {
+                    strategy.apply(
+                        pedinaCorrente,
+                        risultatoDado,
+                        posizioneCorrente,
+                        caselleMap,
+                        giocatori,
+                        scenarioCorrente,
+                        messaggi
+                    );
+                } else {
+                    messaggi.add("Errore: tipo di casella sconosciuto.");
+                }
+            }
+        }
+
+        return MossaResult.ongoing(messaggi);
+    }
 	
 	public void configuraGiocatore(
 	        int numeroGiocatore,
