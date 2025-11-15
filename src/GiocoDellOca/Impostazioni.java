@@ -63,7 +63,7 @@ public class Impostazioni {
 	    this.elencoRegole.clear();
 	    
 	    if (tableModel == null) {
-	        elencoRegole.addAll(listaRegoleSingole);
+//	        elencoRegole.addAll(listaRegoleSingole);
 	        return;
 	    }
 
@@ -89,10 +89,10 @@ public class Impostazioni {
 	    this.elencoRegole.clear();
 	    
 	    if (tableModel == null) {
-	        if (!mapRegoleSet.isEmpty()) {
-	            var primoSet = mapRegoleSet.values().iterator().next();
-	            elencoRegole.addAll(primoSet);
-	        }
+//	        if (!mapRegoleSet.isEmpty()) {
+//	            var primoSet = mapRegoleSet.values().iterator().next();
+//	            elencoRegole.addAll(primoSet);
+//	        }
 	        return;
 	    }
 
