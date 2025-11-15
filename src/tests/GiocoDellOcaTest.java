@@ -54,16 +54,17 @@ class GiocoDellOcaTest {
 	@Test
 	void impostaRegoleSingoleTest() {
 		var numeroRegoleAttese = 2;
-		javax.swing.table.TableModel tableModel = null;
+		javax.swing.table.TableModel tableModel = new DefaultTableModel();
 		
 		
 		var giocoDellOca = new GiocoDellOca();
 		giocoDellOca.configuraNuovaPartita();
 		giocoDellOca.impostaRegoleSingole(tableModel);
 		
-		//Caso in cui la table è vuota: riempimento automatico elenco regole
+		//Caso in cui la table è vuota: la lista di regole salvate nelle impostazioni sarà vuota
 		List<Regola> elencoRegole = giocoDellOca.getPartitaCorrente().getImpostazioni().getElencoRegole();
-		assertEquals(numeroRegoleAttese, elencoRegole.size());
+		assertEquals(0, elencoRegole.size());
+		
 		//Caso in cui la table non è vuota
 		String[] colonne = {"Codice", "Descrizione", "Proprieta", "Tipologia"};
 		tableModel = new DefaultTableModel(colonne, 0);
@@ -80,16 +81,16 @@ class GiocoDellOcaTest {
 	void impostaRegoleDaSetTest() {
 		
 		var numeroRegoleAttese = 2;
-		javax.swing.table.TableModel tableModel = null;
+		javax.swing.table.TableModel tableModel = new DefaultTableModel();
 		
 		
 		var giocoDellOca = new GiocoDellOca();
 		giocoDellOca.configuraNuovaPartita();
 		giocoDellOca.impostaRegoleDaSet(tableModel);
 		
-		//Caso in cui la table è vuota: riempimento automatico elenco regole
+		//Caso in cui la table è vuota: la lista di regole salvate nelle impostazioni sarà vuota
 		var elencoRegole = giocoDellOca.getPartitaCorrente().getImpostazioni().getElencoRegole();
-		assertEquals(numeroRegoleAttese, elencoRegole.size());
+		assertEquals(0, elencoRegole.size());
 		
 		//Caso in cui la table non è vuota
 		String[] colonne = {"Codice", "Descrizione", "Proprieta", "Tipologia"};
