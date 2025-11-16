@@ -58,17 +58,85 @@ Il progetto implementa il **Gioco dell’Oca** in versione digitale, evoluto att
   - Creazione partita e lobby.
   - Configurazione personalizzazioni per host e guest.
   - Gestione turni tra più giocatori.
+ 
+  <details>
+    <summary>
+      <h4 >Vedi di più</h4>
+    </summary>
+      <div align="center">
+        <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/SPSelezionaTipoRegole.jpg" alt="Thumbnail" width="100%"/>
+      </div>
+      
+    All'inizio di ogni tipo di partita ti verrà chiesto di scegliere le regole: puoi optare per delle regole predefinite da set oppure scegliere da regole singole un mix personalizzato.
+
+    <div align="center">
+        <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/DropdownNonSelezionata.jpg" alt="Thumbnail" width="80%"/>
+        <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/DropdownSelezionataCorrettamente.jpg" alt="Thumbnail" width="80%"/>
+    </div>
+    
+    ` Nota bene: se scegli Regole Singole, assicurati di selezionare correttamente il dato (Swing ha un problema di selezione da dropdown): la prima immagine mostra una valorizzazione nulla, mentre quella di successiva una corretta `
+     <div align="center">
+        <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/PartitaClassicaSP.jpg" alt="Thumbnail" width="100%"/>
+    </div>
+    Se tutto è stato configurato correttamente (e sono stati impostati correttamente Pedine e Scenario) la schermata di gioco che apparirà sarà simile a questa.
+
+    - ` Nota bene: quando si selezionano valori da tabelle, usare sempre il doppio click sul record dalla tabella di sinistra (Record selezionabili) e assicurarsi che il valore selezionato compaia sulla tabella di destra (Record impostati). `
+    - ` Nota bene: Se una Pedina o un Dado impostato (quindi situato sulla tabella di destra) non va bene, usare il doppio click per riportarlo alla tabella di sinistra (Selezionabili) `
+    - ` Nota bene: Se Pedina o Dado non sono stati impostati per il Giocatore, il pulsante Avvia Partita non si avvierà! `
+    
+    [Indice Contenuti](#indiceContenuti)
+  
+  </details>
 
 ### ✅ Personalizzazione
 - Scelta di **dadi** e **pedine**.
 - Configurazione **scenari** e **regole**.
 - Salvataggio impostazioni utente per partite future.
+  <details>
+      <summary>
+        <h4 >Vedi di più</h4>
+      </summary>
+        <div align="center">
+          <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/Impostazioni.jpg" alt="Thumbnail" width="100%"/>
+        </div>
+      Scegli le impostazioni per i singoli Giocatori e le Personalizzazioni (Pedina e Dado) associati. Le modifiche salvate appariranno nelle successive partire SinglePlayer che MultiPlayer
+    
+  [Indice Contenuti](#indiceContenuti)
+  
+  </details>
 
 ### ✅ Pannello Admin
 - Gestione **set di regole predefinite**.
 - Gestione **scenari di gioco**.
 - Gestione **elementi personalizzabili** (dadi e pedine).
 - Autenticazione admin (username: `admin`, password: `admin`).
+
+  <details>
+      <summary>
+        <h4 >Vedi di più</h4>
+      </summary>
+        <div align="center">
+          <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/PannelloAdmin.jpg" alt="Thumbnail" width="100%"/>
+        </div>
+      Per modifiche ancora più impegnative invece, si ricorre al pannello di Admin. Si verrà indirizzati a questa schermata.
+    
+        - ` Nota bene: All'autenticazione -> nome: admin, password: admin `
+  
+  
+  <div align="center">
+          <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/AdminAggiuntaNuovoScenario.jpg" alt="Thumbnail" width="100%"/>
+        </div>
+      Nell'Esempio sopra riportato, è in atto l'aggiunta di un nuovo Scenario oltre ai due di default (anche loro modificabili, adesso che si hanno i permessi di admin)
+    <div align="center">
+          <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/PostAggiuntaScenarioAdmin.jpg" alt="Thumbnail" width="100%"/>
+        </div>
+    Il risultato di questa operazione sarà visibile in fase di selezione dello Scenario alla configurazione della nuova Partita (SinglePlayer o MultiPlayer)
+  <div align="center">
+          <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/AdminGestionePersonalizzazioni.jpg" alt="Thumbnail" width="100%"/>
+        </div>
+    
+  - ` Nota bene: Se si vuole invece cambiare una immagine di una pedina, assicurarsi che la risorsa sia presente in /src/Images/ del progetto e incollare il percorso relativo come mostrato `
+  </details>
 
 [Indice Contenuti](#indiceContenuti)
 
@@ -79,9 +147,6 @@ Il progetto implementa il **Gioco dell’Oca** in versione digitale, evoluto att
   <summary>
     <h3 >Architettura</h3>
   </summary>
-    <div align="center">
-      <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/MenuIniziale.jpg" alt="Thumbnail" width="100%"/>
-    </div>
   
 - **Linguaggio:** Java.
 - **GUI:** Java Swing.
@@ -101,9 +166,6 @@ Il progetto implementa il **Gioco dell’Oca** in versione digitale, evoluto att
   <summary>
     <h3 >Casi d'uso implementati</h3>
   </summary>
-    <div align="center">
-      <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/MenuIniziale.jpg" alt="Thumbnail" width="100%"/>
-    </div>
   
 - **UC1:** Configurazione e avvio partita singleplayer.
 - **UC2:** Partita singleplayer.
@@ -124,8 +186,9 @@ Il progetto implementa il **Gioco dell’Oca** in versione digitale, evoluto att
   <summary>
     <h3 >Requisiti</h3>
   </summary>
-  - **Java JDK 17+**
-  - **Librerie:** Java Swing (inclusa nel JDK)
+
+  - Java JDK 17+
+  - Librerie:  Java Swing (inclusa nel JDK)
   
 [Indice Contenuti](#indiceContenuti)
 
