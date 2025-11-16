@@ -1390,6 +1390,25 @@ public class GiocoDellOcaGUI extends JFrame {
 	        }
 	    }
 	}
+	
+	private boolean validazioneRegoleSelezionate(DefaultTableModel model) {
+	    int rowCount = model.getRowCount();
+
+	    for (int i = 0; i < rowCount; i++) {
+	        Object valore = model.getValueAt(i, 2); // colonna Proprietà
+
+	        if (valore == null)
+	            return false;
+
+	        String s = valore.toString().trim();
+
+	        if (s.isEmpty())
+	            return false;
+	    }
+
+	    return true;
+	}
+
 
 	
 	/**
@@ -2696,6 +2715,15 @@ public class GiocoDellOcaGUI extends JFrame {
 		});
 				
 		btnAvanzaToSelezionaScenarioRegSing.addActionListener(e -> {
+			if (!validazioneRegoleSelezionate(tableRegoleSelezionateModel)) {
+		        JOptionPane.showMessageDialog(
+		                null,
+		                "Alcune regole non sono complete!\nSelezionare tutte le proprietà.",
+		                "Errore",
+		                JOptionPane.ERROR_MESSAGE
+		        );
+		        return; 
+		    }
 			GiocoDellOcaGUI.this.giocoDellOca.impostaRegoleSingole(tableRegoleSelezionateModel);
 		    SwitchToPanel(layeredPane, selezioneScenarioPanel);
 		});
@@ -2724,9 +2752,17 @@ public class GiocoDellOcaGUI extends JFrame {
 		        GiocoDellOcaGUI.this.giocoDellOca.impostaScenario(codiceScenario);
 
 		        SwitchToPanel(layeredPane, selezioneTipologiaPersonalizzazionePanel);
+		    } else
+		    {
+		    	JOptionPane.showMessageDialog(
+		                null,
+		                "Selezionare uno scenario!",
+		                "Errore",
+		                JOptionPane.ERROR_MESSAGE
+		        );
 		    }
+		    
 		});
-
 		
 
 		btnReturnToSelScenFromSelPers.addActionListener(new ActionListener() {
