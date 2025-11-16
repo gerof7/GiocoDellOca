@@ -74,7 +74,7 @@ Il progetto implementa il **Gioco dell’Oca** in versione digitale, evoluto att
         <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/DropdownSelezionataCorrettamente.jpg" alt="Thumbnail" width="80%"/>
     </div>
     
-    ` Nota bene: se scegli Regole Singole, assicurati di selezionare correttamente il dato (Swing ha un problema di selezione da dropdown): la prima immagine mostra una valorizzazione nulla, mentre quella di successiva una corretta `
+    ` Nota bene: se scegli Regole Singole, assicurati di selezionare correttamente il dato: la prima immagine mostra una valorizzazione nulla, mentre quella di successiva una corretta `
      <div align="center">
         <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/PartitaClassicaSP.jpg" alt="Thumbnail" width="100%"/>
     </div>
@@ -82,7 +82,6 @@ Il progetto implementa il **Gioco dell’Oca** in versione digitale, evoluto att
 
     - ` Nota bene: quando si selezionano valori da tabelle, usare sempre il doppio click sul record dalla tabella di sinistra (Record selezionabili) e assicurarsi che il valore selezionato compaia sulla tabella di destra (Record impostati). `
     - ` Nota bene: Se una Pedina o un Dado impostato (quindi situato sulla tabella di destra) non va bene, usare il doppio click per riportarlo alla tabella di sinistra (Selezionabili) `
-    - ` Nota bene: Se Pedina o Dado non sono stati impostati per il Giocatore, il pulsante Avvia Partita non si avvierà! `
     
     [Indice Contenuti](#indiceContenuti)
   
@@ -118,7 +117,7 @@ Il progetto implementa il **Gioco dell’Oca** in versione digitale, evoluto att
         <div align="center">
           <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/PannelloAdmin.jpg" alt="Thumbnail" width="100%"/>
         </div>
-      Per modifiche ancora più impegnative invece, si ricorre al pannello di Admin. Si verrà indirizzati a questa schermata.
+      Per modifiche agli elementi selezionabili in fase di configurazione della partita, si ricorre al pannello di Admin. Si verrà indirizzati a questa schermata.
     
         - ` Nota bene: All'autenticazione -> nome: admin, password: admin `
   
@@ -135,7 +134,7 @@ Il progetto implementa il **Gioco dell’Oca** in versione digitale, evoluto att
           <img src="https://github.com/gerof7/GiocoDellOca/blob/develop/CopertinaReadme/AdminGestionePersonalizzazioni.jpg" alt="Thumbnail" width="100%"/>
         </div>
     
-  - ` Nota bene: Se si vuole invece cambiare una immagine di una pedina, assicurarsi che la risorsa sia presente in /src/Images/ del progetto e incollare il percorso relativo come mostrato `
+  - ` Nota bene: Se si vuole invece cambiare una immagine di una pedina, assicurarsi che la risorsa sia presente in /src/images/ del progetto e incollare il percorso relativo come mostrato `
   </details>
 
 [Indice Contenuti](#indiceContenuti)
